@@ -1,0 +1,17 @@
+{
+  "name": "webhotelier-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Luxury travel booking experience with Flywire payment integration",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

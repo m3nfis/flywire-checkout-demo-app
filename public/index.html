@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Caldera House &mdash; Oia, Santorini</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://artifacts.flywire.com/sdk/js/v0/sandbox.main.js" async></script>
+</head>
+<body>
+
+    <!-- ═══════════════════ NAVIGATION ═══════════════════ -->
+    <div id="nav-wrapper">
+        <header>
+            <div class="header-inner">
+                <a href="/" class="logo">The Caldera House</a>
+                <span class="header-tag">Oia, Santorini</span>
+            </div>
+        </header>
+        <div id="stepper" class="stepper-bar">
+            <div class="stepper-inner">
+                <div class="stepper-step active" data-step="1">
+                    <span class="stepper-dot"><span>1</span></span>
+                    <span class="stepper-label">Select Room</span>
+                </div>
+                <div class="stepper-line"></div>
+                <div class="stepper-step" data-step="2">
+                    <span class="stepper-dot"><span>2</span></span>
+                    <span class="stepper-label">Guest Details</span>
+                </div>
+                <div class="stepper-line"></div>
+                <div class="stepper-step" data-step="3">
+                    <span class="stepper-dot"><span>3</span></span>
+                    <span class="stepper-label">Payment</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ PAGE 1: ROOM SELECTION ═══════════════════ -->
+    <div id="rooms-view" class="view page-view">
+        <div class="rooms-hero">
+            <div class="rooms-hero-bg">
+                <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1920&q=80&auto=format&fit=crop"
+                     alt="Santorini blue domes overlooking the Aegean">
+                <div class="rooms-hero-overlay"></div>
+            </div>
+            <div class="rooms-hero-content">
+                <p class="rooms-hero-eyebrow">The Caldera House &middot; Oia, Santorini</p>
+                <h1 class="rooms-hero-title">Choose Your Suite</h1>
+                <p class="rooms-hero-sub">April 15 &ndash; 18, 2026 &middot; 3 Nights &middot; 2 Guests</p>
+            </div>
+        </div>
+
+        <div class="rooms-container">
+            <!-- Featured: Royal Caldera Suite -->
+            <div class="room-card featured"
+                 data-room="royal-caldera"
+                 data-price="2450"
+                 data-name="Royal Caldera Suite"
+                 data-size="120 m²"
+                 data-view-type="Caldera View"
+                 data-image="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop">
+                <div class="room-card-image">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop"
+                         alt="Royal Caldera Suite" loading="lazy">
+                    <span class="room-badge">Recommended</span>
+                </div>
+                <div class="room-card-body">
+                    <div class="room-card-top">
+                        <h3>Royal Caldera Suite</h3>
+                        <div class="room-price">
+                            <span class="price-amount">$2,450</span>
+                            <span class="price-unit">/night</span>
+                        </div>
+                    </div>
+                    <p class="room-specs">120 m&sup2; &middot; Caldera View &middot; Private Infinity Pool</p>
+                    <p class="room-desc">The crown jewel of The Caldera House. A sprawling sanctuary with floor-to-ceiling windows framing the caldera, a private infinity pool, and a terrace designed for the world&rsquo;s most celebrated sunset.</p>
+                    <div class="room-tags">
+                        <span>Private Pool</span>
+                        <span>Butler Service</span>
+                        <span>Terrace</span>
+                        <span>Chef&rsquo;s Kitchen</span>
+                    </div>
+                    <button class="btn-select-room">Select This Suite</button>
+                </div>
+            </div>
+
+            <!-- Other Rooms -->
+            <div class="rooms-grid">
+                <div class="room-card"
+                     data-room="sunset-villa"
+                     data-price="1950"
+                     data-name="Sunset Honeymoon Villa"
+                     data-size="95 m²"
+                     data-view-type="Sunset View"
+                     data-image="https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?w=800&q=80&auto=format&fit=crop">
+                    <div class="room-card-image">
+                        <img src="https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?w=800&q=80&auto=format&fit=crop"
+                             alt="Sunset Honeymoon Villa" loading="lazy">
+                    </div>
+                    <div class="room-card-body">
+                        <div class="room-card-top">
+                            <h3>Sunset Honeymoon Villa</h3>
+                            <div class="room-price">
+                                <span class="price-amount">$1,950</span>
+                                <span class="price-unit">/night</span>
+                            </div>
+                        </div>
+                        <p class="room-specs">95 m&sup2; &middot; Sunset View &middot; Outdoor Bath</p>
+                        <p class="room-desc">A secluded villa wrapped in bougainvillea, with a private courtyard, outdoor copper bathtub, and uninterrupted views of Oia&rsquo;s legendary sunset.</p>
+                        <div class="room-tags">
+                            <span>Outdoor Bath</span>
+                            <span>Courtyard</span>
+                            <span>Sunset View</span>
+                        </div>
+                        <button class="btn-select-room">Select This Suite</button>
+                    </div>
+                </div>
+
+                <div class="room-card"
+                     data-room="captains-quarters"
+                     data-price="1200"
+                     data-name="Captain's Quarters"
+                     data-size="65 m²"
+                     data-view-type="Harbor View"
+                     data-image="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80&auto=format&fit=crop">
+                    <div class="room-card-image">
+                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80&auto=format&fit=crop"
+                             alt="Captain's Quarters" loading="lazy">
+                    </div>
+                    <div class="room-card-body">
+                        <div class="room-card-top">
+                            <h3>Captain&rsquo;s Quarters</h3>
+                            <div class="room-price">
+                                <span class="price-amount">$1,200</span>
+                                <span class="price-unit">/night</span>
+                            </div>
+                        </div>
+                        <p class="room-specs">65 m&sup2; &middot; Harbor View &middot; Plunge Pool</p>
+                        <p class="room-desc">Inspired by Santorini&rsquo;s seafaring heritage, featuring whitewashed vaulted ceilings, hand-selected antiques, and a private courtyard with plunge pool.</p>
+                        <div class="room-tags">
+                            <span>Plunge Pool</span>
+                            <span>Vaulted Ceiling</span>
+                            <span>Courtyard</span>
+                        </div>
+                        <button class="btn-select-room">Select This Suite</button>
+                    </div>
+                </div>
+
+                <div class="room-card"
+                     data-room="aegean-studio"
+                     data-price="890"
+                     data-name="Aegean Cliff Studio"
+                     data-size="45 m²"
+                     data-view-type="Sea View"
+                     data-image="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80&auto=format&fit=crop">
+                    <div class="room-card-image">
+                        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80&auto=format&fit=crop"
+                             alt="Aegean Cliff Studio" loading="lazy">
+                    </div>
+                    <div class="room-card-body">
+                        <div class="room-card-top">
+                            <h3>Aegean Cliff Studio</h3>
+                            <div class="room-price">
+                                <span class="price-amount">$890</span>
+                                <span class="price-unit">/night</span>
+                            </div>
+                        </div>
+                        <p class="room-specs">45 m&sup2; &middot; Sea View &middot; Private Balcony</p>
+                        <p class="room-desc">A refined retreat carved into the volcanic cliff, with a private balcony suspended above the Aegean. Clean lines meet natural stone in this architect-designed studio.</p>
+                        <div class="room-tags">
+                            <span>Sea View</span>
+                            <span>Balcony</span>
+                            <span>Rain Shower</span>
+                        </div>
+                        <button class="btn-select-room">Select This Suite</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ PAGE 2: GUEST INFORMATION ═══════════════════ -->
+    <div id="guest-view" class="view page-view hidden">
+        <div class="guest-container">
+            <div class="guest-layout">
+                <section class="guest-form-section">
+                    <h2 class="guest-form-title">Guest Information</h2>
+                    <p class="guest-form-subtitle">Please confirm your details for the reservation</p>
+
+                    <form id="guest-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guest-first-name">First Name</label>
+                                <input type="text" id="guest-first-name" name="first_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="guest-last-name">Last Name</label>
+                                <input type="text" id="guest-last-name" name="last_name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="guest-email">Email Address</label>
+                            <input type="email" id="guest-email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="guest-phone">Phone Number</label>
+                            <input type="tel" id="guest-phone" name="phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="guest-address">Street Address</label>
+                            <input type="text" id="guest-address" name="address" required>
+                        </div>
+
+                        <div class="form-row form-row-3">
+                            <div class="form-group">
+                                <label for="guest-city">City</label>
+                                <input type="text" id="guest-city" name="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="guest-zip">ZIP / Postal</label>
+                                <input type="text" id="guest-zip" name="zip" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="guest-country">Country</label>
+                                <select id="guest-country" name="country" required>
+                                    <option value="">Select&hellip;</option>
+                                    <option value="ES">Spain</option>
+                                    <option value="GR">Greece</option>
+                                    <option value="IT">Italy</option>
+                                    <option value="FR">France</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="US">United States</option>
+                                    <option value="PT">Portugal</option>
+                                    <option value="NL">Netherlands</option>
+                                    <option value="CH">Switzerland</option>
+                                    <option value="AT">Austria</option>
+                                    <option value="BE">Belgium</option>
+                                    <option value="SE">Sweden</option>
+                                    <option value="NO">Norway</option>
+                                    <option value="DK">Denmark</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="JP">Japan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="guest-form-actions">
+                            <button type="button" id="back-to-rooms" class="btn-text-back">&larr; Back to rooms</button>
+                            <button type="submit" class="btn-primary">Continue to Payment</button>
+                        </div>
+                    </form>
+                </section>
+
+                <aside class="guest-summary-panel">
+                    <div class="guest-summary-sticky">
+                        <h3 class="panel-title">Your Selection</h3>
+
+                        <div class="guest-room-preview">
+                            <img id="summary-room-img" src="" alt="">
+                            <div class="guest-room-info">
+                                <strong id="summary-room-name"></strong>
+                                <span id="summary-room-specs"></span>
+                            </div>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-row">
+                            <span class="summary-label">Check-in</span>
+                            <span class="summary-value">Tue, Apr 15, 2026</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Check-out</span>
+                            <span class="summary-value">Fri, Apr 18, 2026</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Guests</span>
+                            <span class="summary-value">2 Adults</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-row">
+                            <span class="summary-label">3 nights &times; <span id="summary-price-night">$2,450</span></span>
+                            <span class="summary-value" id="summary-total">$7,350.00</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-row summary-total">
+                            <span>Total</span>
+                            <span id="summary-grand-total">$7,350.00</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ PAGE 3: BOOKING / PAYMENT ═══════════════════ -->
+    <div id="booking-view" class="view page-view hidden">
+        <main class="split-layout">
+            <!-- LEFT: Property Showcase -->
+            <section class="showcase">
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1200&q=80&auto=format&fit=crop"
+                         alt="Santorini caldera view at sunset">
+                </div>
+
+                <div class="gallery">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80&auto=format&fit=crop"
+                             alt="Royal Suite interior" loading="lazy">
+                        <span class="gallery-label">The Royal Suite</span>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80&auto=format&fit=crop"
+                             alt="Infinity pool" loading="lazy">
+                        <span class="gallery-label">Infinity Pool</span>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&auto=format&fit=crop"
+                             alt="Fine dining" loading="lazy">
+                        <span class="gallery-label">Private Dining</span>
+                    </div>
+                </div>
+
+                <div class="property-description">
+                    <h2>A Sanctuary Above the Sea</h2>
+                    <p>
+                        Perched on the volcanic cliffs of Oia, The Caldera House is where the Aegean meets the sky.
+                        Each suite opens to unobstructed views of the caldera, with hand-carved stone interiors,
+                        private plunge pools, and terraces designed for watching the most celebrated sunset in the world.
+                    </p>
+                    <p>
+                        From candlelit dinners prepared by our resident chef to dawn yoga on the clifftop,
+                        every detail has been considered so you can simply be present.
+                    </p>
+
+                    <div class="amenities">
+                        <div class="amenity">
+                            <span class="amenity-icon">&#9672;</span>
+                            <span>Private Infinity Pool</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">&#9672;</span>
+                            <span>In-Suite Chef Service</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">&#9672;</span>
+                            <span>Caldera View Terrace</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">&#9672;</span>
+                            <span>Spa &amp; Wellness</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">&#9672;</span>
+                            <span>Sunset Sailing Excursion</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">&#9672;</span>
+                            <span>Airport Concierge</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT: Booking Panel -->
+            <aside class="booking-panel">
+                <div class="panel-sticky">
+                    <button id="back-to-guest" class="btn-text-back">&larr; Back to guest details</button>
+
+                    <div class="booking-summary">
+                        <h3 class="panel-title">Your Stay</h3>
+
+                        <div class="summary-row">
+                            <span class="summary-label">Suite</span>
+                            <span class="summary-value" id="booking-room-name">Royal Caldera Suite</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Check-in</span>
+                            <span class="summary-value">Tue, Apr 15, 2026</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Check-out</span>
+                            <span class="summary-value">Fri, Apr 18, 2026</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Guests</span>
+                            <span class="summary-value">2 Adults</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-row">
+                            <span class="summary-label" id="booking-nightly-calc">3 nights &times; $2,450</span>
+                            <span class="summary-value" id="booking-subtotal">$7,350.00</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-row summary-total">
+                            <span>Total</span>
+                            <span id="booking-total">$7,350.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Options -->
+                    <div id="payment-section">
+                        <h3 class="panel-title">Payment</h3>
+
+                        <div id="payment-options">
+                            <label class="payment-option selected">
+                                <input type="radio" name="payment-type" value="one_off" checked>
+                                <div class="option-content">
+                                    <span class="option-title">Pay in Full</span>
+                                    <span class="option-desc">One-time payment of $7,350</span>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment-type" value="tokenization">
+                                <div class="option-content">
+                                    <span class="option-title">Save Card</span>
+                                    <span class="option-desc">Store card for future charges</span>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment-type" value="pre_auth">
+                                <div class="option-content">
+                                    <span class="option-title">Reserve &amp; Hold</span>
+                                    <span class="option-desc">Pre-authorize $7,350</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <button id="proceed-btn" class="btn-primary">Continue to Payment</button>
+
+                        <div id="payment-container"></div>
+
+                        <button id="back-btn" class="btn-back hidden">
+                            &larr; Change payment method
+                        </button>
+                    </div>
+
+                    <p class="panel-footer">
+                        All transactions are secured and encrypted.
+                        <br>Guest: <span id="booking-guest-name">Alejandro Serrano</span>
+                    </p>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- ═══════════════════ SUCCESS VIEW ═══════════════════ -->
+    <div id="success-view" class="view hidden">
+        <div class="success-bg">
+            <img src="https://images.unsplash.com/photo-1507501336603-6e31db2be093?w=1920&q=80&auto=format&fit=crop"
+                 alt="Santorini sunset" class="success-bg-img">
+            <div class="success-overlay"></div>
+        </div>
+
+        <div class="success-content">
+            <div class="success-inner">
+                <p class="success-eyebrow">Booking Confirmed</p>
+                <h1 class="success-title">Your Santorini<br>Escape Awaits</h1>
+                <p class="success-guest-greeting">Welcome, <span id="success-guest-name">Guest</span></p>
+                <div class="success-line"></div>
+
+                <div class="success-details">
+                    <div class="success-detail">
+                        <span class="detail-label">Check-in</span>
+                        <span class="detail-value">April 15, 2026</span>
+                    </div>
+                    <div class="success-detail">
+                        <span class="detail-label">Check-out</span>
+                        <span class="detail-value">April 18, 2026</span>
+                    </div>
+                    <div class="success-detail">
+                        <span class="detail-label">Suite</span>
+                        <span class="detail-value" id="success-suite-name">Royal Caldera</span>
+                    </div>
+                </div>
+
+                <div class="success-highlights">
+                    <p class="highlights-label">What awaits you</p>
+                    <ul>
+                        <li>Private infinity pool perched above the caldera</li>
+                        <li>Sunset dinner on your terrace, prepared by our chef</li>
+                        <li>Exclusive catamaran sailing at golden hour</li>
+                        <li>Complimentary couples spa ritual</li>
+                    </ul>
+                </div>
+
+                <button class="btn-light" onclick="window.location.reload()">Book Another Stay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ ERROR VIEW ═══════════════════ -->
+    <div id="error-view" class="view hidden">
+        <div class="error-content">
+            <div class="error-x">&#10005;</div>
+            <h1 class="error-title">Sucks to suck.</h1>
+            <p class="error-subtitle">Denied!</p>
+            <div class="error-line"></div>
+            <p class="error-message">
+                Your payment could not be processed.<br>
+                Perhaps the universe is telling you to try a different card.
+            </p>
+            <button id="retry-btn" class="btn-retry">Try Again</button>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
