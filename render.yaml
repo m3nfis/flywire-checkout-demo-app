@@ -1,0 +1,18 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# New → Blueprint → connect this repo and apply, or paste this file when creating a Web Service.
+
+services:
+  - type: web
+    name: caldera-hotel-elements-demo
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: FLYWIRE_API_KEY
+        sync: false
+      - key: FLYWIRE_RECIPIENT_ID
+        sync: false
+      - key: FLYWIRE_FRONTEND_KEY
+        sync: false
