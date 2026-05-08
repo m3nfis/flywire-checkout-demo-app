@@ -1,5 +1,16 @@
-let frontendKey = null;
-let currentElement = null;
+/**
+ * Demo booking flow for The Caldera House (Santorini).
+ *
+ * The Flywire Checkout V2 SDK integration lives in `flywire-checkout.js`.
+ * This file is just the demo host: it manages the room/guest/payment views
+ * and forwards the chosen payment option to `FlywireCheckout.launch()`.
+ *
+ * If you're here to learn the SDK integration, read `flywire-checkout.js`
+ * first and then `server.js` (`/api/flywire-session` proxy). This file is
+ * illustrative "host app" code, not part of the integration surface.
+ */
+
+let flywireConfig = { clientId: null, code: null };
 
 const bookingState = {
     room: null,
@@ -8,7 +19,8 @@ const bookingState = {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const config = await fetch('/api/config').then(r => r.json());
-    frontendKey = config.frontendKey;
+    flywireConfig.clientId = config.clientId;
+    flywireConfig.code = config.code;
 
     document.querySelectorAll('.btn-select-room').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -29,10 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('guest-form').addEventListener('submit', handleGuestSubmit);
     document.getElementById('back-to-rooms').addEventListener('click', () => showView('rooms'));
-    document.getElementById('back-to-guest').addEventListener('click', () => {
-        resetPaymentSection();
-        showView('guest');
-    });
+    document.getElementById('back-to-guest').addEventListener('click', () => showView('guest'));
 
     document.querySelectorAll('.payment-option').forEach(option => {
         option.addEventListener('click', () => {
@@ -43,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('proceed-btn').addEventListener('click', handleProceed);
     document.getElementById('retry-btn').addEventListener('click', handleRetry);
-    document.getElementById('back-btn').addEventListener('click', handleBack);
 });
 
 // ── Guest Data ──
@@ -130,18 +138,14 @@ function updateBookingView() {
     }
 }
 
-// ── Flywire Payment ──
-
-async function waitForSDK(timeout = 15000) {
-    const start = Date.now();
-    while (!window.FlywireSDK) {
-        if (Date.now() - start > timeout) throw new Error('Flywire SDK did not load');
-        await new Promise(r => setTimeout(r, 100));
-    }
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// Hand-off to the Flywire Checkout V2 integration (see public/flywire-checkout.js).
+// The radio button `value` attributes match `FlywireCheckout.launch({ flow })`
+// directly: 'payment' | 'tokenization' | 'preauth'.
+// ─────────────────────────────────────────────────────────────────────────────
 
 async function handleProceed() {
-    const selected = document.querySelector('input[name="payment-type"]:checked').value;
+    const flow = document.querySelector('input[name="payment-type"]:checked').value;
     const btn = document.getElementById('proceed-btn');
 
     btn.disabled = true;
@@ -149,22 +153,19 @@ async function handleProceed() {
     btn.textContent = '';
 
     try {
-        const res = await fetch('/api/create-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ paymentType: selected })
+        const total = bookingState.room.price * 3;
+
+        await FlywireCheckout.launch({
+            flow,
+            recipient: { clientId: flywireConfig.clientId, code: flywireConfig.code },
+            amount: total.toFixed(2),
+            payer: payerFromGuest(bookingState.guest),
+            onSuccess: () => showView('success'),
+            onCancel: () => { /* overlay closed itself; stay on booking view */ },
+            onError: () => showView('error'),
         });
-
-        const session = await res.json();
-
-        if (!res.ok) {
-            console.error('Session creation failed:', session);
-            throw new Error(session.error || 'Failed to create session');
-        }
-
-        await renderPaymentElement(session.id);
     } catch (err) {
-        console.error(err);
+        console.error('Checkout launch failed:', err);
         showView('error');
     } finally {
         btn.disabled = false;
@@ -173,120 +174,21 @@ async function handleProceed() {
     }
 }
 
-async function renderPaymentElement(sessionId) {
-    await waitForSDK();
-
-    const sdk = await window.FlywireSDK(frontendKey);
-
-    const elements = await sdk.elements({
-        appearance: {
-            fonts: [{
-                url: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap',
-                fontFamily: 'Inter',
-            }],
-            variables: { primaryColor: '#B09B71' },
-        },
-        locale: 'en',
-    });
-
-    currentElement = await elements.create('payment', {
-        sessionId,
-        displayMode: 'container',
-        fields: {
-            first_name: { hidden: true, readOnly: true },
-            last_name: { hidden: true, readOnly: true },
-            address: { hidden: true, readOnly: true },
-            city: { hidden: true, readOnly: true },
-            country: { hidden: true, readOnly: true },
-            state: { hidden: true, readOnly: true },
-            phone: { hidden: true, readOnly: true },
-            email: { hidden: true, readOnly: true },
-            zip: { hidden: true, readOnly: true },
-        },
-    });
-
-    currentElement.onEvent('success', handleSuccess);
-    currentElement.onEvent('error', handleError);
-
-    document.getElementById('payment-options').classList.add('hidden');
-    document.getElementById('proceed-btn').classList.add('hidden');
-    document.getElementById('payment-container').classList.add('active');
-    document.getElementById('back-btn').classList.remove('hidden');
-    document.getElementById('back-to-guest').classList.add('hidden');
-
-    const summary = document.querySelector('.booking-summary');
-    summary.style.maxHeight = summary.scrollHeight + 'px';
-    requestAnimationFrame(() => summary.classList.add('collapsed'));
-
-    currentElement.mount('payment-container');
-
-    autoResizeIframe();
-}
-
-function autoResizeIframe() {
-    const container = document.getElementById('payment-container');
-
-    const observer = new MutationObserver(() => {
-        const iframe = container.querySelector('iframe');
-        if (iframe) {
-            iframe.style.width = '100%';
-            iframe.style.border = 'none';
-            iframe.removeAttribute('height');
-            iframe.removeAttribute('scrolling');
-
-            const wrapper = iframe.parentElement;
-            if (wrapper) {
-                wrapper.style.overflow = 'visible';
-                wrapper.style.maxHeight = 'none';
-                wrapper.style.height = 'auto';
-            }
-
-            observer.disconnect();
-        }
-    });
-
-    observer.observe(container, { childList: true, subtree: true });
-}
-
-async function handleSuccess(result) {
-    if (result.confirm_url) {
-        fetch('/api/confirm-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ confirmUrl: result.confirm_url.url }),
-        }).catch(console.error);
-    }
-
-    showView('success');
-}
-
-function handleError(error) {
-    console.error('Payment error:', error);
-    showView('error');
+function payerFromGuest(guest) {
+    if (!guest) return undefined;
+    return {
+        firstName: guest.first_name,
+        lastName: guest.last_name,
+        email: guest.email,
+        phone: guest.phone,
+        address: guest.address,
+        city: guest.city,
+        country: guest.country
+    };
 }
 
 function handleRetry() {
     showView('booking');
-    resetPaymentSection();
-}
-
-function handleBack() {
-    resetPaymentSection();
-}
-
-function resetPaymentSection() {
-    document.getElementById('payment-options').classList.remove('hidden');
-    document.getElementById('proceed-btn').classList.remove('hidden');
-    document.getElementById('back-btn').classList.add('hidden');
-    document.getElementById('back-to-guest').classList.remove('hidden');
-    document.getElementById('payment-container').classList.remove('active');
-    document.getElementById('payment-container').innerHTML = '';
-
-    const summary = document.querySelector('.booking-summary');
-    summary.classList.remove('collapsed');
-    summary.style.maxHeight = '';
-
-    currentElement = null;
 }
 
 // ── View Management ──

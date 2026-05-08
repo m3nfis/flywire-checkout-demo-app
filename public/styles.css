@@ -404,26 +404,101 @@ header {
 
 /* ═══════ PAYMENT CONTAINER ═══════ */
 
-#payment-container {
-    margin-top: 1.5rem;
-    min-height: 0;
-    transition: min-height 0.3s ease;
+
+/* ═══════ DEV MODE TOGGLE (overlay vs embedded) ═══════ */
+
+.dev-mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    color: var(--stone);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    user-select: none;
 }
 
-#payment-container.active {
-    min-height: 200px;
+.dev-mode-toggle input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
-#payment-container iframe {
-    width: 100% !important;
-    min-height: 620px;
-    border: none !important;
+.dev-mode-track {
+    position: relative;
+    width: 28px;
+    height: 16px;
+    background: var(--border);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.dev-mode-track::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background: var(--white);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px var(--shadow);
+    transition: transform 0.2s ease;
+}
+
+.dev-mode-toggle input:checked ~ .dev-mode-track {
+    background: var(--gold);
+}
+
+.dev-mode-toggle input:checked ~ .dev-mode-track::before {
+    transform: translateX(12px);
+}
+
+.dev-mode-toggle input:focus-visible ~ .dev-mode-track {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+}
+
+.dev-mode-text {
+    flex: 1;
+}
+
+.dev-mode-hint {
+    font-size: 0.6rem;
+    color: var(--stone-light);
+    border: 1px solid var(--border);
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    letter-spacing: 0.1em;
+}
+
+/* ═══════ EMBEDDED CHECKOUT MOUNT POINT ═══════ */
+
+#payment-embed-target {
+    display: none;
+}
+
+#payment-section.embedded-mode > #payment-options,
+#payment-section.embedded-mode > #proceed-btn,
+#payment-section.embedded-mode > .dev-mode-toggle {
+    display: none;
+}
+
+#payment-section.embedded-mode > #payment-embed-target {
+    display: block;
+    min-height: 480px;
+    margin-top: 0.5rem;
+}
+
+#payment-section.embedded-mode > #payment-embed-target iframe {
+    width: 100%;
+    border: 0;
     display: block;
 }
 
-#payment-container > div {
-    overflow: visible !important;
-}
 
 /* ═══════ PANEL FOOTER ═══════ */
 

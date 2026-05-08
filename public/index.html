@@ -8,7 +8,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
-    <script src="https://artifacts.flywire.com/sdk/js/v0/sandbox.main.js" async></script>
+
+    <!--
+      Flywire Checkout V2 SDK loader.
+      Installs `window.cpxCore` once it finishes loading. The integration code
+      that drives `cpxCore.start(initFields)` lives in `/flywire-checkout.js`.
+      Playground: https://checkout.demo.flywire.com/playground/1-payment/1-payment-minimum-fields/
+    -->
+    <script src="https://checkout.demo.flywire.com/gateway/connect.js" async></script>
 </head>
 <body>
 
@@ -422,7 +429,7 @@
 
                         <div id="payment-options">
                             <label class="payment-option selected">
-                                <input type="radio" name="payment-type" value="one_off" checked>
+                                <input type="radio" name="payment-type" value="payment" checked>
                                 <div class="option-content">
                                     <span class="option-title">Pay in Full</span>
                                     <span class="option-desc">One-time payment of $7,350</span>
@@ -438,7 +445,7 @@
                             </label>
 
                             <label class="payment-option">
-                                <input type="radio" name="payment-type" value="pre_auth">
+                                <input type="radio" name="payment-type" value="preauth">
                                 <div class="option-content">
                                     <span class="option-title">Reserve &amp; Hold</span>
                                     <span class="option-desc">Pre-authorize $7,350</span>
@@ -448,11 +455,21 @@
 
                         <button id="proceed-btn" class="btn-primary">Continue to Payment</button>
 
-                        <div id="payment-container"></div>
+                        <!--
+                          Demo-only toggle: switch between the SDK's default full-page
+                          overlay and embedded mode (`config.embedTo` in initFields).
+                          See public/flywire-checkout.js → launch({ embedTo }) and the
+                          "Payment embedded" playground sample.
+                        -->
+                        <label class="dev-mode-toggle" title="Demo: switch between full-page overlay and embedded iframe">
+                            <input type="checkbox" id="display-mode-toggle">
+                            <span class="dev-mode-track" aria-hidden="true"></span>
+                            <span class="dev-mode-text">Embed checkout in page</span>
+                            <span class="dev-mode-hint">demo only</span>
+                        </label>
 
-                        <button id="back-btn" class="btn-back hidden">
-                            &larr; Change payment method
-                        </button>
+                        <!-- Mount point for `config.embedTo` when the toggle is on. -->
+                        <div id="payment-embed-target"></div>
                     </div>
 
                     <p class="panel-footer">
@@ -513,7 +530,7 @@
     <div id="error-view" class="view hidden">
         <div class="error-content">
             <div class="error-x">&#10005;</div>
-            <h1 class="error-title">Sucks to suck.</h1>
+            <h1 class="error-title">Woopsie!</h1>
             <p class="error-subtitle">Denied!</p>
             <div class="error-line"></div>
             <p class="error-message">
@@ -524,6 +541,9 @@
         </div>
     </div>
 
+    <!-- Flywire Checkout V2 integration module — keeps the SDK call surface in one file. -->
+    <script src="/flywire-checkout.js"></script>
+    <!-- Demo host app — wires the booking UI to FlywireCheckout.launch(). -->
     <script src="/app.js"></script>
 </body>
 </html>

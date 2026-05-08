@@ -10,9 +10,11 @@ services:
     startCommand: npm start
     healthCheckPath: /
     envVars:
-      - key: FLYWIRE_API_KEY
+      - key: CPX_CLIENT_ID
         sync: false
-      - key: FLYWIRE_RECIPIENT_ID
+      - key: CPX_CODE
         sync: false
-      - key: FLYWIRE_FRONTEND_KEY
+      - key: CPX_API_KEY
+        sync: false
+      - key: CPX_API_BASE
         sync: false
