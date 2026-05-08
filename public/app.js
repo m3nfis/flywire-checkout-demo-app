@@ -146,11 +146,21 @@ function updateBookingView() {
 
 async function handleProceed() {
     const flow = document.querySelector('input[name="payment-type"]:checked').value;
+    const embedded = document.getElementById('display-mode-toggle').checked;
     const btn = document.getElementById('proceed-btn');
+    const paymentSection = document.getElementById('payment-section');
 
     btn.disabled = true;
     btn.classList.add('loading');
     btn.textContent = '';
+
+    if (embedded) paymentSection.classList.add('embedded-mode');
+
+    const restoreEmbedded = () => {
+        if (!embedded) return;
+        paymentSection.classList.remove('embedded-mode');
+        document.getElementById('payment-embed-target').replaceChildren();
+    };
 
     try {
         const total = bookingState.room.price * 3;
@@ -160,12 +170,14 @@ async function handleProceed() {
             recipient: { clientId: flywireConfig.clientId, code: flywireConfig.code },
             amount: total.toFixed(2),
             payer: payerFromGuest(bookingState.guest),
-            onSuccess: () => showView('success'),
-            onCancel: () => { /* overlay closed itself; stay on booking view */ },
-            onError: () => showView('error'),
+            embedTo: embedded ? '#payment-embed-target' : undefined,
+            onSuccess: () => { restoreEmbedded(); showView('success'); },
+            onCancel: () => { restoreEmbedded(); },
+            onError: () => { restoreEmbedded(); showView('error'); },
         });
     } catch (err) {
         console.error('Checkout launch failed:', err);
+        restoreEmbedded();
         showView('error');
     } finally {
         btn.disabled = false;
