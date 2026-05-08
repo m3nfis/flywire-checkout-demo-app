@@ -1,15 +1,12 @@
-# Render Blueprint: https://render.com/docs/blueprint-spec
-# New → Blueprint → connect this repo and apply, or paste this file when creating a Web Service.
-
 services:
   - type: web
-    name: caldera-hotel-elements-demo
+    name: caldera-hotel-cpayex-v2-demo
     runtime: node
-    plan: free
     buildCommand: npm install
-    startCommand: npm start
-    healthCheckPath: /
+    startCommand: node server.js
     envVars:
+      - key: NODE_ENV
+        value: production
       - key: CPX_CLIENT_ID
         sync: false
       - key: CPX_CODE
