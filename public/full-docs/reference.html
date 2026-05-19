@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Flywire Checkout V2 init fields reference for recipient, transaction, session, payer, config, and response callbacks.">
+  <title>Reference - Flywire Checkout V2</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="page page-reference" data-page="reference">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="Flywire Checkout V2 documentation home">
+        <a class="logo" href="index.html" aria-label="Flywire home"></a>
+        <span class="brand-divider"></span>
+        <span class="brand-title">Checkout V2 Docs</span>
+      </div>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="primary-navigation" aria-expanded="false">Menu</button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+            <li><a href="index.html" data-nav-page="index">Overview</a></li>
+            <li><a href="integration.html" data-nav-page="integration">Integration</a></li>
+            <li><a href="sessions.html" data-nav-page="sessions">Sessions</a></li>
+            <li><a href="capabilities.html" data-nav-page="capabilities">Capabilities</a></li>
+            <li><a href="events.html" data-nav-page="events">Events</a></li>
+            <li><a href="api.html" data-nav-page="api">API</a></li>
+            <li><a href="reference.html" data-nav-page="reference">Reference</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-content">
+        <p class="eyebrow">Reference</p>
+        <h1 id="page-title">Initialization field reference</h1>
+        <p class="lead">Use this concise reference when constructing the <code>cpxInitFields</code> object passed to <code>window.cpxCore.start(cpxInitFields)</code>.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="integration.html">Start integrating</a>
+          <a class="button button-secondary" href="capabilities.html">Review capabilities</a>
+        </div>
+      </div>
+      <aside class="flow-card" aria-labelledby="flow-title">
+            <h2 id="flow-title">Required shape</h2>
+            <ol>
+              <li><span class="step-number">1</span><span><strong>recipient</strong><br>Identifies the client and recipient code.</span></li>
+              <li><span class="step-number">2</span><span><strong>transaction</strong><br>Selects payment, tokenization, or combined behavior.</span></li>
+              <li><span class="step-number">3</span><span><strong>response</strong><br>Handles checkout completion and errors in the browser.</span></li>
+            </ol>
+          </aside>
+    </section>
+
+    <div class="page-grid">
+      <div class="content-stack">
+        <div class="callout">
+          <strong>Runtime entry point:</strong>
+          <p>After loading <code>connect.js</code> from the correct environment (<code>https://checkout.demo.flywire.com/gateway/connect.js</code> for demo, <code>https://checkout.flywire.com/gateway/connect.js</code> for production), start checkout with <code>window.cpxCore.start(cpxInitFields)</code>.</p>
+        </div>
+        <section class="doc-section" id="quick-start">
+            <div class="section-kicker">Minimum browser call</div>
+            <h2>Quick start shape</h2>
+            <p>The browser startup object usually contains recipient, transaction, session, and response fields. Authenticated sessions are recommended for production integrations.</p>
+            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+  recipient: {
+    clientId: "YOUR_CLIENT_ID",
+    code: "YOUR_RECIPIENT_CODE"
+  },
+  transaction: {
+    type: "payment",
+    details: {
+      amount: "123.45"
+    }
+  },
+  session: {
+    id: "SESSION_ID",
+    runId: "SESSION_RUN_ID",
+    runToken: "SESSION_RUN_TOKEN"
+  },
+  response: {
+    onEnd: function (reason, payload) {
+      console.log("Checkout ended:", reason, payload);
+    },
+    onError: function (type, payload) {
+      console.error("Checkout error:", type, payload);
+    }
+  }
+});</code></pre></div>
+          </section>
+        <section class="doc-section" id="recipient">
+            <div class="section-kicker">Required recipient context</div>
+            <h2>recipient</h2>
+            <p><code>recipient</code> tells Flywire Checkout which client and recipient configuration should be used for checkout.</p>
+            <div class="card-grid">
+              <article class="card">
+                <h3>clientId</h3>
+                <p>Required string. Use the client identifier provided for your integration.</p>
+              </article>
+              <article class="card">
+                <h3>code</h3>
+                <p>Required string. Identifies the recipient receiving the payment or tokenization context.</p>
+              </article>
+              <article class="card">
+                <h3>fields</h3>
+                <p>Optional key-value bag for recipient-specific values. Values may be strings or booleans.</p>
+              </article>
+            </div>
+            <div class="code-card" data-language="javascript"><pre><code>recipient: {
+  clientId: "YOUR_CLIENT_ID",
+  code: "YOUR_RECIPIENT_CODE",
+  fields: {
+    accountReference: "YOUR_ACCOUNT_REFERENCE"
+  }
+}</code></pre></div>
+          </section>
+<section class="doc-section" id="transaction">
+            <div class="section-kicker">Payment behavior</div>
+            <h2>transaction</h2>
+            <p><code>transaction</code> selects the checkout mode. Amount values are strings in the frontend init fields.</p>
+            <div class="card-grid">
+              <article class="card">
+                <h3>payment</h3>
+                <p><code>{ type: "payment", details: { amount } }</code>. Use for standard payment collection.</p>
+              </article>
+              <article class="card">
+                <h3>tokenization</h3>
+                <p><code>{ type: "tokenization" }</code>. Optional <code>details</code> can include <code>amount</code> and preauthorization.</p>
+              </article>
+              <article class="card">
+                <h3>optionalTokenization</h3>
+                <p><code>{ type: "optionalTokenization", details: { amount } }</code>. Collect payment and offer token storage where supported.</p>
+              </article>
+              <article class="card">
+                <h3>implicitTokenization</h3>
+                <p><code>{ type: "implicitTokenization", details: { amount } }</code>. Collect payment while creating a reusable method where supported.</p>
+              </article>
+              <article class="card">
+                <h3>authorization</h3>
+                <p>Optional <code>"preauth"</code> value inside <code>details</code> for supported preauthorization flows.</p>
+              </article>
+              <article class="card">
+                <h3>details.amount</h3>
+                <p>Required for payment, optional tokenization, and implicit tokenization. Optional for tokenization when details are present.</p>
+              </article>
+            </div>
+          </section>
+<section class="doc-section" id="session">
+            <div class="section-kicker">Authenticated checkout</div>
+            <h2>session</h2>
+            <p><code>session</code> connects the browser checkout startup to a backend-created or backend-resumed Flywire Checkout session run. Pass only the browser-safe values returned by your backend.</p>
+            <ul class="placeholder-list">
+              <li><code>id</code>: the session identifier, shown in examples as <code>SESSION_ID</code>.</li>
+              <li><code>runId</code>: the session run identifier, shown as <code>SESSION_RUN_ID</code>.</li>
+              <li><code>runToken</code>: the session run token, shown as <code>SESSION_RUN_TOKEN</code>.</li>
+            </ul>
+            <p>See <a href="sessions.html">sessions</a> for lifecycle guidance and <a href="api.html#sessions-api">the API guide</a> for backend examples.</p>
+          </section>
+<section class="doc-section" id="payer">
+            <div class="section-kicker">Optional payer prefill</div>
+            <h2>payer</h2>
+            <p><code>payer.fields</code> can prefill payer details and reduce manual entry. Supported fields include <code>firstName</code>, <code>middleName</code>, <code>lastName</code>, <code>email</code>, <code>phone</code>, <code>address</code>, <code>city</code>, <code>state</code>, <code>zip</code>, and <code>country</code>.</p>
+            <div class="code-card" data-language="javascript"><pre><code>payer: {
+  fields: {
+    firstName: "PAYER_FIRST_NAME",
+    lastName: "PAYER_LAST_NAME",
+    email: "payer@example.com",
+    phone: "PAYER_PHONE",
+    country: "US"
+  }
+}</code></pre></div>
+          </section>
+<section class="doc-section" id="config">
+            <div class="section-kicker">Runtime options</div>
+            <h2>config</h2>
+            <p><code>config</code> controls optional runtime behavior. Only set fields that are part of your approved integration design.</p>
+            <div class="card-grid">
+              <article class="card">
+                <h3>env</h3>
+                <p>Optional environment selector. Use the value provided by Flywire for your integration.</p>
+              </article>
+              <article class="card">
+                <h3>locale</h3>
+                <p>Optional locale. Supported values are <code>en</code>, <code>en-US</code>, <code>es</code>, <code>es-ES</code>, <code>fr</code>, <code>fr-FR</code>, <code>de</code>, <code>de-DE</code>, <code>pt</code>, <code>pt-PT</code>, <code>it</code>, <code>it-IT</code>, <code>ko</code>, <code>ko-KR</code>, <code>zh</code>, <code>zh-CN</code>, <code>ja</code>, <code>ja-JP</code>, <code>id</code>, <code>id-ID</code>, <code>vi</code>, and <code>vi-VN</code>.</p>
+              </article>
+              <article class="card">
+                <h3>embedTo</h3>
+                <p>Optional CSS selector for embedded checkout, for example <code>#cpx-checkout</code>.</p>
+              </article>
+              <article class="card">
+                <h3>offerRules</h3>
+                <p>Optional filters and sort order for checkout offers by method, currency relationship, and supported advanced filters.</p>
+              </article>
+              <article class="card">
+                <h3>Form controls</h3>
+                <p><code>showPayerForm</code>, <code>showRecipientForm</code>, and <code>disabledFields</code> control form display and locked fields.</p>
+              </article>
+              <article class="card">
+                <h3>Additional options</h3>
+                <p><code>l2l3</code>, <code>skipMQC</code>, and <code>disablePayerEmails</code> are optional integration-specific settings.</p>
+              </article>
+            </div>
+          </section>
+<section class="doc-section" id="response">
+            <div class="section-kicker">Frontend callbacks</div>
+            <h2>response</h2>
+            <p><code>response.onEnd</code> is required and runs when checkout ends in the browser. The reason can be <code>completed</code> or <code>canceled</code>. The payload may include session status and a <code>paymentReport</code> with payment status, amount, currency, and watchlist values.</p>
+            <p><code>response.onError</code> is optional and can receive categories such as <code>payment</code>, <code>initFields</code>, <code>sessionRunStart</code>, <code>offers</code>, <code>captcha</code>, <code>smartSession</code>, and <code>sessionRunEnd</code>.</p>
+            <div class="callout"><strong>Do not rely only on callbacks:</strong><p>Use <code>onEnd</code> for browser messaging and navigation. Use backend session lookup and/or events before making final payment, order, or fulfillment decisions.</p></div>
+          </section>
+<section class="doc-section" id="examples">
+            <div class="section-kicker">Copyable patterns</div>
+            <h2>Common examples</h2>
+            <h3>Payment</h3>
+            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+  recipient: {
+    clientId: "YOUR_CLIENT_ID",
+    code: "YOUR_RECIPIENT_CODE"
+  },
+  transaction: {
+    type: "payment",
+    details: {
+      amount: "123.45"
+    }
+  },
+  session: {
+    id: "SESSION_ID",
+    runId: "SESSION_RUN_ID",
+    runToken: "SESSION_RUN_TOKEN"
+  },
+  response: {
+    onEnd: function (reason, payload) {
+      console.log("Checkout ended:", reason, payload);
+    }
+  }
+});</code></pre></div>
+            <h3>Tokenization</h3>
+            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+  recipient: {
+    clientId: "YOUR_CLIENT_ID",
+    code: "YOUR_RECIPIENT_CODE"
+  },
+  transaction: {
+    type: "tokenization"
+  },
+  session: {
+    id: "SESSION_ID",
+    runId: "SESSION_RUN_ID",
+    runToken: "SESSION_RUN_TOKEN"
+  },
+  response: {
+    onEnd: function (reason, payload) {
+      console.log("Tokenization ended:", reason, payload);
+    }
+  }
+});</code></pre></div>
+            <h3>Embedded checkout</h3>
+            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+  recipient: {
+    clientId: "YOUR_CLIENT_ID",
+    code: "YOUR_RECIPIENT_CODE"
+  },
+  transaction: {
+    type: "payment",
+    details: {
+      amount: "123.45"
+    }
+  },
+  session: {
+    id: "SESSION_ID",
+    runId: "SESSION_RUN_ID",
+    runToken: "SESSION_RUN_TOKEN"
+  },
+  config: {
+    embedTo: "#cpx-checkout"
+  },
+  response: {
+    onEnd: function (reason, payload) {
+      console.log("Checkout ended:", reason, payload);
+    }
+  }
+});</code></pre></div>
+            <h3>Offer filtering</h3>
+            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+  recipient: {
+    clientId: "YOUR_CLIENT_ID",
+    code: "YOUR_RECIPIENT_CODE"
+  },
+  transaction: {
+    type: "payment",
+    details: {
+      amount: "123.45"
+    }
+  },
+  session: {
+    id: "SESSION_ID",
+    runId: "SESSION_RUN_ID",
+    runToken: "SESSION_RUN_TOKEN"
+  },
+  config: {
+    offerRules: {
+      filters: {
+        method: ["credit_card", "bank_transfer"],
+        currency: ["payerCurrency", "recipientCurrency"],
+        advanced: ["isNotAmex"]
+      },
+      sort: [
+        {
+          field: "currency",
+          order: ["payerCurrency", "recipientCurrency"]
+        }
+      ]
+    }
+  },
+  response: {
+    onEnd: function (reason, payload) {
+      console.log("Checkout ended:", reason, payload);
+    },
+    onError: function (type, payload) {
+      console.error("Checkout error:", type, payload);
+    }
+  }
+});</code></pre></div>
+            <h3>Callbacks</h3>
+            <div class="code-card" data-language="javascript"><pre><code>function startCheckout(session) {
+  window.cpxCore.start({
+    recipient: {
+      clientId: "YOUR_CLIENT_ID",
+      code: "YOUR_RECIPIENT_CODE"
+    },
+    transaction: {
+      type: "payment",
+      details: {
+        amount: "123.45"
+      }
+    },
+    session: {
+      id: session.id,
+      runId: session.runId,
+      runToken: session.runToken
+    },
+    response: {
+      onEnd: async function (reason, payload) {
+        console.log("Checkout ended:", reason, payload);
+        await fetch(`/your-backend/cpx-sessions/${session.id}/status`);
+      },
+      onError: function (type, payload) {
+        console.error("Checkout error:", type, payload);
+      }
+    }
+  });
+}</code></pre></div>
+          </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; Flywire &mdash; Checkout V2 Documentation</span>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Overview</a>
+        <a href="integration.html">Integration</a>
+        <a href="api.html">API</a>
+        <a href="reference.html">Reference</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="assets/script.js" defer></script>
+</body>
+</html>

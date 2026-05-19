@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Flywire Checkout V2 eventUrl, webhook delivery, and digest verification guidance.">
+  <title>Events - Flywire Checkout V2</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="page page-events" data-page="events">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="Flywire Checkout V2 documentation home">
+        <a class="logo" href="index.html" aria-label="Flywire home"></a>
+        <span class="brand-divider"></span>
+        <span class="brand-title">Checkout V2 Docs</span>
+      </div>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="primary-navigation" aria-expanded="false">Menu</button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+            <li><a href="index.html" data-nav-page="index">Overview</a></li>
+            <li><a href="integration.html" data-nav-page="integration">Integration</a></li>
+            <li><a href="sessions.html" data-nav-page="sessions">Sessions</a></li>
+            <li><a href="capabilities.html" data-nav-page="capabilities">Capabilities</a></li>
+            <li><a href="events.html" data-nav-page="events">Events</a></li>
+            <li><a href="api.html" data-nav-page="api">API</a></li>
+            <li><a href="reference.html" data-nav-page="reference">Reference</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-content">
+        <p class="eyebrow">Events</p>
+        <h1 id="page-title">Handle backend event notifications</h1>
+        <p class="lead">Use backend event notifications when your server should receive selected Flywire Checkout session, payment, session-run, and reconcile updates independently from the browser callback.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="sessions.html">Review sessions</a>
+          <a class="button button-secondary" href="api.html">Open API guide</a>
+        </div>
+      </div>
+      <aside class="flow-card" aria-labelledby="flow-title">
+            <h2 id="flow-title">Integration flow</h2>
+            <ol>
+              <li><span class="step-number">1</span><span><strong>Set eventUrl</strong><br>Include your HTTPS receiver when creating the session.</span></li>
+              <li><span class="step-number">2</span><span><strong>Receive JSON</strong><br>Flywire posts one event object per notification.</span></li>
+              <li><span class="step-number">3</span><span><strong>Verify and process</strong><br>Check the digest when present, respond quickly, and process safely.</span></li>
+            </ol>
+          </aside>
+    </section>
+
+    <div class="page-grid">
+      <div class="content-stack">
+        <div class="callout">
+          <strong>Backend signal:</strong>
+          <p>Events are server-to-server notifications. They complement frontend <code>onEnd</code> callbacks, but they are configured and handled by your backend.</p>
+        </div>
+        <section class="doc-section" id="event-url">
+            <div class="section-kicker">Notification endpoint</div>
+            <h2>When to use eventUrl</h2>
+            <p>Configure <code>eventUrl</code> when your backend needs server notifications for selected client-relevant Flywire Checkout activity. This is useful for reconciliation, operational monitoring, and payment/session follow-up that should not depend on the payer's browser staying open.</p>
+            <p>If <code>config.eventUrl</code> is omitted or empty when the session is created, Flywire Checkout does not send client server event notifications for that session.</p>
+          </section>
+<section class="doc-section" id="enable-events">
+            <div class="section-kicker">Create-session config</div>
+            <h2>Enable events for a session</h2>
+            <p>Include your HTTPS receiver in the create-session request. You can also include metadata that helps your backend associate later events with your own order, cart, or account records.</p>
+            <div class="code-card" data-language="json"><pre><code>{
+  "config": {
+    "eventUrl": "https://example.com/cpx-events"
+  }
+}</code></pre></div>
+            <p>Keep metadata client-safe and avoid storing sensitive data in fields that may appear in logs or operational tooling.</p>
+          </section>
+<section class="doc-section" id="payload-shape">
+            <div class="section-kicker">Webhook payload</div>
+            <h2>Expected webhook shape</h2>
+            <p>Each notification sends a single JSON object to your event receiver. Event payloads use snake_case fields such as <code>event_type</code>, <code>event_resource</code>, <code>event_date</code>, <code>session_id</code>, and <code>session_run_id</code>. Not every internal Flywire Checkout event is forwarded; expect a selected set of client-relevant categories such as payment, session, session-run, and reconcile activity.</p>
+            <div class="code-card" data-language="json"><pre><code>{
+  "event_type": "payment.updated",
+  "event_resource": "payment",
+  "event_date": "2026-05-08T09:00:00Z",
+  "session_id": "SESSION_ID",
+  "session_run_id": "SESSION_RUN_ID",
+  "payment": {
+    "payment_id": "PAYMENT_ID"
+  }
+}</code></pre></div>
+            <p>The exact fields can vary by event type and resource. Store the raw payload for troubleshooting, but build your business handling around the documented snake_case fields your integration needs.</p>
+          </section>
+<section class="doc-section" id="verification">
+            <div class="section-kicker">Digest header</div>
+            <h2>Verify the HMAC digest</h2>
+            <p>When a shared secret is available for the recipient associated with the session, Flywire adds <code>X-Flywire-Digest: &lt;base64-hmac&gt;</code>. The value is computed from the UTF-8 JSON request body and the recipient shared secret using HMAC-SHA256.</p>
+            <p>If no shared secret is configured, the digest header is omitted. When the header is present, verify it before trusting the payload. Load <code>YOUR_SHARED_SECRET</code> from backend secret storage and never send it to browser code.</p>
+            <div class="code-card" data-language="javascript"><pre><code>import crypto from "node:crypto";
+
+function verifyCpxDigest(rawJsonBody, receivedDigest) {
+  if (!receivedDigest) {
+    return false;
+  }
+
+  const expectedDigest = crypto
+    .createHmac("sha256", "YOUR_SHARED_SECRET")
+    .update(rawJsonBody, "utf8")
+    .digest("base64");
+
+  const received = Buffer.from(receivedDigest);
+  const expected = Buffer.from(expectedDigest);
+
+  return received.length === expected.length && crypto.timingSafeEqual(received, expected);
+}</code></pre></div>
+            <p>Use the raw request body exactly as received. Parsing and re-stringifying JSON can change whitespace or key order and produce a different digest.</p>
+          </section>
+<section class="doc-section" id="delivery-handling">
+            <div class="section-kicker">Receiver behavior</div>
+            <h2>Delivery handling advice</h2>
+            <ul class="placeholder-list">
+              <li>Return a <code>2xx</code> response quickly after validating and storing the notification.</li>
+              <li>Process events idempotently. The same event may be delivered more than once, and retry-safe handling should produce the same final result.</li>
+              <li>Log the event type, event resource, session id, session run id, and payment id when present.</li>
+              <li>Move slow business work to an internal queue or background worker instead of making Flywire wait for downstream systems.</li>
+              <li>Use backend session lookup when you need the latest session state before making an irreversible business decision.</li>
+            </ul>
+          </section>
+<section class="doc-section" id="callbacks-vs-events">
+            <div class="section-kicker">Browser signal versus final state</div>
+            <h2>Callbacks vs events</h2>
+            <p><code>onEnd</code> is a frontend callback from the checkout UI. It tells your page that the user flow ended with <code>completed</code> or <code>canceled</code>, which is useful for navigation and messaging.</p>
+            <p><code>eventUrl</code> notifications are backend messages. Use them, together with session lookup, for operational follow-up such as payment status tracking, reconciliation, and fulfillment decisions.</p>
+            <div class="callout"><strong>Practical rule:</strong><p>Let <code>onEnd</code> update the browser experience. Let your backend confirm status through events, API lookups, or both.</p></div>
+          </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; Flywire &mdash; Checkout V2 Documentation</span>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Overview</a>
+        <a href="integration.html">Integration</a>
+        <a href="api.html">API</a>
+        <a href="reference.html">Reference</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="assets/script.js" defer></script>
+</body>
+</html>

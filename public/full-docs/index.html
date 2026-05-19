@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Flywire Checkout V2 overview and recommended checkout integration path.">
+  <title>Flywire Checkout V2 Documentation</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="page page-index" data-page="index">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="Flywire Checkout V2 documentation home">
+        <a class="logo" href="index.html" aria-label="Flywire home"></a>
+        <span class="brand-divider"></span>
+        <span class="brand-title">Checkout V2 Docs</span>
+      </div>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="primary-navigation" aria-expanded="false">Menu</button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+            <li><a href="index.html" data-nav-page="index">Overview</a></li>
+            <li><a href="integration.html" data-nav-page="integration">Integration</a></li>
+            <li><a href="sessions.html" data-nav-page="sessions">Sessions</a></li>
+            <li><a href="capabilities.html" data-nav-page="capabilities">Capabilities</a></li>
+            <li><a href="events.html" data-nav-page="events">Events</a></li>
+            <li><a href="api.html" data-nav-page="api">API</a></li>
+            <li><a href="reference.html" data-nav-page="reference">Reference</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-content">
+        <p class="eyebrow">Client documentation</p>
+        <h1 id="page-title">Add secure checkout with Flywire Checkout V2</h1>
+        <p class="lead">Flywire Checkout V2 helps client teams launch payment and tokenization checkout flows with a hosted runtime, backend-controlled sessions, and clear follow-up through session status and events.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="integration.html">Start integrating</a>
+          <a class="button button-secondary" href="sessions.html">Understand sessions</a>
+        </div>
+      </div>
+      <aside class="flow-card" aria-labelledby="flow-title">
+            <h2 id="flow-title">Recommended path</h2>
+            <ol>
+              <li><span class="step-number">1</span><span><strong>Create a session</strong><br>Your backend creates or resumes a Flywire Checkout V2 session.</span></li>
+              <li><span class="step-number">2</span><span><strong>Start checkout</strong><br>Your web app loads <code>connect.js</code> and calls <code>window.cpxCore.start</code>.</span></li>
+              <li><span class="step-number">3</span><span><strong>Confirm outcome</strong><br>Your backend uses events or session status for final follow-up.</span></li>
+            </ol>
+          </aside>
+    </section>
+
+    <div class="page-grid">
+      <div class="content-stack">
+        <div class="callout">
+          <strong>Production recommendation:</strong>
+          <p>Use authenticated sessions when you can. Anonymous sessions are available for lightweight frontend-only setups, but they provide less control and are not the recommended production path.</p>
+        </div>
+        <section class="doc-section" id="what-you-can-build">
+            <div class="section-kicker">Capability summary</div>
+            <h2>What you can build</h2>
+            <p>Flywire Checkout V2 provides a browser checkout experience for collecting payments, creating tokens for future use, and guiding payers through available payment options. Your team keeps sensitive setup and operational decisions on the backend while the hosted runtime manages the checkout UI.</p>
+            <div class="card-grid">
+              <article class="card">
+                <h3>Payment checkout</h3>
+                <p>Start a payment flow with amount, recipient, payer, and session context supplied by your integration.</p>
+              </article>
+              <article class="card">
+                <h3>Tokenization flows</h3>
+                <p>Use tokenization, optional tokenization, or implicit tokenization depending on how you want to save payment details.</p>
+              </article>
+              <article class="card">
+                <h3>Embedded experiences</h3>
+                <p>Open checkout as the default hosted experience or embed it into a container in your page when your UX requires it.</p>
+              </article>
+            </div>
+          </section>
+<section class="doc-section" id="recommended-path">
+            <div class="section-kicker">4-step integration</div>
+            <h2>Recommended integration path</h2>
+            <ol class="placeholder-list">
+              <li>Create or resume a Flywire Checkout V2 session from your backend through the public API.</li>
+              <li>Return only the safe browser values to your frontend: <code>SESSION_ID</code>, <code>SESSION_RUN_ID</code>, and <code>SESSION_RUN_TOKEN</code>.</li>
+              <li>Load <code>connect.js</code> from the appropriate environment and call <code>window.cpxCore.start(cpxInitFields)</code> with recipient, transaction, response, and session fields.</li>
+              <li>Use <code>onEnd</code> and <code>onError</code> to update the browser experience, then let your backend query session status or process configured events for payment follow-up.</li>
+            </ol>
+            <p>For the full copy-paste sequence, continue with the <a href="integration.html">integration guide</a>. For session lifecycle details, see <a href="sessions.html">sessions</a>.</p>
+          </section>
+<section class="doc-section" id="how-it-works">
+            <div class="section-kicker">System roles</div>
+            <h2>How the pieces work together</h2>
+            <div class="card-grid">
+              <article class="card">
+                <h3>Client browser</h3>
+                <p>Loads the connector from the gateway and starts checkout with the session values supplied by your backend.</p>
+              </article>
+              <article class="card">
+                <h3>Client backend</h3>
+                <p>Creates or resumes sessions, keeps API credentials out of the browser, and performs final status checks.</p>
+              </article>
+              <article class="card">
+                <h3>Flywire Checkout API</h3>
+                <p>Creates session runs, returns browser-safe run values, and exposes session status for follow-up.</p>
+              </article>
+              <article class="card">
+                <h3>Checkout runtime</h3>
+                <p>Presents the payment or tokenization UI and reports browser completion or cancellation through callbacks.</p>
+              </article>
+              <article class="card">
+                <h3>Events</h3>
+                <p>Sends backend notifications to your configured <code>eventUrl</code>, such as <code>https://example.com/cpx-events</code>.</p>
+              </article>
+              <article class="card">
+                <h3>Status checks</h3>
+                <p>Let your backend retrieve the latest session state when the browser returns from checkout or when your operations need confirmation.</p>
+              </article>
+            </div>
+            <p><code>onEnd</code> tells your frontend that the checkout UI completed or was canceled. Treat it as a user-experience signal, not the only source of payment truth. Session status, events, and API responses are the backend sources for follow-up.</p>
+          </section>
+<section class="doc-section" id="next-steps">
+            <div class="section-kicker">Continue reading</div>
+            <h2>Next steps</h2>
+            <div class="card-grid">
+              <article class="card">
+                <h3><a href="integration.html">Integration guide</a></h3>
+                <p>Follow the practical frontend and backend sequence for loading the runtime, starting checkout, handling callbacks, and testing.</p>
+              </article>
+              <article class="card">
+                <h3><a href="sessions.html">Sessions</a></h3>
+                <p>Learn how authenticated sessions, session runs, resume flows, and status lookups fit together.</p>
+              </article>
+              <article class="card">
+                <h3><a href="capabilities.html">Capabilities</a></h3>
+                <p>Review supported checkout capabilities, including payment, tokenization, locale options, embedded checkout, and offer controls.</p>
+              </article>
+              <article class="card">
+                <h3><a href="https://checkout.demo.flywire.com/playground/1-payment/1-payment-minimum-fields/" target="_blank" rel="noopener">Demo Playground &rarr;</a></h3>
+                <p>Test checkout scenarios interactively with valid demo credentials — payments, tokenization, preauth, embedded mode, and more.</p>
+              </article>
+            </div>
+          </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; Flywire &mdash; Checkout V2 Documentation</span>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Overview</a>
+        <a href="integration.html">Integration</a>
+        <a href="api.html">API</a>
+        <a href="reference.html">Reference</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="assets/script.js" defer></script>
+</body>
+</html>

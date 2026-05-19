@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compact Flywire Checkout V2 public API examples for sessions and related payment operations.">
+  <title>API Guide - Flywire Checkout V2</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="page page-api" data-page="api">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="Flywire Checkout V2 documentation home">
+        <a class="logo" href="index.html" aria-label="Flywire home"></a>
+        <span class="brand-divider"></span>
+        <span class="brand-title">Checkout V2 Docs</span>
+      </div>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="primary-navigation" aria-expanded="false">Menu</button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+            <li><a href="index.html" data-nav-page="index">Overview</a></li>
+            <li><a href="integration.html" data-nav-page="integration">Integration</a></li>
+            <li><a href="sessions.html" data-nav-page="sessions">Sessions</a></li>
+            <li><a href="capabilities.html" data-nav-page="capabilities">Capabilities</a></li>
+            <li><a href="events.html" data-nav-page="events">Events</a></li>
+            <li><a href="api.html" data-nav-page="api">API</a></li>
+            <li><a href="reference.html" data-nav-page="reference">Reference</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-content">
+        <p class="eyebrow">API guide</p>
+        <h1 id="page-title">Call the API from your backend</h1>
+        <p class="lead">Use these compact backend examples to create, resume, and inspect sessions, then connect them to related payment operations such as token charge, capture, and preauthorization extension.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="reference.html">View reference</a>
+          <a class="button button-secondary" href="events.html">Understand events</a>
+        </div>
+      </div>
+      <aside class="flow-card" aria-labelledby="flow-title">
+            <h2 id="flow-title">Integration flow</h2>
+            <ol>
+              <li><span class="step-number">1</span><span><strong>Create session</strong><br>Call the Flywire Checkout V2 public API from your backend.</span></li>
+              <li><span class="step-number">2</span><span><strong>Pass run values</strong><br>Send only the session run identifiers and token to the browser.</span></li>
+              <li><span class="step-number">3</span><span><strong>Query or process events</strong><br>Use backend follow-up for operational state.</span></li>
+            </ol>
+          </aside>
+    </section>
+
+    <div class="page-grid">
+      <div class="content-stack">
+        <div class="callout">
+          <strong>Backend only:</strong>
+          <p>Call these endpoints from your server with <code>YOUR_PUBLIC_API_KEY</code>. Do not expose public API credentials in browser code.</p>
+        </div>
+        <section class="doc-section" id="sessions-api">
+            <div class="section-kicker">Create, resume, and inspect sessions</div>
+            <h2>Create a session</h2>
+            <p>Create an authenticated session shortly before checkout starts. The response gives your backend the session id, session run id, and session run token to pass to the frontend.</p>
+            <div class="code-card" data-language="http"><pre><code>POST YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session
+X-Authentication-Key: YOUR_PUBLIC_API_KEY
+Content-Type: application/json
+
+{
+  "config": {}
+}</code></pre></div>
+            <div class="code-card" data-language="json"><pre><code>{
+  "id": "SESSION_ID",
+  "runId": "SESSION_RUN_ID",
+  "runToken": "SESSION_RUN_TOKEN"
+}</code></pre></div>
+            <p>Your production request should also include the required recipient, payer, transaction, and checkout configuration fields for your integration.</p>
+          </section>
+<section class="doc-section" id="event-url-example">
+            <div class="section-kicker">Backend notifications</div>
+            <h2>Create a session with eventUrl</h2>
+            <p>Add <code>config.eventUrl</code> when your backend should receive selected server event notifications for the session. If it is omitted or empty, no client server event notifications are sent.</p>
+            <div class="code-card" data-language="http"><pre><code>POST YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session
+X-Authentication-Key: YOUR_PUBLIC_API_KEY
+Content-Type: application/json
+
+{
+  "config": {
+    "eventUrl": "https://example.com/cpx-events"
+  }
+}</code></pre></div>
+            <p>See the <a href="events.html">events guide</a> for delivery handling and HMAC digest verification.</p>
+          </section>
+<section class="doc-section" id="resume-session">
+            <div class="section-kicker">Continue checkout</div>
+            <h2>Resume a session</h2>
+            <p>Resume an existing session when the payer is returning to an unfinished transaction or when a previous session run expired. Return the fresh run values to your frontend.</p>
+            <div class="code-card" data-language="http"><pre><code>POST YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session/SESSION_ID
+X-Authentication-Key: YOUR_PUBLIC_API_KEY
+Content-Type: application/json
+
+{}</code></pre></div>
+            <div class="code-card" data-language="json"><pre><code>{
+  "id": "SESSION_ID",
+  "runId": "SESSION_RUN_ID",
+  "runToken": "SESSION_RUN_TOKEN"
+}</code></pre></div>
+          </section>
+<section class="doc-section" id="get-session">
+            <div class="section-kicker">Backend follow-up</div>
+            <h2>Get session info</h2>
+            <p>Use session lookup when your backend needs current status after <code>onEnd</code>, after an event notification, or during operational reconciliation.</p>
+            <div class="code-card" data-language="http"><pre><code>GET YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session/SESSION_ID
+X-Authentication-Key: YOUR_PUBLIC_API_KEY</code></pre></div>
+            <p>The response contains the latest session information available to your integration. Keep business decisions on your backend rather than relying only on browser callbacks.</p>
+          </section>
+<section class="doc-section" id="payments-api">
+            <div class="section-kicker">Related Payments API operations</div>
+            <h2>Payment operations</h2>
+            <p>Some integrations also use Payments API operations after checkout, especially when charging a saved token or managing a preauthorized payment. Keep these calls on your backend and use the formal API reference for complete schemas.</p>
+            <div class="card-grid">
+              <article class="card">
+                <h3>Charge token</h3>
+                <p>Charge a previously created payment method token. This abbreviated body shows the main fields; include the recipient and item details required by your integration.</p>
+                <div class="code-card" data-language="http"><pre><code>POST YOUR_PUBLIC_API_BASE_URL/payments/v1/payments/charge
+X-Authentication-Key: YOUR_PUBLIC_API_KEY
+Content-Type: application/json
+
+{
+  "payment_method_token": "TOKEN_ID",
+  "mandate_id": "MANDATE_ID",
+  "payor_id": "PAYOR_ID",
+  "recipient": {},
+  "items": [
+    {
+      "amount": 12345
+    }
+  ],
+  "charge_intent": {
+    "mode": "unscheduled"
+  }
+}</code></pre></div>
+              </article>
+              <article class="card">
+                <h3>Capture payment</h3>
+                <p>Capture funds for a payment that was authorized but not captured immediately. The schema is abbreviated; include the amount you want to capture.</p>
+                <div class="code-card" data-language="http"><pre><code>POST YOUR_PUBLIC_API_BASE_URL/payments/v1/payments/PAYMENT_ID/captures
+X-Authentication-Key: YOUR_PUBLIC_API_KEY
+Content-Type: application/json
+
+{
+  "amount": 1200
+}</code></pre></div>
+              </article>
+              <article class="card">
+                <h3>Extend preauth</h3>
+                <p>Extend the authorization window for an active preauthorized payment. Include an amount when adjusting the authorized amount as part of the operation.</p>
+                <div class="code-card" data-language="http"><pre><code>POST YOUR_PUBLIC_API_BASE_URL/payments/v1/payments/PAYMENT_ID/authorization_adjustments
+X-Authentication-Key: YOUR_PUBLIC_API_KEY
+Content-Type: application/json
+
+{
+  "amount": 15000
+}</code></pre></div>
+              </article>
+            </div>
+          </section>
+<section class="doc-section" id="placeholders">
+            <div class="section-kicker">Client-safe examples</div>
+            <h2>Placeholder conventions</h2>
+            <p>Examples on this page intentionally use placeholders instead of environment-specific values or real identifiers.</p>
+            <ul class="placeholder-list">
+              <li><code>YOUR_PUBLIC_API_BASE_URL</code> for the public API host used by your backend.</li>
+              <li><code>YOUR_PUBLIC_API_KEY</code> for the API credential stored on your backend.</li>
+              <li><code>SESSION_ID</code>, <code>SESSION_RUN_ID</code>, and <code>SESSION_RUN_TOKEN</code> for session values returned by the Flywire Checkout V2 session API.</li>
+              <li><code>PAYMENT_ID</code>, <code>TOKEN_ID</code>, <code>MANDATE_ID</code>, and <code>PAYOR_ID</code> for related payment operations.</li>
+              <li><code>https://example.com/cpx-events</code> for a client-owned event receiver URL.</li>
+            </ul>
+          </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; Flywire &mdash; Checkout V2 Documentation</span>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Overview</a>
+        <a href="integration.html">Integration</a>
+        <a href="api.html">API</a>
+        <a href="reference.html">Reference</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="assets/script.js" defer></script>
+</body>
+</html>

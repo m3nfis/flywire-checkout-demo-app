@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Minimal Flywire Checkout V2 anonymous sessions integration guide."
+    />
+    <title>Flywire Checkout V2 Anonymous Sessions</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header">
+      <div
+        class="brand"
+        aria-label="Flywire Checkout V2 anonymous sessions guide"
+      >
+        <a class="logo" href="#top" aria-label="Flywire home"></a>
+        <span class="brand-divider"></span>
+        <span class="brand-title">Checkout V2 Docs</span>
+      </div>
+      <nav class="top-nav" aria-label="Page sections">
+        <a href="#steps">Steps</a>
+        <a href="#example">Example</a>
+        <a href="#features">Features</a>
+        <a href="#checklist">Checklist</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow">Minimal client guide</p>
+          <h1>Integrate Flywire Checkout V2 with anonymous sessions</h1>
+          <p class="lead">
+            Anonymous sessions let a frontend-only page start Flywire Checkout in
+            order to complete a payment.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#steps">Start the steps</a>
+            <a class="button button-secondary" href="#example"
+              >Copy the example</a
+            >
+          </div>
+        </div>
+        <aside class="summary-card" aria-labelledby="summary-title">
+          <h2 id="summary-title">The short version</h2>
+          <ol>
+            <li>Load <code>connect.js</code>.</li>
+            <li>Call <code>window.cpxCore.start</code>.</li>
+            <li>Handle <code>onEnd</code> and <code>onError</code>.</li>
+          </ol>
+        </aside>
+      </section>
+
+      <section class="notice" aria-labelledby="fit-title">
+        <h2 id="fit-title">Use anonymous sessions for simple payments</h2>
+        <p>
+          Use anonymous sessions when you want to add a simple payment checkout
+          to your page with a lightweight frontend-only integration.
+        </p>
+        <p>
+          If you need more capabilities, such as an event system, stronger
+          security, status follow-up, or a more tailored payment flow, contact
+          Flywire. We will guide you to the right session setup.
+        </p>
+      </section>
+
+      <section class="doc-section" id="steps">
+        <p class="section-kicker">Step by step</p>
+        <h2>How to integrate</h2>
+
+        <article class="step-card">
+          <span class="step-number">1</span>
+          <div>
+            <h3>Get your integration values</h3>
+            <p>Flywire provides two environments. Use the correct gateway origin when loading the checkout runtime:</p>
+            <ul>
+              <li>
+                <strong>Demo</strong> &mdash; <code>https://checkout.demo.flywire.com</code><br>
+                Script: <code>https://checkout.demo.flywire.com/gateway/connect.js</code>
+              </li>
+              <li>
+                <strong>Production</strong> &mdash; <code>https://checkout.flywire.com</code><br>
+                Script: <code>https://checkout.flywire.com/gateway/connect.js</code>
+              </li>
+            </ul>
+            <p>You also need:</p>
+            <ul>
+              <li><code>YOUR_CLIENT_ID</code> &mdash; your client identifier (provided by Flywire).</li>
+              <li><code>YOUR_RECIPIENT_CODE</code> &mdash; the recipient configuration checkout should use.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="step-card">
+          <span class="step-number">2</span>
+          <div>
+            <h3>Load the Flywire Checkout browser runtime</h3>
+            <p>Add the connector script on the page where checkout starts. Use the URL matching your environment:</p>
+            <div class="code-card" data-label="HTML — Demo">
+              <pre><code>&lt;script src="https://checkout.demo.flywire.com/gateway/connect.js" defer&gt;&lt;/script&gt;</code></pre>
+            </div>
+            <div class="code-card" data-label="HTML — Production">
+              <pre><code>&lt;script src="https://checkout.flywire.com/gateway/connect.js" defer&gt;&lt;/script&gt;</code></pre>
+            </div>
+          </div>
+        </article>
+
+        <article class="step-card">
+          <span class="step-number">3</span>
+          <div>
+            <h3>Start checkout without a session object</h3>
+            <div class="code-card" data-label="JavaScript">
+              <pre><code>window.cpxCore.start({
+  recipient: {
+    clientId: "YOUR_CLIENT_ID",
+    code: "YOUR_RECIPIENT_CODE"
+  },
+  transaction: {
+    type: "payment",
+    details: {
+      amount: "123.45"
+    }
+  },
+  response: {
+    onEnd: function (reason, payload) {
+      console.log("Checkout ended:", reason, payload);
+    },
+    onError: function (type, payload) {
+      console.error("Checkout error:", type, payload);
+    }
+  }
+});</code></pre>
+            </div>
+          </div>
+        </article>
+
+        <article class="step-card">
+          <span class="step-number">4</span>
+          <div>
+            <h3>Handle the result in the browser</h3>
+            <p>
+              <code>onEnd</code> is called when checkout completes or is
+              canceled. For anonymous sessions, a completed checkout can include
+              a high-level session status and payment report.
+            </p>
+            <div class="code-card" data-label="Example payload">
+              <pre><code>{
+  status: "COMPLETED",
+  paymentReport: {
+    status: "FULLY_PAID",
+    amount: "123.45",
+    currency: "USD",
+    paymentWatchlist: []
+  }
+}</code></pre>
+            </div>
+          </div>
+        </article>
+
+        <article class="step-card">
+          <span class="step-number">5</span>
+          <div>
+            <h3>Test the main paths</h3>
+            <p>
+              Before going live, test a completed payment, a canceled checkout,
+              and an error case. Show clear messages for each one.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <section class="doc-section" id="example">
+        <p class="section-kicker">Copy-paste starter</p>
+        <h2>Minimal anonymous checkout page</h2>
+        <p>
+          This example starts a payment checkout from a button. Replace the
+          placeholder values before testing.
+        </p>
+        <div class="code-card" data-label="HTML">
+          <pre><code>&lt;button id="start-cpx-checkout" type="button"&gt;Pay now&lt;/button&gt;
+&lt;p id="cpx-result" role="status"&gt;&lt;/p&gt;
+
+&lt;!-- Demo: https://checkout.demo.flywire.com/gateway/connect.js --&gt;
+&lt;!-- Prod: https://checkout.flywire.com/gateway/connect.js      --&gt;
+&lt;script src="https://checkout.demo.flywire.com/gateway/connect.js" defer&gt;&lt;/script&gt;
+&lt;script&gt;
+  function showResult(message) {
+    document.getElementById("cpx-result").textContent = message;
+  }
+
+  function startCheckout() {
+    if (!window.cpxCore) {
+      showResult("Checkout is still loading. Please try again.");
+      return;
+    }
+
+    window.cpxCore.start({
+      recipient: {
+        clientId: "YOUR_CLIENT_ID",
+        code: "YOUR_RECIPIENT_CODE"
+      },
+      transaction: {
+        type: "payment",
+        details: {
+          amount: "123.45"
+        }
+      },
+      response: {
+        onEnd: function (reason, payload) {
+          if (reason === "completed") {
+            showResult("Checkout completed.");
+            console.log("Payment report:", payload);
+          } else {
+            showResult("Checkout was canceled.");
+          }
+        },
+        onError: function (type, payload) {
+          showResult("Checkout could not start or finish.");
+          console.error("Checkout error:", type, payload);
+        }
+      }
+    });
+  }
+
+  document
+    .getElementById("start-cpx-checkout")
+    .addEventListener("click", startCheckout);
+&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="doc-section compact" id="features">
+        <p class="section-kicker">Need more?</p>
+        <h2>For advanced payment needs</h2>
+        <p>
+          This guide covers a simple anonymous payment checkout. If your
+          integration needs additional features, contact Flywire and we will
+          help you choose the right setup.
+        </p>
+        <div class="feature-grid">
+          <article>
+            <h3><a href="/full-docs/capabilities.html#payment-checkout">Payment checkout</a></h3>
+            <p>Collect a payment for a known amount.</p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/capabilities.html#tokenization">Tokenization</a></h3>
+            <p>Store a payer payment method for later use.</p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/capabilities.html#optional-tokenization">Optional tokenization</a></h3>
+            <p>Collect payment and optionally save the method.</p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/capabilities.html#implicit-tokenization">Implicit tokenization</a></h3>
+            <p>Create a reusable method as part of checkout.</p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/capabilities.html#embedded-checkout">Embedded checkout</a></h3>
+            <p>
+              Render checkout inside a page container with
+              <code>config.embedTo</code>.
+            </p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/capabilities.html#localization-forms">Localization</a></h3>
+            <p>Request a supported checkout language or locale.</p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/capabilities.html#offer-rules">Offer controls</a></h3>
+            <p>Influence available payment methods and ordering.</p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/capabilities.html#preauthorization">Preauthorization</a></h3>
+            <p>Authorize funds before capture when the flow supports it.</p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/events.html">Events and status visibility</a></h3>
+            <p>
+              Contact Flywire if you need event notifications or stronger
+              payment follow-up.
+            </p>
+          </article>
+          <article>
+            <h3><a href="/full-docs/sessions.html#authenticated">Stronger security</a></h3>
+            <p>
+              Contact Flywire if your checkout requires stronger security or
+              operational controls.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="doc-section" id="playground">
+        <p class="section-kicker">Try it live</p>
+        <h2>Demo Playground</h2>
+        <p>
+          Use the interactive playground to test checkout scenarios with valid
+          demo credentials. It includes examples for payments, tokenization,
+          preauthorization, embedded mode, and authenticated sessions.
+        </p>
+        <p>
+          <a href="https://checkout.demo.flywire.com/playground/1-payment/1-payment-minimum-fields/" target="_blank" rel="noopener" class="btn btn-primary">
+            Open Playground &rarr;
+          </a>
+        </p>
+      </section>
+
+      <section class="doc-section" id="checklist">
+        <p class="section-kicker">Before sharing with users</p>
+        <h2>Final checklist</h2>
+        <ul class="checklist">
+          <li>
+            Use the Flywire-provided gateway origin, client id, and recipient
+            code.
+          </li>
+          <li>
+            Load <code>connect.js</code> from the correct environment
+            (<code>checkout.demo.flywire.com</code> or <code>checkout.flywire.com</code>) before starting checkout.
+          </li>
+          <li>
+            Handle <code>completed</code> and <code>canceled</code> in
+            <code>onEnd</code>.
+          </li>
+          <li>
+            Handle <code>onError</code> and show a recoverable message to the
+            payer.
+          </li>
+          <li>
+            Contact Flywire if you need events, stronger security, status
+            follow-up, or a more tailored payment flow.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>&copy; Flywire &mdash; Checkout V2 Anonymous Sessions Guide</span>
+    </footer>
+  </body>
+</html>

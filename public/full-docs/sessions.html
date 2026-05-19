@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Flywire Checkout V2 session and session run guidance for client integrations.">
+  <title>Sessions - Flywire Checkout V2</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="page page-sessions" data-page="sessions">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="Flywire Checkout V2 documentation home">
+        <a class="logo" href="index.html" aria-label="Flywire home"></a>
+        <span class="brand-divider"></span>
+        <span class="brand-title">Checkout V2 Docs</span>
+      </div>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="primary-navigation" aria-expanded="false">Menu</button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+            <li><a href="index.html" data-nav-page="index">Overview</a></li>
+            <li><a href="integration.html" data-nav-page="integration">Integration</a></li>
+            <li><a href="sessions.html" data-nav-page="sessions">Sessions</a></li>
+            <li><a href="capabilities.html" data-nav-page="capabilities">Capabilities</a></li>
+            <li><a href="events.html" data-nav-page="events">Events</a></li>
+            <li><a href="api.html" data-nav-page="api">API</a></li>
+            <li><a href="reference.html" data-nav-page="reference">Reference</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-content">
+        <p class="eyebrow">Sessions</p>
+        <h1 id="page-title">Use sessions to coordinate checkout</h1>
+        <p class="lead">Sessions connect your backend, the Flywire Checkout UI, and follow-up status. Use authenticated sessions for production integrations and session runs for each checkout attempt.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="api.html">Review API guide</a>
+          <a class="button button-secondary" href="events.html">See events</a>
+        </div>
+      </div>
+      <aside class="flow-card" aria-labelledby="flow-title">
+            <h2 id="flow-title">Integration flow</h2>
+            <ol>
+              <li><span class="step-number">1</span><span><strong>Create or resume</strong><br>Your backend creates a session or resumes one that can continue.</span></li>
+              <li><span class="step-number">2</span><span><strong>Start a run</strong><br>The browser starts checkout with the returned session run values.</span></li>
+              <li><span class="step-number">3</span><span><strong>Follow up</strong><br>Your backend checks session state or receives configured events.</span></li>
+            </ol>
+          </aside>
+    </section>
+
+    <div class="page-grid">
+      <div class="content-stack">
+        <div class="callout">
+          <strong>Recommended path:</strong>
+          <p>Use authenticated sessions whenever your integration has a backend. They keep API credentials server-side, support status lookup and events, and make it easier to resume or continue a payer's transaction.</p>
+        </div>
+        <section class="doc-section" id="concepts">
+            <div class="section-kicker">Session model</div>
+            <h2>Sessions and session runs</h2>
+            <p>A session is the backend record that represents the checkout transaction your integration wants Flywire Checkout to coordinate. It can be queried and monitored until it is archived.</p>
+            <p>A session run is one pass through the Flywire Checkout UI. A session can contain one or more runs, which lets a payer return to checkout without creating a duplicate payment attempt for the same business transaction.</p>
+            <div class="card-grid">
+              <article class="card">
+                <h3>Session</h3>
+                <p>Created or resumed by your backend through the public API. It groups the transaction configuration, follow-up state, and related runs.</p>
+              </article>
+              <article class="card">
+                <h3>Session run</h3>
+                <p>Returned with a run identifier and token. Your frontend passes these values to the checkout runtime to start or continue the UI.</p>
+              </article>
+              <article class="card">
+                <h3>Events</h3>
+                <p>Describe selected payer actions and system behavior. Configure an <code>eventUrl</code> when your backend should receive notifications.</p>
+              </article>
+            </div>
+          </section>
+<section class="doc-section" id="authenticated">
+            <div class="section-kicker">Recommended lifecycle</div>
+            <h2>Authenticated sessions</h2>
+            <p>Authenticated sessions are the production default for most client integrations. Your backend uses Public API credentials to create or resume the session, then returns only browser-safe values to your frontend.</p>
+            <ol class="placeholder-list">
+              <li>Your backend calls <code>POST YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session</code> to create a session, or <code>POST YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session/SESSION_ID</code> to resume one.</li>
+              <li>The API response includes a <code>SESSION_ID</code>, <code>SESSION_RUN_ID</code>, and <code>SESSION_RUN_TOKEN</code>.</li>
+              <li>Your frontend loads <code>connect.js</code> and starts checkout with those session run values.</li>
+              <li>Flywire Checkout validates the session and run before showing the checkout UI.</li>
+              <li>The frontend <code>onEnd</code> callback reports <code>completed</code> or <code>canceled</code> for the browser experience.</li>
+              <li>Your backend follows up by querying session state and/or handling configured event notifications.</li>
+            </ol>
+            <p>This approach gives you stronger security, backend observability, support for one session with multiple runs, fewer duplicate payments, and a path to resume or continue a transaction.</p>
+          </section>
+<section class="doc-section" id="anonymous">
+            <div class="section-kicker">Lightweight fallback</div>
+            <h2>Anonymous sessions</h2>
+            <p>Anonymous sessions are intended for clients without a backend that need a lightweight, one-off checkout operation. They are simpler to start, but they provide less control and are not the recommended path for production integrations that can use a backend.</p>
+            <div class="card-grid">
+              <article class="card">
+                <h3>Best fit</h3>
+                <p>Frontend-only use cases where the operation is simple and the client accepts a reduced follow-up model.</p>
+              </article>
+              <article class="card">
+                <h3>Trade-offs</h3>
+                <p>Less secure than authenticated sessions, not all flows are supported, and the response comes directly from the UI.</p>
+              </article>
+              <article class="card">
+                <h3>Run behavior</h3>
+                <p>Anonymous sessions always have exactly one session run and cannot be reused after completion.</p>
+              </article>
+            </div>
+          </section>
+<section class="doc-section" id="expiry-reuse">
+            <div class="section-kicker">Recovery guidance</div>
+            <h2>Expiry and reuse</h2>
+            <p>Session runs are time-limited. Create or resume a run close to the moment the payer is ready to start checkout, and be prepared to recover if the run expires before checkout finishes.</p>
+            <ul class="placeholder-list">
+              <li>If the payer is returning to the same unfinished transaction, resume the existing session from your backend and send the fresh run values to the browser.</li>
+              <li>If the transaction should start over, create a new session and discard the expired browser values.</li>
+              <li>Do not keep retrying old <code>SESSION_RUN_TOKEN</code> values in the browser. Ask your backend for current session run details.</li>
+            </ul>
+          </section>
+<section class="doc-section" id="status-follow-up">
+            <div class="section-kicker">Backend confirmation</div>
+            <h2>Status follow-up</h2>
+            <p><code>onEnd</code> is a frontend callback that helps your page react when the checkout UI closes. It should not be the only signal used for payment, order, or fulfillment decisions.</p>
+            <p>For operational follow-up, use backend session lookup with <code>GET YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session/SESSION_ID</code> and/or server event notifications configured with <code>config.eventUrl</code>. This keeps status decisions on your backend and makes your integration more resilient to browser closes, network changes, and delayed payment updates.</p>
+          </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; Flywire &mdash; Checkout V2 Documentation</span>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Overview</a>
+        <a href="integration.html">Integration</a>
+        <a href="api.html">API</a>
+        <a href="reference.html">Reference</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="assets/script.js" defer></script>
+</body>
+</html>

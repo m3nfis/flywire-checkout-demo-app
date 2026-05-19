@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Flywire Checkout V2 checkout capabilities, transaction modes, embedded checkout, offer rules, localization, forms, and status visibility.">
+  <title>Capabilities - Flywire Checkout V2</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="page page-capabilities" data-page="capabilities">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="Flywire Checkout V2 documentation home">
+        <a class="logo" href="index.html" aria-label="Flywire home"></a>
+        <span class="brand-divider"></span>
+        <span class="brand-title">Checkout V2 Docs</span>
+      </div>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="primary-navigation" aria-expanded="false">Menu</button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+            <li><a href="index.html" data-nav-page="index">Overview</a></li>
+            <li><a href="integration.html" data-nav-page="integration">Integration</a></li>
+            <li><a href="sessions.html" data-nav-page="sessions">Sessions</a></li>
+            <li><a href="capabilities.html" data-nav-page="capabilities">Capabilities</a></li>
+            <li><a href="events.html" data-nav-page="events">Events</a></li>
+            <li><a href="api.html" data-nav-page="api">API</a></li>
+            <li><a href="reference.html" data-nav-page="reference">Reference</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-content">
+        <p class="eyebrow">Capabilities</p>
+        <h1 id="page-title">Checkout capabilities at a glance</h1>
+        <p class="lead">Flywire Checkout V2 supports payment collection, payment method tokenization, embedded checkout, localization, offer controls, and backend-visible session follow-up.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="integration.html">Start integrating</a>
+          <a class="button button-secondary" href="reference.html">Open reference</a>
+        </div>
+      </div>
+      <aside class="flow-card" aria-labelledby="flow-title">
+            <h2 id="flow-title">Capability map</h2>
+            <ol>
+              <li><span class="step-number">1</span><span><strong>Choose transaction mode</strong><br>Collect a payment, store a method, or combine both.</span></li>
+              <li><span class="step-number">2</span><span><strong>Shape checkout</strong><br>Embed the UI, set locale, configure forms, and control offers.</span></li>
+              <li><span class="step-number">3</span><span><strong>Confirm from backend</strong><br>Use sessions, events, and API lookups for payment truth.</span></li>
+            </ol>
+          </aside>
+    </section>
+
+    <div class="page-grid">
+      <div class="content-stack">
+        <div class="callout">
+          <strong>Use capabilities with sessions:</strong>
+          <p>Most production integrations should create or resume a session on the backend, pass the session run values to the browser, and start checkout with <code>window.cpxCore.start(cpxInitFields)</code>. See the <a href="integration.html">integration guide</a> and <a href="reference.html">init fields reference</a> for complete startup examples.</p>
+        </div>
+        <section class="doc-section" id="transaction-modes">
+            <div class="section-kicker">Core checkout modes</div>
+            <h2>Transaction modes</h2>
+            <p>Choose the transaction mode that matches the business outcome you want checkout to produce. Each mode uses the same startup method and session pattern, but the <code>transaction.type</code> and <code>transaction.details</code> fields differ.</p>
+            <div class="card-grid">
+              <article class="card" id="payment-checkout">
+                <h3>Payment</h3>
+                <p>Collect a payment for a known amount. Use <code>transaction.type: "payment"</code> with <code>details.amount</code>.</p>
+              </article>
+              <article class="card" id="tokenization">
+                <h3>Tokenization</h3>
+                <p>Store a payer payment method for later use. Use <code>transaction.type: "tokenization"</code>; amount is optional when details are included.</p>
+              </article>
+              <article class="card" id="optional-tokenization">
+                <h3>Optional tokenization</h3>
+                <p>Collect a payment and allow the payer to save the method when supported. Use <code>transaction.type: "optionalTokenization"</code> with an amount.</p>
+              </article>
+              <article class="card" id="implicit-tokenization">
+                <h3>Implicit tokenization</h3>
+                <p>Collect a payment while creating a reusable method as part of the checkout flow where supported. Use <code>transaction.type: "implicitTokenization"</code> with an amount.</p>
+              </article>
+              <article class="card" id="preauthorization-card">
+                <h3>Preauthorization</h3>
+                <p>Authorize funds without immediate capture by adding <code>authorization: "preauth"</code> in transaction details where the flow supports it.</p>
+              </article>
+              <article class="card">
+                <h3>Session-backed checkout</h3>
+                <p>Coordinate the frontend flow with backend status, event delivery, and recovery by passing <code>session.id</code>, <code>session.runId</code>, and <code>session.runToken</code>.</p>
+              </article>
+            </div>
+            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+  recipient: {
+    clientId: "YOUR_CLIENT_ID",
+    code: "YOUR_RECIPIENT_CODE"
+  },
+  transaction: {
+    type: "optionalTokenization",
+    details: {
+      amount: "123.45"
+    }
+  },
+  session: {
+    id: "SESSION_ID",
+    runId: "SESSION_RUN_ID",
+    runToken: "SESSION_RUN_TOKEN"
+  },
+  response: {
+    onEnd: function (reason, payload) {
+      console.log("Checkout ended:", reason, payload);
+    },
+    onError: function (type, payload) {
+      console.error("Checkout error:", type, payload);
+    }
+  }
+});</code></pre></div>
+          </section>
+<section class="doc-section" id="embedded-checkout">
+            <div class="section-kicker">Presentation mode</div>
+            <h2>Embedded checkout</h2>
+            <p>Use embedded checkout when the Flywire Checkout UI should appear inside a page area you control instead of opening in the standard runtime experience. Provide <code>config.embedTo</code> with a CSS selector for an existing container.</p>
+            <div class="code-card" data-language="html"><pre><code>&lt;div id="cpx-checkout"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  window.cpxCore.start({
+    recipient: {
+      clientId: "YOUR_CLIENT_ID",
+      code: "YOUR_RECIPIENT_CODE"
+    },
+    transaction: {
+      type: "payment",
+      details: {
+        amount: "123.45"
+      }
+    },
+    session: {
+      id: "SESSION_ID",
+      runId: "SESSION_RUN_ID",
+      runToken: "SESSION_RUN_TOKEN"
+    },
+    config: {
+      embedTo: "#cpx-checkout"
+    },
+    response: {
+      onEnd: function (reason, payload) {
+        console.log("Checkout ended:", reason, payload);
+      }
+    }
+  });
+&lt;/script&gt;</code></pre></div>
+            <p>For a step-by-step embedded example, see <a href="integration.html#embedded-checkout">embedded checkout in the integration guide</a>.</p>
+          </section>
+<section class="doc-section" id="preauthorization">
+            <div class="section-kicker">Authorize before capture</div>
+            <h2>Preauthorization</h2>
+            <p>Add <code>authorization: "preauth"</code> in <code>transaction.details</code> when your integration needs to authorize funds before capture and the selected payment method supports that behavior.</p>
+            <div class="code-card" data-language="javascript"><pre><code>transaction: {
+  type: "payment",
+  details: {
+    amount: "123.45",
+    authorization: "preauth"
+  }
+}</code></pre></div>
+            <p>Capture and authorization-management calls are backend operations. See the <a href="api.html#payments-api">API guide</a> for related payment operation examples.</p>
+          </section>
+<section class="doc-section" id="offer-rules">
+            <div class="section-kicker">Offer filtering and sorting</div>
+            <h2>Offer rules</h2>
+            <p>Offer rules let your integration influence which payment offers are displayed and how they are ordered. Common filters include payment method, currency relationship, and advanced filters such as <code>isNotAmex</code>.</p>
+            <div class="code-card" data-language="javascript"><pre><code>config: {
+  offerRules: {
+    filters: {
+      method: ["credit_card", "bank_transfer"],
+      currency: ["payerCurrency", "recipientCurrency"],
+      advanced: ["isNotAmex"]
+    },
+    sort: [
+      {
+        field: "method",
+        order: ["bank_transfer", "credit_card"]
+      }
+    ]
+  }
+}</code></pre></div>
+            <p>Use offer rules to align checkout choices with your integration policy while still allowing Flywire Checkout to present eligible payment options for the payer and transaction context.</p>
+          </section>
+<section class="doc-section" id="localization-forms">
+            <div class="section-kicker">Locale and form behavior</div>
+            <h2>Localization and configurable forms</h2>
+            <p>Set <code>config.locale</code> to request a supported checkout locale, such as <code>en</code>, <code>en-US</code>, <code>es</code>, <code>fr-FR</code>, <code>de-DE</code>, <code>pt-PT</code>, <code>it-IT</code>, <code>ko-KR</code>, <code>zh-CN</code>, <code>ja-JP</code>, <code>id-ID</code>, or <code>vi-VN</code>.</p>
+            <p>Use <code>showPayerForm</code>, <code>showRecipientForm</code>, and <code>disabledFields</code> to control which payer or recipient fields Flywire Checkout should collect or lock in the UI. You can prefill payer fields such as name, email, phone, and address through <code>payer.fields</code>.</p>
+            <div class="code-card" data-language="javascript"><pre><code>payer: {
+  fields: {
+    firstName: "PAYER_FIRST_NAME",
+    lastName: "PAYER_LAST_NAME",
+    email: "payer@example.com",
+    country: "US"
+  }
+},
+config: {
+  locale: "en-US",
+  showPayerForm: "auto",
+  showRecipientForm: false,
+  disabledFields: ["payer.email"]
+}</code></pre></div>
+          </section>
+<section class="doc-section" id="fee-rate-visibility">
+            <div class="section-kicker">Client-visible pricing context</div>
+            <h2>Fee and rate visibility</h2>
+            <p>Depending on the selected offer and transaction context, checkout may show payer-facing fee and rate information such as Flywire conversion fee, service fee, surcharge, exchange rate, and markup rate.</p>
+            <p>Keep your own UI language high-level unless Flywire provides integration-specific pricing guidance. The checkout offer presentation is the best source for payer-facing amounts and rate details at the moment of payment.</p>
+          </section>
+<section class="doc-section" id="events-session-visibility">
+            <div class="section-kicker">Operational status</div>
+            <h2>Events and session visibility</h2>
+            <p>The frontend <code>response.onEnd</code> callback tells your page that the checkout UI ended with <code>completed</code> or <code>canceled</code>. It should not be the only source of payment truth for fulfillment, order state, or reconciliation.</p>
+            <p>For operational decisions, use backend session lookup and/or server event notifications. See <a href="sessions.html#status-follow-up">status follow-up</a>, the <a href="events.html#callbacks-vs-events">callbacks versus events guidance</a>, and the <a href="api.html#get-session">get session info example</a>.</p>
+          </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; Flywire &mdash; Checkout V2 Documentation</span>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Overview</a>
+        <a href="integration.html">Integration</a>
+        <a href="api.html">API</a>
+        <a href="reference.html">Reference</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="assets/script.js" defer></script>
+</body>
+</html>
