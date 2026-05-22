@@ -87,7 +87,7 @@
               <li>The API response includes a <code>SESSION_ID</code>, <code>SESSION_RUN_ID</code>, and <code>SESSION_RUN_TOKEN</code>.</li>
               <li>Your frontend loads <code>connect.js</code> and starts checkout with those session run values.</li>
               <li>Flywire Checkout validates the session and run before showing the checkout UI.</li>
-              <li>The frontend <code>onEnd</code> callback reports <code>completed</code> or <code>canceled</code> for the browser experience.</li>
+              <li>The frontend <code>on_end</code> callback reports <code>completed</code> or <code>canceled</code> for the browser experience.</li>
               <li>Your backend follows up by querying session state and/or handling configured event notifications.</li>
             </ol>
             <p>This approach gives you stronger security, backend observability, support for one session with multiple runs, fewer duplicate payments, and a path to resume or continue a transaction.</p>
@@ -124,7 +124,7 @@
 <section class="doc-section" id="status-follow-up">
             <div class="section-kicker">Backend confirmation</div>
             <h2>Status follow-up</h2>
-            <p><code>onEnd</code> is a frontend callback that helps your page react when the checkout UI closes. It should not be the only signal used for payment, order, or fulfillment decisions.</p>
+            <p><code>on_end</code> is a frontend callback that helps your page react when the checkout UI closes. It should not be the only signal used for payment, order, or fulfillment decisions.</p>
             <p>For operational follow-up, use backend session lookup with <code>GET YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session/SESSION_ID</code> and/or server event notifications configured with <code>config.eventUrl</code>. This keeps status decisions on your backend and makes your integration more resilient to browser closes, network changes, and delayed payment updates.</p>
           </section>
       </div>

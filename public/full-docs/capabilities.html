@@ -56,7 +56,7 @@
       <div class="content-stack">
         <div class="callout">
           <strong>Use capabilities with sessions:</strong>
-          <p>Most production integrations should create or resume a session on the backend, pass the session run values to the browser, and start checkout with <code>window.cpxCore.start(cpxInitFields)</code>. See the <a href="integration.html">integration guide</a> and <a href="reference.html">init fields reference</a> for complete startup examples.</p>
+          <p>Most production integrations should create or resume a session on the backend, pass the session run values to the browser, and start checkout with <code>window.cpx_core.start(cpxInitFields)</code>. See the <a href="integration.html">integration guide</a> and <a href="reference.html">init fields reference</a> for complete startup examples.</p>
         </div>
         <section class="doc-section" id="transaction-modes">
             <div class="section-kicker">Core checkout modes</div>
@@ -85,12 +85,12 @@
               </article>
               <article class="card">
                 <h3>Session-backed checkout</h3>
-                <p>Coordinate the frontend flow with backend status, event delivery, and recovery by passing <code>session.id</code>, <code>session.runId</code>, and <code>session.runToken</code>.</p>
+                <p>Coordinate the frontend flow with backend status, event delivery, and recovery by passing <code>session.id</code>, <code>session.run_id</code>, and <code>session.run_token</code>.</p>
               </article>
             </div>
-            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+            <div class="code-card" data-language="javascript"><pre><code>window.cpx_core.start({
   recipient: {
-    clientId: "YOUR_CLIENT_ID",
+    client_id: "YOUR_CLIENT_ID",
     code: "YOUR_RECIPIENT_CODE"
   },
   transaction: {
@@ -101,14 +101,14 @@
   },
   session: {
     id: "SESSION_ID",
-    runId: "SESSION_RUN_ID",
-    runToken: "SESSION_RUN_TOKEN"
+    run_id: "SESSION_RUN_ID",
+    run_token: "SESSION_RUN_TOKEN"
   },
   response: {
-    onEnd: function (reason, payload) {
+    on_end: function (reason, payload) {
       console.log("Checkout ended:", reason, payload);
     },
-    onError: function (type, payload) {
+    on_error: function (type, payload) {
       console.error("Checkout error:", type, payload);
     }
   }
@@ -117,13 +117,13 @@
 <section class="doc-section" id="embedded-checkout">
             <div class="section-kicker">Presentation mode</div>
             <h2>Embedded checkout</h2>
-            <p>Use embedded checkout when the Flywire Checkout UI should appear inside a page area you control instead of opening in the standard runtime experience. Provide <code>config.embedTo</code> with a CSS selector for an existing container.</p>
+            <p>Use embedded checkout when the Flywire Checkout UI should appear inside a page area you control instead of opening in the standard runtime experience. Provide <code>config.embed_to</code> with a CSS selector for an existing container.</p>
             <div class="code-card" data-language="html"><pre><code>&lt;div id="cpx-checkout"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  window.cpxCore.start({
+  window.cpx_core.start({
     recipient: {
-      clientId: "YOUR_CLIENT_ID",
+      client_id: "YOUR_CLIENT_ID",
       code: "YOUR_RECIPIENT_CODE"
     },
     transaction: {
@@ -134,14 +134,14 @@
     },
     session: {
       id: "SESSION_ID",
-      runId: "SESSION_RUN_ID",
-      runToken: "SESSION_RUN_TOKEN"
+      run_id: "SESSION_RUN_ID",
+      run_token: "SESSION_RUN_TOKEN"
     },
     config: {
-      embedTo: "#cpx-checkout"
+      embed_to: "#cpx-checkout"
     },
     response: {
-      onEnd: function (reason, payload) {
+      on_end: function (reason, payload) {
         console.log("Checkout ended:", reason, payload);
       }
     }
@@ -190,8 +190,8 @@
             <p>Use <code>showPayerForm</code>, <code>showRecipientForm</code>, and <code>disabledFields</code> to control which payer or recipient fields Flywire Checkout should collect or lock in the UI. You can prefill payer fields such as name, email, phone, and address through <code>payer.fields</code>.</p>
             <div class="code-card" data-language="javascript"><pre><code>payer: {
   fields: {
-    firstName: "PAYER_FIRST_NAME",
-    lastName: "PAYER_LAST_NAME",
+    first_name: "PAYER_FIRST_NAME",
+    last_name: "PAYER_LAST_NAME",
     email: "payer@example.com",
     country: "US"
   }
@@ -212,7 +212,7 @@ config: {
 <section class="doc-section" id="events-session-visibility">
             <div class="section-kicker">Operational status</div>
             <h2>Events and session visibility</h2>
-            <p>The frontend <code>response.onEnd</code> callback tells your page that the checkout UI ended with <code>completed</code> or <code>canceled</code>. It should not be the only source of payment truth for fulfillment, order state, or reconciliation.</p>
+            <p>The frontend <code>response.on_end</code> callback tells your page that the checkout UI ended with <code>completed</code> or <code>canceled</code>. It should not be the only source of payment truth for fulfillment, order state, or reconciliation.</p>
             <p>For operational decisions, use backend session lookup and/or server event notifications. See <a href="sessions.html#status-follow-up">status follow-up</a>, the <a href="events.html#callbacks-vs-events">callbacks versus events guidance</a>, and the <a href="api.html#get-session">get session info example</a>.</p>
           </section>
       </div>

@@ -50,8 +50,8 @@
           <h2 id="summary-title">The short version</h2>
           <ol>
             <li>Load <code>connect.js</code>.</li>
-            <li>Call <code>window.cpxCore.start</code>.</li>
-            <li>Handle <code>onEnd</code> and <code>onError</code>.</li>
+            <li>Call <code>window.cpx_core.start</code>.</li>
+            <li>Handle <code>on_end</code> and <code>on_error</code>.</li>
           </ol>
         </aside>
       </section>
@@ -115,9 +115,9 @@
           <div>
             <h3>Start checkout without a session object</h3>
             <div class="code-card" data-label="JavaScript">
-              <pre><code>window.cpxCore.start({
+              <pre><code>window.cpx_core.start({
   recipient: {
-    clientId: "YOUR_CLIENT_ID",
+    client_id: "YOUR_CLIENT_ID",
     code: "YOUR_RECIPIENT_CODE"
   },
   transaction: {
@@ -127,10 +127,10 @@
     }
   },
   response: {
-    onEnd: function (reason, payload) {
+    on_end: function (reason, payload) {
       console.log("Checkout ended:", reason, payload);
     },
-    onError: function (type, payload) {
+    on_error: function (type, payload) {
       console.error("Checkout error:", type, payload);
     }
   }
@@ -144,7 +144,7 @@
           <div>
             <h3>Handle the result in the browser</h3>
             <p>
-              <code>onEnd</code> is called when checkout completes or is
+              <code>on_end</code> is called when checkout completes or is
               canceled. For anonymous sessions, a completed checkout can include
               a high-level session status and payment report.
             </p>
@@ -194,14 +194,14 @@
   }
 
   function startCheckout() {
-    if (!window.cpxCore) {
+    if (!window.cpx_core) {
       showResult("Checkout is still loading. Please try again.");
       return;
     }
 
-    window.cpxCore.start({
+    window.cpx_core.start({
       recipient: {
-        clientId: "YOUR_CLIENT_ID",
+        client_id: "YOUR_CLIENT_ID",
         code: "YOUR_RECIPIENT_CODE"
       },
       transaction: {
@@ -211,7 +211,7 @@
         }
       },
       response: {
-        onEnd: function (reason, payload) {
+        on_end: function (reason, payload) {
           if (reason === "completed") {
             showResult("Checkout completed.");
             console.log("Payment report:", payload);
@@ -219,7 +219,7 @@
             showResult("Checkout was canceled.");
           }
         },
-        onError: function (type, payload) {
+        on_error: function (type, payload) {
           showResult("Checkout could not start or finish.");
           console.error("Checkout error:", type, payload);
         }
@@ -263,7 +263,7 @@
             <h3><a href="/full-docs/capabilities.html#embedded-checkout">Embedded checkout</a></h3>
             <p>
               Render checkout inside a page container with
-              <code>config.embedTo</code>.
+              <code>config.embed_to</code>.
             </p>
           </article>
           <article>
@@ -304,7 +304,7 @@
           preauthorization, embedded mode, and authenticated sessions.
         </p>
         <p>
-          <a href="https://checkout.demo.flywire.com/playground/1-payment/1-payment-minimum-fields/" target="_blank" rel="noopener" class="btn btn-primary">
+          <a href="https://checkout.demo.flywire.com/playground/1_payment/1_payment_minimum_fields/" target="_blank" rel="noopener" class="btn btn-primary">
             Open Playground &rarr;
           </a>
         </p>
@@ -324,10 +324,10 @@
           </li>
           <li>
             Handle <code>completed</code> and <code>canceled</code> in
-            <code>onEnd</code>.
+            <code>on_end</code>.
           </li>
           <li>
-            Handle <code>onError</code> and show a recoverable message to the
+            Handle <code>on_error</code> and show a recoverable message to the
             payer.
           </li>
           <li>

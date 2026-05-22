@@ -36,7 +36,7 @@
       <div class="hero-content">
         <p class="eyebrow">Reference</p>
         <h1 id="page-title">Initialization field reference</h1>
-        <p class="lead">Use this concise reference when constructing the <code>cpxInitFields</code> object passed to <code>window.cpxCore.start(cpxInitFields)</code>.</p>
+        <p class="lead">Use this concise reference when constructing the <code>cpxInitFields</code> object passed to <code>window.cpx_core.start(cpxInitFields)</code>.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="integration.html">Start integrating</a>
           <a class="button button-secondary" href="capabilities.html">Review capabilities</a>
@@ -56,15 +56,15 @@
       <div class="content-stack">
         <div class="callout">
           <strong>Runtime entry point:</strong>
-          <p>After loading <code>connect.js</code> from the correct environment (<code>https://checkout.demo.flywire.com/gateway/connect.js</code> for demo, <code>https://checkout.flywire.com/gateway/connect.js</code> for production), start checkout with <code>window.cpxCore.start(cpxInitFields)</code>.</p>
+          <p>After loading <code>connect.js</code> from the correct environment (<code>https://checkout.demo.flywire.com/gateway/connect.js</code> for demo, <code>https://checkout.flywire.com/gateway/connect.js</code> for production), start checkout with <code>window.cpx_core.start(cpxInitFields)</code>.</p>
         </div>
         <section class="doc-section" id="quick-start">
             <div class="section-kicker">Minimum browser call</div>
             <h2>Quick start shape</h2>
             <p>The browser startup object usually contains recipient, transaction, session, and response fields. Authenticated sessions are recommended for production integrations.</p>
-            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+            <div class="code-card" data-language="javascript"><pre><code>window.cpx_core.start({
   recipient: {
-    clientId: "YOUR_CLIENT_ID",
+    client_id: "YOUR_CLIENT_ID",
     code: "YOUR_RECIPIENT_CODE"
   },
   transaction: {
@@ -75,14 +75,14 @@
   },
   session: {
     id: "SESSION_ID",
-    runId: "SESSION_RUN_ID",
-    runToken: "SESSION_RUN_TOKEN"
+    run_id: "SESSION_RUN_ID",
+    run_token: "SESSION_RUN_TOKEN"
   },
   response: {
-    onEnd: function (reason, payload) {
+    on_end: function (reason, payload) {
       console.log("Checkout ended:", reason, payload);
     },
-    onError: function (type, payload) {
+    on_error: function (type, payload) {
       console.error("Checkout error:", type, payload);
     }
   }
@@ -94,7 +94,7 @@
             <p><code>recipient</code> tells Flywire Checkout which client and recipient configuration should be used for checkout.</p>
             <div class="card-grid">
               <article class="card">
-                <h3>clientId</h3>
+                <h3>client_id</h3>
                 <p>Required string. Use the client identifier provided for your integration.</p>
               </article>
               <article class="card">
@@ -107,7 +107,7 @@
               </article>
             </div>
             <div class="code-card" data-language="javascript"><pre><code>recipient: {
-  clientId: "YOUR_CLIENT_ID",
+  client_id: "YOUR_CLIENT_ID",
   code: "YOUR_RECIPIENT_CODE",
   fields: {
     accountReference: "YOUR_ACCOUNT_REFERENCE"
@@ -151,19 +151,19 @@
             <p><code>session</code> connects the browser checkout startup to a backend-created or backend-resumed Flywire Checkout session run. Pass only the browser-safe values returned by your backend.</p>
             <ul class="placeholder-list">
               <li><code>id</code>: the session identifier, shown in examples as <code>SESSION_ID</code>.</li>
-              <li><code>runId</code>: the session run identifier, shown as <code>SESSION_RUN_ID</code>.</li>
-              <li><code>runToken</code>: the session run token, shown as <code>SESSION_RUN_TOKEN</code>.</li>
+              <li><code>run_id</code>: the session run identifier, shown as <code>SESSION_RUN_ID</code>.</li>
+              <li><code>run_token</code>: the session run token, shown as <code>SESSION_RUN_TOKEN</code>.</li>
             </ul>
             <p>See <a href="sessions.html">sessions</a> for lifecycle guidance and <a href="api.html#sessions-api">the API guide</a> for backend examples.</p>
           </section>
 <section class="doc-section" id="payer">
             <div class="section-kicker">Optional payer prefill</div>
             <h2>payer</h2>
-            <p><code>payer.fields</code> can prefill payer details and reduce manual entry. Supported fields include <code>firstName</code>, <code>middleName</code>, <code>lastName</code>, <code>email</code>, <code>phone</code>, <code>address</code>, <code>city</code>, <code>state</code>, <code>zip</code>, and <code>country</code>.</p>
+            <p><code>payer.fields</code> can prefill payer details and reduce manual entry. Supported fields include <code>first_name</code>, <code>middle_name</code>, <code>last_name</code>, <code>email</code>, <code>phone</code>, <code>address</code>, <code>city</code>, <code>state</code>, <code>zip</code>, and <code>country</code>.</p>
             <div class="code-card" data-language="javascript"><pre><code>payer: {
   fields: {
-    firstName: "PAYER_FIRST_NAME",
-    lastName: "PAYER_LAST_NAME",
+    first_name: "PAYER_FIRST_NAME",
+    last_name: "PAYER_LAST_NAME",
     email: "payer@example.com",
     phone: "PAYER_PHONE",
     country: "US"
@@ -184,7 +184,7 @@
                 <p>Optional locale. Supported values are <code>en</code>, <code>en-US</code>, <code>es</code>, <code>es-ES</code>, <code>fr</code>, <code>fr-FR</code>, <code>de</code>, <code>de-DE</code>, <code>pt</code>, <code>pt-PT</code>, <code>it</code>, <code>it-IT</code>, <code>ko</code>, <code>ko-KR</code>, <code>zh</code>, <code>zh-CN</code>, <code>ja</code>, <code>ja-JP</code>, <code>id</code>, <code>id-ID</code>, <code>vi</code>, and <code>vi-VN</code>.</p>
               </article>
               <article class="card">
-                <h3>embedTo</h3>
+                <h3>embed_to</h3>
                 <p>Optional CSS selector for embedded checkout, for example <code>#cpx-checkout</code>.</p>
               </article>
               <article class="card">
@@ -204,17 +204,17 @@
 <section class="doc-section" id="response">
             <div class="section-kicker">Frontend callbacks</div>
             <h2>response</h2>
-            <p><code>response.onEnd</code> is required and runs when checkout ends in the browser. The reason can be <code>completed</code> or <code>canceled</code>. The payload may include session status and a <code>paymentReport</code> with payment status, amount, currency, and watchlist values.</p>
-            <p><code>response.onError</code> is optional and can receive categories such as <code>payment</code>, <code>initFields</code>, <code>sessionRunStart</code>, <code>offers</code>, <code>captcha</code>, <code>smartSession</code>, and <code>sessionRunEnd</code>.</p>
-            <div class="callout"><strong>Do not rely only on callbacks:</strong><p>Use <code>onEnd</code> for browser messaging and navigation. Use backend session lookup and/or events before making final payment, order, or fulfillment decisions.</p></div>
+            <p><code>response.on_end</code> is required and runs when checkout ends in the browser. The reason can be <code>completed</code> or <code>canceled</code>. The payload may include session status and a <code>paymentReport</code> with payment status, amount, currency, and watchlist values.</p>
+            <p><code>response.on_error</code> is optional and can receive categories such as <code>payment</code>, <code>initFields</code>, <code>sessionRunStart</code>, <code>offers</code>, <code>captcha</code>, <code>smartSession</code>, and <code>sessionRunEnd</code>.</p>
+            <div class="callout"><strong>Do not rely only on callbacks:</strong><p>Use <code>on_end</code> for browser messaging and navigation. Use backend session lookup and/or events before making final payment, order, or fulfillment decisions.</p></div>
           </section>
 <section class="doc-section" id="examples">
             <div class="section-kicker">Copyable patterns</div>
             <h2>Common examples</h2>
             <h3>Payment</h3>
-            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+            <div class="code-card" data-language="javascript"><pre><code>window.cpx_core.start({
   recipient: {
-    clientId: "YOUR_CLIENT_ID",
+    client_id: "YOUR_CLIENT_ID",
     code: "YOUR_RECIPIENT_CODE"
   },
   transaction: {
@@ -225,19 +225,19 @@
   },
   session: {
     id: "SESSION_ID",
-    runId: "SESSION_RUN_ID",
-    runToken: "SESSION_RUN_TOKEN"
+    run_id: "SESSION_RUN_ID",
+    run_token: "SESSION_RUN_TOKEN"
   },
   response: {
-    onEnd: function (reason, payload) {
+    on_end: function (reason, payload) {
       console.log("Checkout ended:", reason, payload);
     }
   }
 });</code></pre></div>
             <h3>Tokenization</h3>
-            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+            <div class="code-card" data-language="javascript"><pre><code>window.cpx_core.start({
   recipient: {
-    clientId: "YOUR_CLIENT_ID",
+    client_id: "YOUR_CLIENT_ID",
     code: "YOUR_RECIPIENT_CODE"
   },
   transaction: {
@@ -245,19 +245,19 @@
   },
   session: {
     id: "SESSION_ID",
-    runId: "SESSION_RUN_ID",
-    runToken: "SESSION_RUN_TOKEN"
+    run_id: "SESSION_RUN_ID",
+    run_token: "SESSION_RUN_TOKEN"
   },
   response: {
-    onEnd: function (reason, payload) {
+    on_end: function (reason, payload) {
       console.log("Tokenization ended:", reason, payload);
     }
   }
 });</code></pre></div>
             <h3>Embedded checkout</h3>
-            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+            <div class="code-card" data-language="javascript"><pre><code>window.cpx_core.start({
   recipient: {
-    clientId: "YOUR_CLIENT_ID",
+    client_id: "YOUR_CLIENT_ID",
     code: "YOUR_RECIPIENT_CODE"
   },
   transaction: {
@@ -268,22 +268,22 @@
   },
   session: {
     id: "SESSION_ID",
-    runId: "SESSION_RUN_ID",
-    runToken: "SESSION_RUN_TOKEN"
+    run_id: "SESSION_RUN_ID",
+    run_token: "SESSION_RUN_TOKEN"
   },
   config: {
-    embedTo: "#cpx-checkout"
+    embed_to: "#cpx-checkout"
   },
   response: {
-    onEnd: function (reason, payload) {
+    on_end: function (reason, payload) {
       console.log("Checkout ended:", reason, payload);
     }
   }
 });</code></pre></div>
             <h3>Offer filtering</h3>
-            <div class="code-card" data-language="javascript"><pre><code>window.cpxCore.start({
+            <div class="code-card" data-language="javascript"><pre><code>window.cpx_core.start({
   recipient: {
-    clientId: "YOUR_CLIENT_ID",
+    client_id: "YOUR_CLIENT_ID",
     code: "YOUR_RECIPIENT_CODE"
   },
   transaction: {
@@ -294,8 +294,8 @@
   },
   session: {
     id: "SESSION_ID",
-    runId: "SESSION_RUN_ID",
-    runToken: "SESSION_RUN_TOKEN"
+    run_id: "SESSION_RUN_ID",
+    run_token: "SESSION_RUN_TOKEN"
   },
   config: {
     offerRules: {
@@ -313,19 +313,19 @@
     }
   },
   response: {
-    onEnd: function (reason, payload) {
+    on_end: function (reason, payload) {
       console.log("Checkout ended:", reason, payload);
     },
-    onError: function (type, payload) {
+    on_error: function (type, payload) {
       console.error("Checkout error:", type, payload);
     }
   }
 });</code></pre></div>
             <h3>Callbacks</h3>
             <div class="code-card" data-language="javascript"><pre><code>function startCheckout(session) {
-  window.cpxCore.start({
+  window.cpx_core.start({
     recipient: {
-      clientId: "YOUR_CLIENT_ID",
+      client_id: "YOUR_CLIENT_ID",
       code: "YOUR_RECIPIENT_CODE"
     },
     transaction: {
@@ -336,15 +336,15 @@
     },
     session: {
       id: session.id,
-      runId: session.runId,
-      runToken: session.runToken
+      run_id: session.run_id,
+      run_token: session.run_token
     },
     response: {
-      onEnd: async function (reason, payload) {
+      on_end: async function (reason, payload) {
         console.log("Checkout ended:", reason, payload);
         await fetch(`/your-backend/cpx-sessions/${session.id}/status`);
       },
-      onError: function (type, payload) {
+      on_error: function (type, payload) {
         console.error("Checkout error:", type, payload);
       }
     }

@@ -11,9 +11,9 @@
 
     <!--
       Flywire Checkout V2 SDK loader.
-      Installs `window.cpxCore` once it finishes loading. The integration code
-      that drives `cpxCore.start(initFields)` lives in `/flywire-checkout.js`.
-      Playground: https://checkout.demo.flywire.com/playground/1-payment/1-payment-minimum-fields/
+      Installs `window.cpx_core` once it finishes loading. The integration code
+      that drives `cpx_core.start(initFields)` lives in `/flywire-checkout.js`.
+      Playground: https://checkout.demo.flywire.com/playground/1_payment/1_payment_minimum_fields/
     -->
     <script src="https://checkout.demo.flywire.com/gateway/connect.js" async></script>
 </head>
@@ -457,7 +457,7 @@
 
                         <!--
                           Demo-only toggle: switch between the SDK's default full-page
-                          overlay and embedded mode (`config.embedTo` in initFields).
+                          overlay and embedded mode (`config.embed_to` in initFields).
                           See public/flywire-checkout.js → launch({ embedTo }) and the
                           "Payment embedded" playground sample.
                         -->
@@ -468,7 +468,7 @@
                             <span class="dev-mode-hint">demo only</span>
                         </label>
 
-                        <!-- Mount point for `config.embedTo` when the toggle is on. -->
+                        <!-- Mount point for `config.embed_to` when the toggle is on. -->
                         <div id="payment-embed-target"></div>
                     </div>
 

@@ -10,7 +10,7 @@
  * illustrative "host app" code, not part of the integration surface.
  */
 
-let flywireConfig = { clientId: null, code: null };
+let flywireConfig = { client_id: null, code: null };
 
 const bookingState = {
     room: null,
@@ -19,7 +19,7 @@ const bookingState = {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const config = await fetch('/api/config').then(r => r.json());
-    flywireConfig.clientId = config.clientId;
+    flywireConfig.client_id = config.client_id;
     flywireConfig.code = config.code;
 
     document.querySelectorAll('.btn-select-room').forEach(btn => {
@@ -167,8 +167,8 @@ async function handleProceed() {
 
         await FlywireCheckout.launch({
             flow,
-            recipient: { clientId: flywireConfig.clientId, code: flywireConfig.code },
-            amount: total.toFixed(2),
+            recipient: { client_id: flywireConfig.client_id, code: flywireConfig.code },
+            amount: Math.round(total * 100),
             payer: payerFromGuest(bookingState.guest),
             embedTo: embedded ? '#payment-embed-target' : undefined,
             onSuccess: () => { restoreEmbedded(); showView('success'); },
@@ -189,8 +189,8 @@ async function handleProceed() {
 function payerFromGuest(guest) {
     if (!guest) return undefined;
     return {
-        firstName: guest.first_name,
-        lastName: guest.last_name,
+        first_name: guest.first_name,
+        last_name: guest.last_name,
         email: guest.email,
         phone: guest.phone,
         address: guest.address,

@@ -46,7 +46,7 @@
             <h2 id="flow-title">Recommended path</h2>
             <ol>
               <li><span class="step-number">1</span><span><strong>Create a session</strong><br>Your backend creates or resumes a Flywire Checkout V2 session.</span></li>
-              <li><span class="step-number">2</span><span><strong>Start checkout</strong><br>Your web app loads <code>connect.js</code> and calls <code>window.cpxCore.start</code>.</span></li>
+              <li><span class="step-number">2</span><span><strong>Start checkout</strong><br>Your web app loads <code>connect.js</code> and calls <code>window.cpx_core.start</code>.</span></li>
               <li><span class="step-number">3</span><span><strong>Confirm outcome</strong><br>Your backend uses events or session status for final follow-up.</span></li>
             </ol>
           </aside>
@@ -83,8 +83,8 @@
             <ol class="placeholder-list">
               <li>Create or resume a Flywire Checkout V2 session from your backend through the public API.</li>
               <li>Return only the safe browser values to your frontend: <code>SESSION_ID</code>, <code>SESSION_RUN_ID</code>, and <code>SESSION_RUN_TOKEN</code>.</li>
-              <li>Load <code>connect.js</code> from the appropriate environment and call <code>window.cpxCore.start(cpxInitFields)</code> with recipient, transaction, response, and session fields.</li>
-              <li>Use <code>onEnd</code> and <code>onError</code> to update the browser experience, then let your backend query session status or process configured events for payment follow-up.</li>
+              <li>Load <code>connect.js</code> from the appropriate environment and call <code>window.cpx_core.start(cpxInitFields)</code> with recipient, transaction, response, and session fields.</li>
+              <li>Use <code>on_end</code> and <code>on_error</code> to update the browser experience, then let your backend query session status or process configured events for payment follow-up.</li>
             </ol>
             <p>For the full copy-paste sequence, continue with the <a href="integration.html">integration guide</a>. For session lifecycle details, see <a href="sessions.html">sessions</a>.</p>
           </section>
@@ -117,7 +117,7 @@
                 <p>Let your backend retrieve the latest session state when the browser returns from checkout or when your operations need confirmation.</p>
               </article>
             </div>
-            <p><code>onEnd</code> tells your frontend that the checkout UI completed or was canceled. Treat it as a user-experience signal, not the only source of payment truth. Session status, events, and API responses are the backend sources for follow-up.</p>
+            <p><code>on_end</code> tells your frontend that the checkout UI completed or was canceled. Treat it as a user-experience signal, not the only source of payment truth. Session status, events, and API responses are the backend sources for follow-up.</p>
           </section>
 <section class="doc-section" id="next-steps">
             <div class="section-kicker">Continue reading</div>
@@ -136,7 +136,7 @@
                 <p>Review supported checkout capabilities, including payment, tokenization, locale options, embedded checkout, and offer controls.</p>
               </article>
               <article class="card">
-                <h3><a href="https://checkout.demo.flywire.com/playground/1-payment/1-payment-minimum-fields/" target="_blank" rel="noopener">Demo Playground &rarr;</a></h3>
+                <h3><a href="https://checkout.demo.flywire.com/playground/1_payment/1_payment_minimum_fields/" target="_blank" rel="noopener">Demo Playground &rarr;</a></h3>
                 <p>Test checkout scenarios interactively with valid demo credentials — payments, tokenization, preauth, embedded mode, and more.</p>
               </article>
             </div>

@@ -71,8 +71,8 @@ Content-Type: application/json
 }</code></pre></div>
             <div class="code-card" data-language="json"><pre><code>{
   "id": "SESSION_ID",
-  "runId": "SESSION_RUN_ID",
-  "runToken": "SESSION_RUN_TOKEN"
+  "run_id": "SESSION_RUN_ID",
+  "run_token": "SESSION_RUN_TOKEN"
 }</code></pre></div>
             <p>Your production request should also include the required recipient, payer, transaction, and checkout configuration fields for your integration.</p>
           </section>
@@ -102,14 +102,14 @@ Content-Type: application/json
 {}</code></pre></div>
             <div class="code-card" data-language="json"><pre><code>{
   "id": "SESSION_ID",
-  "runId": "SESSION_RUN_ID",
-  "runToken": "SESSION_RUN_TOKEN"
+  "run_id": "SESSION_RUN_ID",
+  "run_token": "SESSION_RUN_TOKEN"
 }</code></pre></div>
           </section>
 <section class="doc-section" id="get-session">
             <div class="section-kicker">Backend follow-up</div>
             <h2>Get session info</h2>
-            <p>Use session lookup when your backend needs current status after <code>onEnd</code>, after an event notification, or during operational reconciliation.</p>
+            <p>Use session lookup when your backend needs current status after <code>on_end</code>, after an event notification, or during operational reconciliation.</p>
             <div class="code-card" data-language="http"><pre><code>GET YOUR_PUBLIC_API_BASE_URL/commercial-payex/v2/session/SESSION_ID
 X-Authentication-Key: YOUR_PUBLIC_API_KEY</code></pre></div>
             <p>The response contains the latest session information available to your integration. Keep business decisions on your backend rather than relying only on browser callbacks.</p>

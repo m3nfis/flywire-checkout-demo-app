@@ -53,12 +53,12 @@ let guestData = { ...DUMMY_PAYOR };
 /**
  * GET /api/config
  * Returns the public Flywire Checkout V2 recipient identifiers so the browser
- * can build `initFields.recipient = { clientId, code }`.
- * https://checkout.demo.flywire.com/playground/1-payment/1-payment-minimum-fields/
+ * can build `initFields.recipient = { client_id, code }`.
+ * https://checkout.demo.flywire.com/playground/1_payment/1_payment_minimum_fields/
  */
 app.get('/api/config', (_req, res) => {
     res.json({
-        clientId: CPX_CLIENT_ID,
+        client_id: CPX_CLIENT_ID,
         code: CPX_CODE
     });
 });
@@ -87,7 +87,7 @@ app.post('/api/save-guest', (req, res) => {
  *   The upstream `POST /commercial-payex/v2/session` requires an
  *   `X-Authentication-Key` that MUST stay on the server. The browser hits this
  *   endpoint, the server forwards the call with the secret, and we return the
- *   session JSON (`{ id, runId, runToken }`) back to the client, which the
+ *   session JSON (`{ id, run_id, run_token }`) back to the client, which the
  *   client then drops into `initFields.session`.
  *
  * Equivalent curl:
@@ -98,7 +98,7 @@ app.post('/api/save-guest', (req, res) => {
  *     "$CPX_API_BASE/commercial-payex/v2/session"
  *
  * Playground reference:
- *   https://checkout.demo.flywire.com/playground/100-authenticated-sessions/1-create-session/
+ *   https://checkout.demo.flywire.com/playground/4_authenticated_sessions/1_create_session/
  *
  * Used from the browser by the `createSession()` helper inside
  * `public/flywire-checkout.js` when the `tokenization` flow is selected.

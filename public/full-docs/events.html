@@ -56,7 +56,7 @@
       <div class="content-stack">
         <div class="callout">
           <strong>Backend signal:</strong>
-          <p>Events are server-to-server notifications. They complement frontend <code>onEnd</code> callbacks, but they are configured and handled by your backend.</p>
+          <p>Events are server-to-server notifications. They complement frontend <code>on_end</code> callbacks, but they are configured and handled by your backend.</p>
         </div>
         <section class="doc-section" id="event-url">
             <div class="section-kicker">Notification endpoint</div>
@@ -129,9 +129,9 @@ function verifyCpxDigest(rawJsonBody, receivedDigest) {
 <section class="doc-section" id="callbacks-vs-events">
             <div class="section-kicker">Browser signal versus final state</div>
             <h2>Callbacks vs events</h2>
-            <p><code>onEnd</code> is a frontend callback from the checkout UI. It tells your page that the user flow ended with <code>completed</code> or <code>canceled</code>, which is useful for navigation and messaging.</p>
+            <p><code>on_end</code> is a frontend callback from the checkout UI. It tells your page that the user flow ended with <code>completed</code> or <code>canceled</code>, which is useful for navigation and messaging.</p>
             <p><code>eventUrl</code> notifications are backend messages. Use them, together with session lookup, for operational follow-up such as payment status tracking, reconciliation, and fulfillment decisions.</p>
-            <div class="callout"><strong>Practical rule:</strong><p>Let <code>onEnd</code> update the browser experience. Let your backend confirm status through events, API lookups, or both.</p></div>
+            <div class="callout"><strong>Practical rule:</strong><p>Let <code>on_end</code> update the browser experience. Let your backend confirm status through events, API lookups, or both.</p></div>
           </section>
       </div>
     </div>
