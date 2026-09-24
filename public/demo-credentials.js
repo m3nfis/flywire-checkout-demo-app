@@ -1,10 +1,11 @@
 /**
- * Demo credentials — lets sales point the demo at their own Flywire account
- * without redeploying. Saved in this browser's localStorage.
+ * Demo credentials — every user enters their own Flywire DEMO credentials in
+ * the back office (/dashboard). There are no defaults. They are saved in this
+ * browser's localStorage.
  *
  * DEMO ONLY: the API key is sent to this demo's server in `X-Demo-Api-Key`,
- * which uses it instead of `CPX_API_KEY`. In production the API key lives only
- * in your server's environment and never reaches the browser.
+ * and the server only ever calls the Flywire demo API. In a real integration
+ * the API key lives only in your server's environment and never reaches the browser.
  */
 (function (global) {
     'use strict';
@@ -12,6 +13,12 @@
     // Shared with the checkout settings drawer (Recipient section).
     const RECIPIENT_KEY = 'flywire.checkoutDemo.recipient';
     const API_KEY_KEY = 'flywire.checkoutDemo.apiKey';
+    const FIELDS = [
+        ['client_id', 'Client ID'],
+        ['code', 'recipient code'],
+        ['api_key', 'API key'],
+    ];
+    const listeners = new Set();
 
     function readJson(key) {
         try {
@@ -44,13 +51,49 @@
         }
         if (next.api_key) localStorage.setItem(API_KEY_KEY, next.api_key);
         else localStorage.removeItem(API_KEY_KEY);
+        notify();
         return next;
     }
 
     function clear() {
         localStorage.removeItem(RECIPIENT_KEY);
         localStorage.removeItem(API_KEY_KEY);
+        notify();
     }
+
+    /** Labels of the credentials still missing, e.g. ['API key']. */
+    function missing() {
+        const saved = get();
+        return FIELDS.filter(([key]) => !saved[key]).map(([, label]) => label);
+    }
+
+    function isComplete() {
+        return missing().length === 0;
+    }
+
+    function notify() {
+        listeners.forEach((fn) => fn(get()));
+        renderBanners();
+    }
+
+    /** Show every `[data-credentials-banner]` while credentials are missing. */
+    function renderBanners() {
+        const gaps = missing();
+        document.querySelectorAll('[data-credentials-banner]').forEach((banner) => {
+            banner.hidden = gaps.length === 0;
+            const list = banner.querySelector('[data-credentials-missing]');
+            if (list) list.textContent = gaps.length === FIELDS.length ? 'Client ID, recipient code and API key' : joinList(gaps);
+        });
+    }
+
+    function joinList(items) {
+        return items.length > 1 ? `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}` : items[0] || '';
+    }
+
+    global.addEventListener('storage', (e) => {
+        if (e.key === RECIPIENT_KEY || e.key === API_KEY_KEY || e.key === null) notify();
+    });
+    global.addEventListener('DOMContentLoaded', renderBanners);
 
     /**
      * Undo the usual copy-paste accidents. Returns the cleaned value and a
@@ -104,5 +147,8 @@
         return nativeFetch(input, init);
     };
 
-    global.DemoCredentials = { get, set, clear, clean, mask };
+    global.DemoCredentials = {
+        get, set, clear, clean, mask, missing, isComplete, renderBanners,
+        onChange: (fn) => listeners.add(fn),
+    };
 })(window);

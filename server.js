@@ -3,10 +3,16 @@
  *
  * Two responsibilities:
  *   1. Serve the static client (index.html, app.js, flywire-checkout.js, styles.css).
- *   2. Proxy the Flywire Checkout V2 session API using the server-only
- *      `X-Authentication-Key`:
+ *   2. Proxy the Flywire session and payments APIs with an `X-Authentication-Key`:
  *        POST /api/flywire-session       → create an authenticated session
  *        GET  /api/flywire-session/:id   → read the session outcome after `on_end`
+ *
+ * DEMO ONLY. This server holds no credentials: every user enters their own
+ * Flywire demo credentials in the back office (/dashboard), they live in the
+ * browser, and the API key arrives with each request in `X-Demo-Api-Key`.
+ * All calls go to the Flywire DEMO API; there is no setting to point it at
+ * production, so production keys are simply rejected (401).
+ * In a real integration the API key lives only in your server's environment.
  *
  * Everything else (`/api/config`, `/api/guest-data`, `/api/save-guest`) is
  * demo scaffolding for the booking flow; not part of the SDK integration.
@@ -28,37 +34,19 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ─── Flywire Checkout V2 configuration ───────────────────────────────────────
-// `clientId` and `code` are PUBLIC (recipient identifiers, safe in the browser).
-// `apiKey` is SECRET (used to authenticate session creation; server-only).
-const DEFAULT_API_BASE = 'https://api-platform.demo.flywire.com';
+// ─── Flywire configuration ───────────────────────────────────────────────────
+// Hard-coded on purpose: this demo only ever talks to the Flywire demo environment.
+const FLYWIRE_DEMO_API = 'https://api-platform.demo.flywire.com';
 
-// The old checkout-hosted proxies no longer serve the session API (they answer 405).
-const LEGACY_API_BASES = {
-    'https://checkout.demo.flywire.com/public-api-demo': 'https://api-platform.demo.flywire.com',
-    'https://checkout.flywire.com/public-api-prod': 'https://api-platform.flywire.com',
-};
-
-const CPX_CLIENT_ID = process.env.CPX_CLIENT_ID;
-const CPX_CODE = process.env.CPX_CODE;
-const CPX_API_KEY = process.env.CPX_API_KEY;
-const CPX_API_BASE = resolveApiBase(process.env.CPX_API_BASE);
+const RETIRED_ENV = ['CPX_CLIENT_ID', 'CPX_CODE', 'CPX_API_KEY', 'CPX_API_BASE'].filter((name) => process.env[name]);
 const CPX_EVENT_URL = process.env.CPX_EVENT_URL;
-const CPX_SPLIT_RECIPIENTS = listFromEnv(process.env.CPX_SPLIT_RECIPIENTS, ['EVT', 'UUI']);
+// Partner portal codes to prefill in the split editor; empty by default (presenters enter their own).
+const CPX_SPLIT_RECIPIENTS = listFromEnv(process.env.CPX_SPLIT_RECIPIENTS, []);
 // Capabilities that exist in the SDK but are not deployed to every environment yet.
 const CPX_PREVIEW_FEATURES = listFromEnv(process.env.CPX_PREVIEW_FEATURES, []);
 
 const SESSION_PATH = '/commercial_payex/v2/session';
 const SESSION_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-function resolveApiBase(value) {
-    const base = (value || DEFAULT_API_BASE).replace(/\/+$/, '');
-    if (LEGACY_API_BASES[base]) {
-        console.warn(`⚠  CPX_API_BASE=${base} is retired; using ${LEGACY_API_BASES[base]} instead. Update your environment.`);
-        return LEGACY_API_BASES[base];
-    }
-    return base;
-}
 
 function listFromEnv(value, fallback) {
     if (!value) return fallback;
@@ -81,14 +69,13 @@ let guestData = { ...DUMMY_PAYOR };
 
 /**
  * GET /api/config
- * Returns the public recipient identifiers used in `initFields.recipient`,
- * plus demo settings for the configuration drawer.
+ * Demo settings for the configuration drawer. Credentials are not served:
+ * each user enters their own in the back office.
  */
-app.get('/api/config', (req, res) => {
+app.get('/api/config', (_req, res) => {
     res.json({
-        client_id: CPX_CLIENT_ID,
-        code: CPX_CODE,
-        authenticated_sessions: Boolean(apiKeyFor(req)),
+        environment: 'demo',
+        api_base: FLYWIRE_DEMO_API,
         split_recipients: CPX_SPLIT_RECIPIENTS,
         preview_features: CPX_PREVIEW_FEATURES
     });
@@ -109,26 +96,19 @@ app.post('/api/save-guest', (req, res) => {
 });
 
 /**
- * Which API key to use for a request.
- *
- * Normally the server's `CPX_API_KEY`. For demos, the hotel dashboard can send
- * its own key in `X-Demo-Api-Key` so sales can switch Flywire accounts without
- * redeploying. Never accept an API key from the browser in production.
+ * The user's Flywire DEMO API key, sent by the browser in `X-Demo-Api-Key`.
+ * Demo only: never accept an API key from the browser in a real integration.
  */
-function apiKeyFor(req) {
-    return demoApiKey(req) || CPX_API_KEY;
-}
-
 function demoApiKey(req) {
     const key = String(req.get('X-Demo-Api-Key') || '').trim();
     return key && key.length <= 512 && /^[\x21-\x7e]+$/.test(key) ? key : '';
 }
 
+const MISSING_CREDENTIALS = 'Add your Flywire demo credentials in the hotel back office (/dashboard) first.';
+
 function requireApiKey(req, res) {
-    const key = apiKeyFor(req);
-    if (!key) {
-        res.status(500).json({ error: 'No API key: set CPX_API_KEY on the server or add one in the hotel dashboard.' });
-    }
+    const key = demoApiKey(req);
+    if (!key) res.status(401).json({ error: MISSING_CREDENTIALS, code: 'missing_credentials' });
     return key;
 }
 
@@ -146,7 +126,7 @@ function requireApiKey(req, res) {
  * Equivalent curl:
  *
  *   curl -X POST \
- *     -H "X-Authentication-Key: $CPX_API_KEY" \
+ *     -H "X-Authentication-Key: $API_KEY" \
  *     -H "Content-Type: application/json" \
  *     -d '{"config":{"event_url":"https://your-app.example.com/flywire/events"}}' \
  *     "https://api-platform.demo.flywire.com/commercial_payex/v2/session"
@@ -281,31 +261,35 @@ app.post('/api/payments/charge', async (req, res) => {
 /**
  * GET /api/credentials/check
  *
- * Verifies the API key without creating anything: looking up a session that
- * cannot exist answers 404 for a valid key and 401 for an invalid one.
+ * Verifies the API key against the Flywire DEMO API without creating anything:
+ * looking up a session that cannot exist answers 404 for a valid key and 401
+ * for an invalid one. Production keys are not valid on the demo API.
  */
 app.get('/api/credentials/check', async (req, res) => {
-    const key = apiKeyFor(req);
-    const source = demoApiKey(req) ? 'browser' : 'server';
-    if (!key) return res.json({ ok: false, source: 'none', detail: 'No API key configured.' });
+    const key = demoApiKey(req);
+    if (!key) return res.json({ ok: false, detail: 'No API key entered yet.', environment: 'demo' });
 
     try {
-        const response = await fetch(`${CPX_API_BASE}${SESSION_PATH}/00000000-0000-0000-0000-000000000000`, {
+        const response = await fetch(`${FLYWIRE_DEMO_API}${SESSION_PATH}/00000000-0000-0000-0000-000000000000`, {
             headers: { 'X-Authentication-Key': key },
         });
         if (response.status === 401 || response.status === 403) {
             const data = await response.json().catch(() => ({}));
-            return res.json({ ok: false, source, detail: data.detail || 'The API key was rejected.' });
+            return res.json({
+                ok: false,
+                environment: 'demo',
+                detail: `${(data.detail || 'The API key was rejected').replace(/\.?$/, '.')} Only Flywire demo keys work here; production keys are rejected.`,
+            });
         }
-        res.json({ ok: response.status === 404 || response.ok, source, detail: `API answered ${response.status}.` });
+        res.json({ ok: response.status === 404 || response.ok, environment: 'demo', detail: `Demo API answered ${response.status}.` });
     } catch {
-        res.status(502).json({ ok: false, source, detail: 'Could not reach the Flywire API.' });
+        res.status(502).json({ ok: false, environment: 'demo', detail: 'Could not reach the Flywire demo API.' });
     }
 });
 
 async function proxyFlywireApi(res, key, method, pathname, body) {
     try {
-        const response = await fetch(`${CPX_API_BASE}${pathname}`, {
+        const response = await fetch(`${FLYWIRE_DEMO_API}${pathname}`, {
             method,
             headers: {
                 'Content-Type': 'application/json',
@@ -331,10 +315,8 @@ async function proxyFlywireApi(res, key, method, pathname, body) {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
-    if (!CPX_CLIENT_ID || !CPX_CODE) {
-        console.warn('⚠  CPX_CLIENT_ID / CPX_CODE not set — checkout will fail until configured in .env');
-    }
-    if (!CPX_API_KEY) {
-        console.warn('⚠  CPX_API_KEY not set — only anonymous payment flows will be available');
+    console.log(`Flywire API: ${FLYWIRE_DEMO_API} (demo only). Credentials are entered per user in /dashboard.`);
+    if (RETIRED_ENV.length) {
+        console.warn(`⚠  Ignoring ${RETIRED_ENV.join(', ')}: this demo holds no server credentials and always uses the demo API. You can delete them.`);
     }
 });

@@ -1018,6 +1018,87 @@ a.fw-result-link {
     border-radius: 4px;
 }
 
+/* ═══════ CREDENTIALS REQUIRED ═══════ */
+
+.fw-credentials-banner {
+    margin-top: 1.25rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid #FED7AA;
+    border-radius: var(--fw-radius-lg);
+    background: var(--fw-warning-bg);
+    color: #7C2D12;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.fw-credentials-banner strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    color: #7C2D12;
+}
+
+.fw-credentials-banner .fw-btn {
+    margin-top: 0.75rem;
+}
+
+.fw-btn-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.fw-cred-summary {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.35rem 1rem;
+    font-size: 0.8125rem;
+}
+
+.fw-cred-summary dt {
+    color: var(--fw-text-secondary);
+}
+
+.fw-cred-summary dd {
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+}
+
+.fw-cred-summary dd.fw-cred-missing {
+    font-family: 'Inter', sans-serif;
+    color: var(--fw-warning-text);
+}
+
+.fw-cred-summary + .fw-help + .fw-btn {
+    margin-top: 0.75rem;
+}
+
+.demo-badge.demo-badge-warn {
+    background: #D97706;
+}
+
+.payment-credentials {
+    margin: -0.75rem 0 1rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #FED7AA;
+    border-radius: 6px;
+    background: #FFF7ED;
+    color: #7C2D12;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.payment-credentials strong {
+    display: block;
+}
+
+.payment-credentials a {
+    color: inherit;
+    font-weight: 500;
+}
+
 /* ═══════ CHECKOUT ACTIVITY DRAWER ═══════ */
 
 .demo-cog {

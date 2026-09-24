@@ -1,8 +1,8 @@
 {
-  "name": "webhotelier-demo",
+  "name": "flywire-checkout-v2-hotel-demo",
   "version": "1.0.0",
   "private": true,
-  "description": "Luxury travel booking experience with Flywire payment integration",
+  "description": "Demo hotel booking site and back office showing a Flywire Checkout V2 integration (demo environment only)",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js"

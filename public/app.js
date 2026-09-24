@@ -2,7 +2,7 @@
  * Demo booking flow for The Caldera House (Santorini).
  *
  * The Flywire Checkout V2 SDK integration lives in `flywire-checkout.js`.
- * `demo-config.js` is the sales drawer that picks which capability to demo.
+ * `demo-config.js` is the settings drawer that picks which capability to demo.
  * This file is just the demo host: it manages the room/guest/payment views
  * and forwards the chosen options to `FlywireCheckout.launch()`.
  *
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     DemoConfig.init(config);
     DemoConfig.onChange(updatePaymentOption);
+    DemoCredentials.onChange(updatePaymentOption);
     CheckoutActivity.init();
 
     Stay.init();
@@ -187,7 +188,12 @@ function updatePaymentOption() {
     document.getElementById('payment-option-notes').textContent = copy.notes.join(' ');
 
     const btn = document.getElementById('proceed-btn');
-    if (!btn.classList.contains('loading')) btn.textContent = copy.cta;
+    if (!btn.classList.contains('loading')) {
+        btn.textContent = copy.cta;
+        // No default credentials: checkout can't start until the user has entered their own.
+        btn.disabled = !DemoCredentials.isComplete();
+        btn.title = btn.disabled ? 'Add your Flywire demo credentials in the hotel back office first' : '';
+    }
 }
 
 function showPaymentNotice(message) {
@@ -201,6 +207,7 @@ function showPaymentNotice(message) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function handleProceed() {
+    if (!DemoCredentials.isComplete()) return;
     const btn = document.getElementById('proceed-btn');
     const paymentSection = document.getElementById('payment-section');
     const options = DemoConfig.buildCheckoutOptions({ amountCents: totalCents(), embedTo: '#payment-embed-target' });

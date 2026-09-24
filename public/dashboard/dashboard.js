@@ -11,6 +11,9 @@
 
     const $ = (id) => document.getElementById(id);
     const PLAYGROUND = 'https://checkout.demo.flywire.com/playground/authenticated_sessions/';
+    const DEFAULT_API_BASE = 'https://api-platform.demo.flywire.com';
+    const SESSION_API = '/commercial_payex/v2/session';
+    const PREVIEW_LANG_KEY = 'caldera.dashboard.previewLang';
 
     const PAYMENT_STATUS = {
         NO_PAYMENTS: 'No payment was made.',
@@ -24,10 +27,19 @@
     const CHARGE_PRESETS = ['Minibar', 'Spa treatment', 'Late checkout', 'Airport transfer', 'Dive equipment rental', 'No-show fee'];
 
     let serverConfig = {};
-    let selectedId = decodeURIComponent(location.hash.slice(1)) || null;
+    const CREDENTIALS_HASH = 'credentials';
+    const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const PORTAL_CODE = /^(?:[A-Z]{3}|[A-Z][A-Z0-9]{4})$/;
+
+    const hashBooking = () => {
+        const hash = decodeURIComponent(location.hash.slice(1));
+        return hash && hash !== CREDENTIALS_HASH ? hash : null;
+    };
+    let selectedId = hashBooking();
     let openAction = null;
     let busyAction = null;
     let actionError = null;
+    let previewLang = localStorage.getItem(PREVIEW_LANG_KEY) === 'fetch' ? 'fetch' : 'curl';
     // Typed form values survive re-renders (e.g. when another tab updates the bookings).
     const drafts = new Map();
 
@@ -38,9 +50,17 @@
             if (!Bookings.list().length || !confirm('Delete all demo bookings from this browser?')) return;
             Bookings.clear();
         });
-        window.addEventListener('hashchange', () => select(decodeURIComponent(location.hash.slice(1)) || null));
+        window.addEventListener('hashchange', () => {
+            if (location.hash.slice(1) === CREDENTIALS_HASH) focusCredentials();
+            else select(hashBooking());
+        });
         Bookings.onChange(render);
+        DemoCredentials.onChange(() => {
+            if (!document.activeElement?.closest('#db-credentials-form')) fillCredentials();
+        });
         render();
+        DemoCredentials.renderBanners();
+        if (location.hash.slice(1) === CREDENTIALS_HASH || !DemoCredentials.isComplete()) focusCredentials();
         testConnection();
     });
 
@@ -72,6 +92,7 @@
         });
 
         $('db-credentials-reset').addEventListener('click', () => {
+            if (!confirm('Remove the Flywire demo credentials from this browser? Checkout stays disabled until new ones are added.')) return;
             DemoCredentials.clear();
             fillCredentials();
             fixNotes.clear();
@@ -91,11 +112,28 @@
     function fillCredentials() {
         const saved = DemoCredentials.get();
         $('db-client-id').value = saved.client_id;
-        $('db-client-id').placeholder = serverConfig.client_id ? `Server: ${serverConfig.client_id}` : 'UUID';
+        $('db-client-id').placeholder = 'UUID from your Flywire demo account';
         $('db-code').value = saved.code;
-        $('db-code').placeholder = serverConfig.code ? `Server: ${serverConfig.code}` : 'e.g. DTT';
+        $('db-code').placeholder = 'e.g. ABC';
         $('db-api-key').value = saved.api_key;
-        $('db-api-key').placeholder = serverConfig.authenticated_sessions && !saved.api_key ? 'Using the server key' : 'Paste your API key';
+        $('db-api-key').placeholder = 'Paste your demo API key';
+        if (serverConfig.api_base) $('db-api-base').textContent = serverConfig.api_base.replace(/^https?:\/\//, '');
+    }
+
+    function focusCredentials() {
+        const card = $('credentials');
+        card.scrollIntoView({ block: 'start' });
+        const firstEmpty = ['db-client-id', 'db-code', 'db-api-key'].map($).find((input) => !input.value);
+        (firstEmpty || $('db-client-id')).focus({ preventScroll: true });
+    }
+
+    /** Format hints only: whether the credentials work is decided by the demo API. */
+    function formatWarnings() {
+        const { client_id, code } = DemoCredentials.get();
+        const warnings = [];
+        if (client_id && !UUID.test(client_id)) warnings.push('The Client ID doesn’t look like a UUID (8-4-4-4-12 characters).');
+        if (code && !PORTAL_CODE.test(code)) warnings.push('Recipient codes are 3 letters (ABC) or 5 characters starting with a letter (ABC1D).');
+        return warnings;
     }
 
     const fixNotes = new Map();
@@ -114,16 +152,33 @@
     async function testConnection() {
         const pill = $('db-connection-status');
         const result = $('db-credentials-result');
+        const missing = DemoCredentials.missing();
+        const warnings = formatWarnings();
+
+        if (!DemoCredentials.get().api_key) {
+            setPill(pill, 'warn', 'Not set');
+            if (warnings.length) showNotice(result, 'error', warnings.join(' '));
+            else result.hidden = true;
+            return;
+        }
+
         setPill(pill, 'neutral', 'Checking…');
         try {
             const check = await fetch('/api/credentials/check').then((r) => r.json());
-            const source = check.source === 'browser' ? 'your key' : check.source === 'server' ? 'server key' : 'no key';
-            if (check.ok) {
-                setPill(pill, 'success', `Connected · ${source}`);
-                result.hidden = true;
-            } else {
-                setPill(pill, 'error', check.source === 'none' ? 'No API key' : 'Key rejected');
+            if (!check.ok) {
+                setPill(pill, 'error', 'Key rejected');
                 showNotice(result, 'error', `${check.detail} Check for a missing character, or paste the key again.`);
+                return;
+            }
+            if (missing.length) {
+                setPill(pill, 'warn', 'Incomplete');
+                showNotice(result, 'error', `API key works on the demo API. Still missing: ${missing.join(', ')}.`);
+            } else if (warnings.length) {
+                setPill(pill, 'warn', 'Connected · check fields');
+                showNotice(result, 'error', warnings.join(' '));
+            } else {
+                setPill(pill, 'success', 'Connected · demo API');
+                result.hidden = true;
             }
         } catch {
             setPill(pill, 'error', 'Server unreachable');
@@ -362,34 +417,34 @@
 
         return [
             {
-                id: 'refresh', label: 'Refresh status', api: 'GET /commercial_payex/v2/session/{id}', playground: 'get_session',
+                id: 'refresh', label: 'Refresh status', method: 'GET', endpoint: '/commercial_payex/v2/session/{session_id}', playground: 'get_session',
                 help: 'Reads the session from Flywire: session, payment and tokenization reports.',
-                disabled: noSession, run: () => refreshStatus(b),
+                disabled: noSession, spec: refreshSpec,
             },
             {
-                id: 'resume', label: 'Resume session', api: 'POST /commercial_payex/v2/session/{id}', playground: 'resume_session',
-                help: 'Gets new run credentials for this session and reopens checkout where the guest left off, e.g. to send a payment link.',
+                id: 'resume', label: 'Resume session', method: 'POST', endpoint: '/commercial_payex/v2/session/{session_id}', playground: 'resume_session',
+                help: 'Gets new run credentials for this session, then reopens checkout with them where the guest left off, e.g. to send a payment link.',
                 disabled: noSession || (b.checkout ? null : { reason: 'This booking was made before resume support.', fix: 'Make a new booking.' }),
-                run: () => resumeSession(b),
+                spec: resumeSpec,
             },
             {
-                id: 'capture', label: 'Capture payment', api: 'POST /payments/v1/payments/{id}/captures', playground: 'capture_payment',
+                id: 'capture', label: 'Capture payment', method: 'POST', endpoint: '/payments/v1/payments/{payment_id}/captures', playground: 'capture_payment',
                 help: 'Collects the held funds, fully or partly (e.g. at check-in). Any uncaptured amount is released to the guest.',
-                disabled: notPreauth || noPayment || holdEnded, form: captureForm,
+                disabled: notPreauth || noPayment || holdEnded, spec: captureSpec,
             },
             {
-                id: 'extend', label: 'Extend hold', api: 'POST /payments/v1/payments/{id}/authorization_adjustments', playground: 'extend_preauth',
+                id: 'extend', label: 'Extend hold', method: 'POST', endpoint: '/payments/v1/payments/{payment_id}/authorization_adjustments', playground: 'extend_preauth',
                 help: 'Resets the hold to 7 days from today and can raise the authorized amount (increase only).',
-                disabled: notPreauth || noPayment || holdEnded, form: extendForm,
+                disabled: notPreauth || noPayment || holdEnded, spec: extendSpec,
             },
             {
-                id: 'charge', label: 'Charge saved card', api: 'POST /payments/v1/payments/charge', playground: 'charge_token',
+                id: 'charge', label: 'Charge saved card', method: 'POST', endpoint: '/payments/v1/payments/charge', playground: 'charge_token',
                 help: 'Charges the card saved at checkout without the guest present, e.g. minibar or a no-show fee.',
                 disabled: savesCard ? null : {
                     reason: 'No card was saved on this booking.',
                     fix: 'Make a booking with a card-on-file flow, e.g. Save card, charge later or Pay now & save card.',
                 },
-                form: chargeForm,
+                spec: chargeSpec,
             },
         ];
     }
@@ -402,71 +457,116 @@
             class: `db-btn ${openAction === a.id ? 'db-btn-primary' : 'db-btn-secondary'}${a.disabled ? ' db-btn-unavailable' : ''}`,
             disabled: Boolean(busyAction),
             'aria-disabled': a.disabled ? 'true' : null,
-            title: a.disabled ? a.disabled.reason : a.help,
-            'aria-expanded': a.form || a.disabled ? String(openAction === a.id) : null,
+            title: a.disabled ? a.disabled.reason : `${a.method} ${a.endpoint}`,
+            'aria-expanded': String(openAction === a.id),
             onclick: () => {
-                if (a.form || a.disabled) {
-                    openAction = openAction === a.id ? null : a.id;
-                    actionError = null;
-                    render();
-                } else {
-                    a.run();
-                }
+                openAction = openAction === a.id ? null : a.id;
+                actionError = null;
+                render();
             },
-        }, busyAction === a.id ? 'Working…' : a.label)));
+        }, h('span', { class: `db-method db-method-${a.method.toLowerCase()}` }, a.method), busyAction === a.id ? 'Working…' : a.label)));
 
         const active = actions.find((a) => a.id === openAction);
-        const meta = active && h('div', { class: 'db-action-meta' },
-            h('p', {}, active.help),
-            h('p', { class: 'db-sub' }, h('code', {}, active.api), ' · ',
-                h('a', { href: PLAYGROUND + active.playground, target: '_blank', rel: 'noopener', class: 'db-link' }, 'Playground ↗'))
-        );
 
         return h('div', { class: 'db-block' },
-            h('h3', {}, 'Actions'),
+            h('div', { class: 'db-block-head' },
+                h('h3', {}, 'Actions'),
+                h('span', { class: 'db-sub' }, 'Flywire API calls, made through this demo’s server')
+            ),
             buttons,
             active ? h('div', { class: 'db-action-panel' },
-                meta,
+                h('div', { class: 'db-action-meta' },
+                    h('div', { class: 'db-endpoint' },
+                        h('span', { class: `db-method db-method-${active.method.toLowerCase()}` }, active.method),
+                        h('code', {}, active.endpoint),
+                        h('a', { href: PLAYGROUND + active.playground, target: '_blank', rel: 'noopener', class: 'db-btn db-btn-ghost db-btn-sm db-playground' }, 'Open in playground ↗')
+                    ),
+                    h('p', {}, active.help)
+                ),
                 active.disabled
                     ? h('div', { class: 'db-notice db-notice-warn', role: 'status' },
                         h('strong', {}, `${active.label} isn’t available for this booking. `), active.disabled.reason,
                         h('span', { class: 'db-notice-fix' }, active.disabled.fix))
-                    : active.form(b)
+                    : actionForm(b, active, active.spec(b))
             ) : null
         );
     }
 
-    function captureForm(b) {
+    // ── Action specs: form fields, the Flywire request, and what to do with the response ──
+
+    function refreshSpec(b) {
+        return {
+            request: () => ({
+                upstream: { method: 'GET', path: `${SESSION_API}/${b.sessionId}` },
+                proxy: { method: 'GET', url: `/api/flywire-session/${b.sessionId}` },
+            }),
+            onResult: (result, req) => {
+                if (result.ok) Bookings.applyReport(b.id, result.data);
+                const status = result.data?.payment_report?.status || result.data?.session_report?.status;
+                record(b, result, req, result.ok ? `Status refreshed${status ? ` · ${status}` : ''}` : 'Status refresh failed', 'refresh');
+            },
+        };
+    }
+
+    function resumeSpec(b) {
+        return {
+            note: 'After Flywire answers, checkout opens on this page with the new run_id and run_token.',
+            request: () => ({
+                upstream: { method: 'POST', path: `${SESSION_API}/${b.sessionId}` },
+                proxy: { method: 'POST', url: `/api/flywire-session/${b.sessionId}/resume` },
+            }),
+            onResult: (result, req) => {
+                record(b, result, req, result.ok ? 'Session resumed · checkout reopened' : 'Resume failed', 'resume');
+                if (result.ok) reopenCheckout(b, result.data);
+            },
+        };
+    }
+
+    function captureSpec(b) {
         const remaining = Math.max(0, (b.authorizedAmount || b.amount) - sum(b.captures));
         const paymentSelect = paymentPicker(b, 'capture');
         const amount = amountInput(`${b.id}:capture:amount`, remaining);
-        return form(b, 'capture', [paymentSelect.field, amount.field], `Capture`, async () => {
-            const cents = amount.cents();
-            const paymentId = paymentSelect.value();
-            const result = await callApi('POST', `/api/payments/${encodeURIComponent(paymentId)}/captures`, { amount: cents });
-            record(b, result, `Captured ${money(cents, b.currency)}${resultStatus(result)}`, 'capture', (x) => {
-                x.captures.push({ payment_id: paymentId, amount: cents, at: Date.now() });
-            });
-        });
+        return {
+            fields: [paymentSelect.field, amount.field],
+            request: () => paymentRequest(paymentSelect.value(), 'captures', { amount: amount.cents() }),
+            onResult: (result, req) => {
+                const cents = req.upstream.body.amount;
+                record(b, result, req, `Captured ${money(cents, b.currency)}${resultStatus(result)}`, 'capture', (x) => {
+                    x.captures.push({ payment_id: req.paymentId, amount: cents, at: Date.now() });
+                });
+            },
+        };
     }
 
-    function extendForm(b) {
+    function extendSpec(b) {
         const current = b.authorizedAmount || b.amount;
         const paymentSelect = paymentPicker(b, 'extend');
         const amount = amountInput(`${b.id}:extend:amount`, current, current);
-        return form(b, 'extend', [paymentSelect.field, amount.field], 'Extend hold', async () => {
-            const cents = amount.cents();
-            const paymentId = paymentSelect.value();
-            const result = await callApi('POST', `/api/payments/${encodeURIComponent(paymentId)}/authorization_adjustments`, { amount: cents });
-            const label = (cents > current ? `Hold raised to ${money(cents, b.currency)} and extended 7 days` : 'Hold extended 7 days') + resultStatus(result);
-            record(b, result, label, 'extend', (x) => {
-                x.adjustments.push({ payment_id: paymentId, amount: cents, at: Date.now() });
-                x.authorizedAmount = Math.max(x.authorizedAmount || 0, cents);
-            });
-        }, `Minimum ${money(current, b.currency)}: holds can only increase.`);
+        return {
+            fields: [paymentSelect.field, amount.field],
+            note: `Minimum ${money(current, b.currency)}: holds can only increase.`,
+            request: () => paymentRequest(paymentSelect.value(), 'authorization_adjustments', { amount: amount.cents() }),
+            onResult: (result, req) => {
+                const cents = req.upstream.body.amount;
+                const label = (cents > current ? `Hold raised to ${money(cents, b.currency)} and extended 7 days` : 'Hold extended 7 days') + resultStatus(result);
+                record(b, result, req, label, 'extend', (x) => {
+                    x.adjustments.push({ payment_id: req.paymentId, amount: cents, at: Date.now() });
+                    x.authorizedAmount = Math.max(x.authorizedAmount || 0, cents);
+                });
+            },
+        };
     }
 
-    function chargeForm(b) {
+    function paymentRequest(paymentId, operation, body) {
+        const id = encodeURIComponent(paymentId);
+        return {
+            paymentId,
+            upstream: { method: 'POST', path: `/payments/v1/payments/${id}/${operation}`, body },
+            proxy: { method: 'POST', url: `/api/payments/${id}/${operation}`, body },
+        };
+    }
+
+    function chargeSpec(b) {
         const amount = amountInput(`${b.id}:charge:amount`, 12000);
         const description = remember(`${b.id}:charge:description`, h('select', {}, ...CHARGE_PRESETS.map((p) => h('option', {}, p))));
         const reference = textInput(`${b.id}:charge:reference`, `${b.id}-${(b.charges?.length || 0) + 1}`);
@@ -476,68 +576,188 @@
         const payorInput = textInput(`${b.id}:charge:payor`, token.payor_id);
         const tokenFields = h('div', { class: 'db-token-fields' },
             h('p', { class: 'db-sub' }, b.token
-                ? 'From the session’s tokenization report. Edit if needed.'
+                ? 'From the session’s tokenization_report. Edit if needed.'
                 : 'The card token was not in the session report. Refresh status first, or paste the token details from the Flywire portal.'),
             field('payment_method_token', tokenInput),
             field('mandate_id', mandateInput),
             field('payor_id', payorInput)
         );
+        const clean = (input) => DemoCredentials.clean(input.value, { kind: 'id' }).value;
 
-        return form(b, 'charge', [amount.field, field('What for', description), field('Your reference (external_reference)', reference), tokenFields], 'Charge card', async () => {
-            const cents = amount.cents();
-            const clean = (input) => DemoCredentials.clean(input.value, { kind: 'id' }).value;
-            const tokenData = {
-                payment_method_token: clean(tokenInput),
-                mandate_id: clean(mandateInput),
-                payor_id: clean(payorInput),
-            };
-            const recipientCode = DemoCredentials.get().code || b.recipientCode || serverConfig.code;
-            const externalReference = reference.value.trim();
-            if (!externalReference) throw new Error('Add a reference for this charge, e.g. the booking number.');
-            const result = await callApi('POST', '/api/payments/charge', {
-                ...tokenData, recipient_code: recipientCode, external_reference: externalReference, amount: cents,
-            });
-            const chargeStatus = result.data?.charge_result?.status;
-            const label = `Charged ${money(cents, b.currency)} · ${description.value} · ${externalReference}${chargeStatus && chargeStatus !== 'success' ? ` · ${chargeStatus}` : ''}`;
-            record(b, result, label, 'charge', (x) => {
-                x.token = { ...x.token, ...tokenData };
-                const paymentId = chargePaymentId(result.data);
-                x.charges.push({
-                    amount: cents, description: description.value, external_reference: externalReference,
-                    at: Date.now(), payment_id: paymentId, response: result.data,
+        return {
+            fields: [amount.field, field('What for (kept in the back office)', description), field('external_reference', reference), tokenFields],
+            request: () => {
+                const tokenData = {
+                    payment_method_token: clean(tokenInput),
+                    mandate_id: clean(mandateInput),
+                    payor_id: clean(payorInput),
+                };
+                const externalReference = reference.value.trim();
+                if (!externalReference) throw new Error('Add an external_reference for this charge, e.g. the booking number.');
+                const recipientCode = DemoCredentials.get().code || b.recipientCode;
+                const cents = amount.cents();
+                return {
+                    tokenData,
+                    upstream: {
+                        method: 'POST',
+                        path: '/payments/v1/payments/charge',
+                        // Same body the demo server sends to Flywire.
+                        body: {
+                            ...tokenData,
+                            charge_intent: { mode: 'unscheduled' },
+                            recipient: { id: recipientCode },
+                            items: [{ id: 'default', amount: cents }],
+                            external_reference: externalReference,
+                        },
+                    },
+                    proxy: {
+                        method: 'POST',
+                        url: '/api/payments/charge',
+                        body: { ...tokenData, recipient_code: recipientCode, external_reference: externalReference, amount: cents },
+                    },
+                };
+            },
+            onResult: (result, req) => {
+                const cents = req.proxy.body.amount;
+                const externalReference = req.proxy.body.external_reference;
+                const chargeStatus = result.data?.charge_result?.status;
+                const label = `Charged ${money(cents, b.currency)} · ${description.value} · ${externalReference}${chargeStatus && chargeStatus !== 'success' ? ` · ${chargeStatus}` : ''}`;
+                record(b, result, req, label, 'charge', (x) => {
+                    x.token = { ...x.token, ...req.tokenData };
+                    const paymentId = chargePaymentId(result.data);
+                    x.charges.push({
+                        amount: cents, description: description.value, external_reference: externalReference,
+                        at: Date.now(), payment_id: paymentId, response: result.data,
+                    });
+                    if (paymentId && !x.payments.some((p) => p.payment_id === paymentId)) {
+                        const card = x.report?.tokenization_report || {};
+                        x.payments.push({ payment_id: paymentId, payment_method: 'credit_card', brand: card.brand, last_four: card.last_four });
+                    }
                 });
-                if (paymentId && !x.payments.some((p) => p.payment_id === paymentId)) {
-                    const card = x.report?.tokenization_report || {};
-                    x.payments.push({ payment_id: paymentId, payment_method: 'credit_card', brand: card.brand, last_four: card.last_four });
-                }
-            });
-        });
+            },
+        };
     }
 
-    function form(b, id, fields, submitLabel, onSubmit, note) {
-        const showError = actionError && actionError.bookingId === b.id && actionError.action === id;
-        const submit = h('button', { type: 'submit', class: 'db-btn db-btn-primary', disabled: busyAction === id }, busyAction === id ? 'Working…' : submitLabel);
+    /** Fields, a live preview of the exact Flywire request, and a Send button. */
+    function actionForm(b, action, spec) {
+        const showError = actionError && actionError.bookingId === b.id && actionError.action === action.id;
+        const busy = busyAction === action.id;
+        const submitLabel = `Send ${action.method} request`;
+        const submit = h('button', { type: 'submit', class: 'db-btn db-btn-primary', disabled: busy }, busy ? 'Sending…' : submitLabel);
+        const preview = h('div', { class: 'db-request' });
+
+        const updatePreview = () => {
+            let req = null;
+            let problem = null;
+            try {
+                req = spec.request();
+            } catch (err) {
+                problem = err.message;
+            }
+            preview.replaceChildren(...requestPreview(req?.upstream, problem, updatePreview));
+        };
+        updatePreview();
+
         return h('form', {
             class: 'db-action-form',
             novalidate: true,
+            oninput: updatePreview,
+            onchange: updatePreview,
             onsubmit: async (e) => {
                 e.preventDefault();
                 actionError = null;
-                busyAction = id;
-                submit.disabled = true;
-                submit.textContent = 'Working…';
+                let req;
                 try {
-                    await onSubmit();
+                    req = spec.request();
                 } catch (err) {
-                    actionError = { bookingId: b.id, action: id, message: err.message };
+                    actionError = { bookingId: b.id, action: action.id, message: err.message };
+                    render();
+                    return;
+                }
+                busyAction = action.id;
+                submit.disabled = true;
+                submit.textContent = 'Sending…';
+                try {
+                    const result = await callApi(req.proxy);
+                    await spec.onResult(result, req);
+                } catch (err) {
+                    actionError = { bookingId: b.id, action: action.id, message: err.message };
                 } finally {
                     busyAction = null;
                     render();
                 }
             },
-        }, ...fields, note ? h('p', { class: 'db-sub' }, note) : null,
+        }, ...(spec.fields || []), spec.note ? h('p', { class: 'db-sub' }, spec.note) : null,
+            preview,
             showError ? h('p', { class: 'db-notice db-notice-error', role: 'alert' }, actionError.message) : null,
             submit);
+    }
+
+    // ── Request preview (curl / fetch) ──
+
+    function requestPreview(upstream, problem, rerender) {
+        const tabs = h('div', { class: 'db-tabs', role: 'tablist', 'aria-label': 'Request format' },
+            ...[['curl', 'curl'], ['fetch', 'Node fetch']].map(([id, label]) => h('button', {
+                type: 'button',
+                role: 'tab',
+                class: `db-tab${previewLang === id ? ' active' : ''}`,
+                'aria-selected': String(previewLang === id),
+                onclick: () => {
+                    previewLang = id;
+                    localStorage.setItem(PREVIEW_LANG_KEY, id);
+                    rerender();
+                },
+            }, label)));
+        const code = upstream ? (previewLang === 'fetch' ? toFetch(upstream) : toCurl(upstream)) : '';
+        const copy = h('button', { type: 'button', class: 'db-btn db-btn-ghost db-btn-sm', disabled: !upstream }, 'Copy');
+        copy.addEventListener('click', () => copyText(copy, code));
+
+        return [
+            h('div', { class: 'db-request-head' }, h('span', { class: 'db-request-title' }, 'Request to Flywire'), tabs, copy),
+            upstream
+                ? h('pre', { class: 'db-code' }, h('code', {}, code))
+                : h('p', { class: 'db-notice db-notice-error' }, problem || 'Fill in the fields above.'),
+            h('p', { class: 'db-sub' }, 'This demo’s server sends it with your demo API key as X-Authentication-Key. The key is never shown here.'),
+        ];
+    }
+
+    function apiUrl(path) {
+        return `${serverConfig.api_base || DEFAULT_API_BASE}${path}`;
+    }
+
+    function toCurl({ method, path, body }) {
+        const lines = [`curl${method === 'GET' ? '' : ` -X ${method}`} '${apiUrl(path)}'`, `  -H 'X-Authentication-Key: $FLYWIRE_DEMO_API_KEY'`];
+        if (body) {
+            lines.push(`  -H 'Content-Type: application/json'`);
+            lines.push(`  -d '${JSON.stringify(body, null, 2).replace(/'/g, "'\\''")}'`);
+        }
+        return lines.join(' \\\n');
+    }
+
+    function toFetch({ method, path, body }) {
+        const indent = (text, spaces) => text.split('\n').map((line, i) => (i ? ' '.repeat(spaces) + line : line)).join('\n');
+        const headers = [`    'X-Authentication-Key': process.env.FLYWIRE_DEMO_API_KEY,`];
+        if (body) headers.unshift(`    'Content-Type': 'application/json',`);
+        return [
+            `const response = await fetch('${apiUrl(path)}', {`,
+            `  method: '${method}',`,
+            '  headers: {',
+            ...headers,
+            '  },',
+            ...(body ? [`  body: JSON.stringify(${indent(JSON.stringify(body, null, 2), 2)}),`] : []),
+            '});',
+            'const data = await response.json();',
+        ].join('\n');
+    }
+
+    async function copyText(button, text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            button.textContent = 'Copied';
+        } catch {
+            button.textContent = 'Copy failed';
+        }
+        setTimeout(() => { button.textContent = 'Copy'; }, 1500);
     }
 
     function remember(key, control) {
@@ -584,30 +804,13 @@
         return h('label', { class: 'db-field' }, h('span', {}, label), control);
     }
 
-    // ── Session actions ──
+    // ── Calling the API ──
 
-    async function refreshStatus(b) {
-        busyAction = 'refresh';
-        render();
-        const result = await callApi('GET', `/api/flywire-session/${b.sessionId}`);
-        busyAction = null;
-        if (result.ok) Bookings.applyReport(b.id, result.data);
-        const status = result.data?.payment_report?.status || result.data?.session_report?.status;
-        record(b, result, result.ok ? `Status refreshed${status ? ` · ${status}` : ''}` : 'Status refresh failed', 'refresh');
-    }
-
-    async function resumeSession(b) {
-        busyAction = 'resume';
-        render();
-        const result = await callApi('POST', `/api/flywire-session/${b.sessionId}/resume`);
-        busyAction = null;
-        record(b, result, result.ok ? 'Session resumed · checkout reopened' : 'Resume failed', 'resume');
-        if (!result.ok) return;
-
+    async function reopenCheckout(b, session) {
         try {
             await FlywireCheckout.launch({
                 ...b.checkout,
-                session: result.data,
+                session,
                 onEvent: (name, detail) => Bookings.trackCheckout(b.id, name, detail),
                 onComplete: ({ report }) => Bookings.addHistory(b.id, {
                     action: 'resume', ok: true, label: `Checkout completed after resume${report?.payment_report?.status ? ` · ${report.payment_report.status}` : ''}`,
@@ -624,7 +827,8 @@
         }
     }
 
-    async function callApi(method, url, body) {
+    async function callApi({ method, url, body }) {
+        const started = performance.now();
         try {
             const res = await fetch(url, {
                 method,
@@ -632,20 +836,22 @@
                 body: body ? JSON.stringify(body) : undefined,
             });
             const data = await res.json().catch(() => ({}));
-            return { ok: res.ok, status: res.status, data, request: { method, url, body } };
+            return { ok: res.ok, status: res.status, data, ms: Math.round(performance.now() - started) };
         } catch (err) {
-            return { ok: false, status: 0, data: { error: err.message }, request: { method, url, body } };
+            return { ok: false, status: 0, data: { error: err.message }, ms: Math.round(performance.now() - started) };
         }
     }
 
-    function record(b, result, label, action, onSuccess) {
+    function record(b, result, req, label, action, onSuccess) {
         if (result.ok && onSuccess) Bookings.update(b.id, (x) => { onSuccess(x); return x; });
         Bookings.addHistory(b.id, {
             action,
             ok: result.ok,
             label: result.ok ? label : `${label.split(' · ')[0]} failed · ${errorText(result)}`,
             status: result.status,
-            request: result.request,
+            ms: result.ms,
+            upstream: req.upstream,
+            request: req.proxy,
             response: result.data,
         });
         if (result.ok && action !== 'refresh') {
@@ -675,18 +881,35 @@
         if (!b.history?.length) return null;
         return h('div', { class: 'db-block' },
             h('h3', {}, 'Activity'),
-            h('ol', { class: 'db-history' }, ...b.history.map((entry) => h('li', { class: entry.ok ? 'ok' : 'failed' },
-                h('div', { class: 'db-history-head' },
-                    h('span', {}, entry.label),
-                    h('span', { class: 'db-sub' }, new Date(entry.at).toLocaleTimeString('en-GB'))
-                ),
-                entry.request || entry.response !== undefined ? h('details', {},
-                    h('summary', {}, entry.request ? `${entry.request.method} ${entry.request.url}${entry.status ? ` → ${entry.status}` : ''}` : 'Show data'),
-                    entry.request?.body ? h('pre', {}, h('code', {}, JSON.stringify(entry.request.body, null, 2))) : null,
-                    entry.response !== undefined ? h('pre', {}, h('code', {}, maskJson(entry.response))) : null
-                ) : null
-            )))
+            h('ol', { class: 'db-history' }, ...b.history.map((entry) => {
+                // Entries recorded before the Flywire endpoint was stored show this demo's proxy URL instead.
+                const call = entry.upstream || entry.request;
+                const path = entry.upstream ? entry.upstream.path : entry.request?.url;
+                const summary = call
+                    ? [`${call.method} ${path}`, entry.status ? `→ ${entry.status}` : '', entry.ms !== undefined ? `· ${entry.ms} ms` : ''].filter(Boolean).join(' ')
+                    : 'Show data';
+                return h('li', { class: entry.ok ? 'ok' : 'failed' },
+                    h('div', { class: 'db-history-head' },
+                        h('span', {}, entry.label),
+                        h('span', { class: 'db-sub' }, new Date(entry.at).toLocaleTimeString('en-GB'))
+                    ),
+                    call || entry.response !== undefined ? h('details', {},
+                        h('summary', {}, summary),
+                        entry.upstream ? historyCode('Request', toCurl(entry.upstream)) : null,
+                        !entry.upstream && entry.request?.body ? historyCode('Request body', JSON.stringify(entry.request.body, null, 2)) : null,
+                        entry.response !== undefined ? historyCode('Response', maskJson(entry.response)) : null
+                    ) : null
+                );
+            }))
         );
+    }
+
+    function historyCode(title, text) {
+        const copy = h('button', { type: 'button', class: 'db-btn db-btn-ghost db-btn-sm' }, 'Copy');
+        copy.addEventListener('click', () => copyText(copy, text));
+        return h('div', { class: 'db-history-code' },
+            h('div', { class: 'db-request-head' }, h('span', { class: 'db-request-title' }, title), copy),
+            h('pre', {}, h('code', {}, text)));
     }
 
     function maskJson(value) {

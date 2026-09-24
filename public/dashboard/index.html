@@ -20,20 +20,25 @@
                 <span class="db-brand-tag">Back office</span>
             </div>
             <div class="db-header-meta">
-                <span class="db-demo-tag">Flywire Checkout V2 demo &middot; data saved in this browser</span>
+                <span class="db-demo-tag">Flywire <strong>demo environment only</strong> &middot; data saved in this browser</span>
                 <a href="/" class="db-link">&larr; Booking site</a>
             </div>
         </div>
     </header>
 
     <main class="db-main">
-        <section class="db-card" aria-labelledby="db-credentials-title">
+        <section class="db-card" id="credentials" aria-labelledby="db-credentials-title">
             <div class="db-card-head">
                 <div>
-                    <h2 id="db-credentials-title">Flywire connection</h2>
-                    <p class="db-muted">Credentials used by the booking site and by the actions on this page. Leave a field empty to use the server's value.</p>
+                    <h2 id="db-credentials-title">Flywire connection <span class="db-env-badge">DEMO only</span></h2>
+                    <p class="db-muted">Your Flywire <strong>demo</strong> account credentials, used by the booking site and by every action on this page. Requests always go to the Flywire demo API (<code id="db-api-base">api-platform.demo.flywire.com</code>); production credentials are rejected there.</p>
                 </div>
                 <span id="db-connection-status" class="db-pill db-pill-neutral">Not checked</span>
+            </div>
+
+            <div id="db-credentials-intro" class="db-notice db-notice-warn db-intro" data-credentials-banner hidden>
+                <strong>Add your Flywire demo credentials to start.</strong>
+                This demo ships without credentials. Enter the <span data-credentials-missing></span> of a Flywire demo account, then press <em>Save &amp; test connection</em>. Until then, checkout on the booking site stays disabled.
             </div>
 
             <form id="db-credentials-form" class="db-credentials" autocomplete="off" novalidate>
@@ -54,12 +59,12 @@
                 </label>
                 <div class="db-credentials-actions">
                     <button type="submit" class="db-btn db-btn-primary">Save &amp; test connection</button>
-                    <button type="button" id="db-credentials-reset" class="db-btn db-btn-secondary">Use server defaults</button>
+                    <button type="button" id="db-credentials-reset" class="db-btn db-btn-secondary">Clear credentials</button>
                 </div>
             </form>
             <p id="db-credentials-fixes" class="db-notice db-notice-info" role="status" hidden></p>
             <p id="db-credentials-result" class="db-notice" role="status" hidden></p>
-            <p class="db-muted db-small">Demo only: the key is stored in this browser and sent to this demo's server, which uses it instead of <code>CPX_API_KEY</code>. In production your API key stays on your server.</p>
+            <p class="db-muted db-small">Demo only: credentials are stored in this browser and the API key is sent to this demo's server with each request, which forwards it to the Flywire demo API. In a real integration your API key stays on your server.</p>
         </section>
 
         <div class="db-layout">

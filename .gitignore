@@ -2,3 +2,8 @@ node_modules/
 .env
 .DS_Store
 .vibey-render
+
+# Internal QA material and test evidence (tokens, payor IDs, guest data) never belongs in this repo.
+docs/qa/
+evidence/
+QA-HANDOFF.md

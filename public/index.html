@@ -39,10 +39,11 @@
                         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
                     </a>
                     <!-- Flywire demo tooling: opens the checkout settings drawer (public/demo-config.js). -->
-                    <button type="button" id="demo-config-open" class="demo-cog"
+                    <button type="button" id="demo-config-open" class="demo-cog demo-cog-with-badge"
                             aria-haspopup="dialog" aria-controls="demo-drawer" aria-expanded="false"
                             aria-label="Checkout settings" title="Checkout settings">
                         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <span class="demo-badge demo-badge-warn" data-credentials-banner hidden></span>
                     </button>
                 </div>
             </div>
@@ -487,6 +488,12 @@
 
                         <p id="payment-notice" class="payment-notice" role="status" hidden></p>
 
+                        <!-- Demo tooling: checkout stays disabled until the user has entered Flywire demo credentials. -->
+                        <div class="payment-credentials" data-credentials-banner hidden role="status">
+                            <strong>Checkout needs Flywire demo credentials.</strong>
+                            Add your <span data-credentials-missing></span> in the <a href="/dashboard/#credentials">hotel back office</a>, then come back to pay.
+                        </div>
+
                         <button id="proceed-btn" class="btn-primary">Continue to Payment</button>
 
                         <!-- Mount point for `config.embed_to` when "Embedded in page" is selected. -->
@@ -590,6 +597,11 @@
             </header>
 
             <div class="fw-drawer-body">
+                <div class="fw-credentials-banner" data-credentials-banner hidden role="status">
+                    <strong>Add your Flywire demo credentials to start</strong>
+                    <p>This demo comes without credentials. Enter your <span data-credentials-missing></span> in the hotel back office. They're saved in this browser and only work with the Flywire demo environment.</p>
+                    <a class="fw-btn fw-btn-primary fw-btn-link" href="/dashboard/#credentials">Add credentials</a>
+                </div>
                 <section class="fw-section" aria-labelledby="demo-sec-flow">
                     <h3 id="demo-sec-flow" class="fw-section-title"><span class="fw-step">1</span>Flow</h3>
                     <div id="demo-flow-list" class="fw-flow-list"></div>
@@ -781,22 +793,11 @@
                     <p class="fw-help" id="demo-session-note"></p>
                 </section>
 
-                <section class="fw-section" aria-labelledby="demo-sec-recipient">
-                    <h3 id="demo-sec-recipient" class="fw-section-title"><span class="fw-step">8</span>Recipient</h3>
-                    <p class="fw-help">Who receives the payment, sent as <code>recipient</code>. Saved in this browser and kept when you reset the other settings. Leave empty to use the server's recipient.</p>
-                    <div class="fw-recipient-fields">
-                        <label class="fw-field">Client ID
-                            <input type="text" id="demo-recipient-client-id" autocomplete="off" spellcheck="false">
-                        </label>
-                        <label class="fw-field">Code
-                            <input type="text" id="demo-recipient-code" autocomplete="off" spellcheck="false">
-                        </label>
-                    </div>
-                    <div class="fw-recipient-footer">
-                        <p class="fw-help" id="demo-recipient-note"></p>
-                        <p class="fw-help"><a class="fw-link" href="/dashboard/">Change the API key in the hotel back office</a></p>
-                        <button type="button" id="demo-recipient-clear" class="fw-btn fw-btn-ghost" hidden>Use server recipient</button>
-                    </div>
+                <section class="fw-section" aria-labelledby="demo-sec-credentials">
+                    <h3 id="demo-sec-credentials" class="fw-section-title"><span class="fw-step">8</span>Flywire demo credentials</h3>
+                    <dl class="fw-cred-summary" id="demo-credentials-summary"></dl>
+                    <p class="fw-help">Entered once per browser in the hotel back office and used for every checkout and payment action. Flywire demo environment only.</p>
+                    <a class="fw-btn fw-btn-secondary fw-btn-link" href="/dashboard/#credentials">Change credentials in the back office</a>
                 </section>
 
                 <details class="fw-section fw-code">
@@ -833,7 +834,14 @@
                 </button>
             </header>
 
-            <div class="fw-drawer-body" id="activity-body" aria-live="polite"></div>
+            <div class="fw-drawer-body">
+                <div class="fw-credentials-banner" data-credentials-banner hidden role="status">
+                    <strong>Add your Flywire demo credentials to start</strong>
+                    <p>This demo comes without credentials. Enter your <span data-credentials-missing></span> in the hotel back office. They're saved in this browser and only work with the Flywire demo environment.</p>
+                    <a class="fw-btn fw-btn-primary fw-btn-link" href="/dashboard/#credentials">Add credentials</a>
+                </div>
+                <div id="activity-body" aria-live="polite"></div>
+            </div>
 
             <footer class="fw-drawer-footer">
                 <div class="fw-footer-group">
@@ -853,7 +861,7 @@
     <script src="/bookings-store.js"></script>
     <!-- Flywire Checkout V2 integration module — keeps the SDK call surface in one file. -->
     <script src="/flywire-checkout.js"></script>
-    <!-- Demo configuration drawer — sales tooling that picks which capability to demo. -->
+    <!-- Demo configuration drawer — picks which capability to demo. -->
     <script src="/demo-config.js"></script>
     <!-- Card brand icons for payment results. -->
     <script src="/card-brands.js"></script>

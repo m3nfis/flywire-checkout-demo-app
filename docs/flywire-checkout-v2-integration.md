@@ -12,7 +12,7 @@ Three files. Read them in this order:
 2. **[`public/flywire-checkout.js`](../public/flywire-checkout.js)** — the entire SDK integration. Copy this file as-is.
 3. **[`server.js`](../server.js)** — `/api/flywire-session` proxy that creates and reads authenticated sessions with the secret API key.
 
-Everything else in this repo is demo-app scaffolding (rooms, guest form, success view, sales drawer) and is irrelevant to the integration.
+Everything else in this repo is demo-app scaffolding (rooms, guest form, success view, settings drawer, back office) and is irrelevant to the integration.
 
 ---
 
@@ -163,10 +163,9 @@ It returns `{ session_report: { status }, payment_report: { status, payment_watc
 
 | Variable          | Where           | Description                                                                         |
 | ----------------- | --------------- | ----------------------------------------------------------------------------------- |
-| `CPX_CLIENT_ID`   | server + client | Public recipient identifier; goes into `initFields.recipient.client_id`             |
-| `CPX_CODE`        | server + client | Public recipient code; goes into `initFields.recipient.code`                        |
-| `CPX_API_KEY`     | **server only** | Secret used as `X-Authentication-Key` for session calls. Never expose.              |
-| `CPX_API_BASE`    | server only     | Public API base. Demo: `https://api-platform.demo.flywire.com`                      |
+| Client ID / recipient code | client | Public recipient identifiers; go into `initFields.recipient`. In this demo they are entered in `/dashboard`. |
+| API key | **server only** in a real integration | Secret used as `X-Authentication-Key`. This demo is the exception: each user enters a demo key in `/dashboard` and the browser sends it with each request. |
+| API base | server | Demo: `https://api-platform.demo.flywire.com` (fixed in this demo). Production: `https://api-platform.flywire.com`. |
 | `CPX_EVENT_URL`   | server only     | Optional `config.event_url` for session events                                      |
 
 ---

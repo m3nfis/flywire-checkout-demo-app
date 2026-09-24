@@ -1,5 +1,5 @@
 /**
- * Demo configuration drawer — lets Flywire sales pick which Checkout V2
+ * Demo configuration drawer — lets the presenter pick which Checkout V2
  * capability to demo on the Caldera House booking page.
  *
  * Not part of the SDK integration. It only decides which `transaction`,
@@ -10,8 +10,6 @@
     'use strict';
 
     const STORAGE_KEY = 'caldera.checkoutDemo.v1';
-    // Kept apart from STORAGE_KEY so "Reset" leaves the recipient in place.
-    const RECIPIENT_KEY = 'flywire.checkoutDemo.recipient';
     const PLAYGROUND = 'https://checkout.demo.flywire.com/playground/';
 
     const FLOW_GROUPS = [
@@ -23,7 +21,7 @@
 
     /**
      * `guest*` fields are what the hotel guest sees on the booking page;
-     * `title` / `pitch` are what the sales team sees in the drawer.
+     * `title` / `pitch` are what the presenter sees in the drawer.
      */
     const FLOWS = [
         {
@@ -173,8 +171,7 @@
     };
 
     let state = loadState();
-    let recipientOverride = loadRecipient();
-    let serverConfig = { authenticated_sessions: true, split_recipients: [], preview_features: [] };
+    let serverConfig = { split_recipients: [], preview_features: [] };
     let bookingAmountCents = 0;
     const listeners = new Set();
     let lastFocused = null;
@@ -204,32 +201,14 @@
         listeners.forEach((fn) => fn());
     }
 
-    function loadRecipient() {
-        try {
-            const saved = JSON.parse(localStorage.getItem(RECIPIENT_KEY));
-            return { client_id: String(saved?.client_id || ''), code: String(saved?.code || '') };
-        } catch {
-            return { client_id: '', code: '' };
-        }
-    }
-
-    function setRecipient(patch) {
-        recipientOverride = { ...recipientOverride, ...patch };
-        if (recipientOverride.client_id || recipientOverride.code) {
-            localStorage.setItem(RECIPIENT_KEY, JSON.stringify(recipientOverride));
-        } else {
-            localStorage.removeItem(RECIPIENT_KEY);
-        }
-        render();
-        listeners.forEach((fn) => fn());
-    }
-
-    /** Recipient sent to checkout: the saved override, falling back to the server's per field. */
+    /** Recipient sent to checkout: the demo credentials entered in the back office. */
     function recipient() {
-        return {
-            client_id: recipientOverride.client_id || serverConfig.client_id,
-            code: recipientOverride.code || serverConfig.code,
-        };
+        const { client_id, code } = global.DemoCredentials.get();
+        return { client_id, code };
+    }
+
+    function hasApiKey() {
+        return Boolean(global.DemoCredentials.get().api_key);
     }
 
     function currentFlow() {
@@ -242,7 +221,7 @@
 
     function isFlowAvailable(flow) {
         if (flow.preview && !isPreviewEnabled(flow.preview)) return false;
-        if (flow.type !== 'payment' && !serverConfig.authenticated_sessions) return false;
+        if (flow.type !== 'payment' && !hasApiKey()) return false;
         return true;
     }
 
@@ -259,7 +238,7 @@
                 if (flow.type !== 'payment') return 'Card-on-file flows always need an authenticated session.';
                 return null;
             case 'authenticated':
-                return serverConfig.authenticated_sessions ? null : 'Server has no CPX_API_KEY configured.';
+                return hasApiKey() ? null : 'Add your demo API key in the hotel back office first.';
             default:
                 return null;
         }
@@ -400,6 +379,13 @@
         bindControls();
         render();
 
+        global.DemoCredentials.onChange(() => {
+            if (!isFlowAvailable(currentFlow())) state.flow = DEFAULT_STATE.flow;
+            renderFlowList();
+            render();
+            listeners.forEach((fn) => fn());
+        });
+
         $('demo-config-open').addEventListener('click', open);
         document.querySelectorAll('#demo-drawer [data-drawer-close]').forEach((el) => el.addEventListener('click', close));
         $('demo-drawer').addEventListener('keydown', onDrawerKeydown);
@@ -459,7 +445,7 @@
                 const body = el('span', 'fw-flow-option-body');
                 const titleRow = el('span', 'fw-flow-option-title', flow.title);
                 if (flow.preview && !isPreviewEnabled(flow.preview)) titleRow.append(el('span', 'fw-badge fw-badge-soon', 'Coming soon'));
-                else if (flow.type !== 'payment' && !serverConfig.authenticated_sessions) titleRow.append(el('span', 'fw-badge fw-badge-warn', 'Needs API key'));
+                else if (flow.type !== 'payment' && !hasApiKey()) titleRow.append(el('span', 'fw-badge fw-badge-warn', 'Needs API key'));
                 body.append(titleRow, el('span', 'fw-flow-option-pitch', flow.pitch), el('code', 'fw-flow-option-tech', techSummary(flow)));
 
                 label.append(input, body);
@@ -536,12 +522,6 @@
         $('demo-brand-space').addEventListener('change', (e) => setState({ branding: { ...state.branding, space: e.target.value } }));
         $('demo-locale').addEventListener('change', (e) => setState({ locale: e.target.value }));
 
-        $('demo-recipient-client-id').addEventListener('input', (e) => setRecipient({ client_id: e.target.value.trim() }));
-        $('demo-recipient-code').addEventListener('input', (e) => setRecipient({ code: e.target.value.trim() }));
-        $('demo-recipient-clear').addEventListener('click', () => {
-            setRecipient({ client_id: '', code: '' });
-            $('demo-recipient-client-id').focus();
-        });
 
         $('demo-reset').addEventListener('click', () => {
             splitEditorKey = null;
@@ -613,7 +593,7 @@
         $('demo-branding-fields').hidden = !state.branding.enabled;
         $('demo-locale').value = state.locale;
 
-        renderRecipient();
+        renderCredentialsSummary();
 
         $('demo-config-open').title = `Checkout settings · ${flow.title}`;
         renderCodePreview(flow);
@@ -705,18 +685,17 @@
         return input;
     }
 
-    function renderRecipient() {
-        syncInput('demo-recipient-client-id', recipientOverride.client_id, serverConfig.client_id || 'Client ID (UUID)');
-        syncInput('demo-recipient-code', recipientOverride.code, serverConfig.code || 'e.g. DTT');
-
-        const overridden = Boolean(recipientOverride.client_id || recipientOverride.code);
-        $('demo-recipient-clear').hidden = !overridden;
-        const { client_id, code } = recipient();
-        $('demo-recipient-note').textContent = !client_id || !code
-            ? 'Checkout needs both a client ID and a code.'
-            : overridden && serverConfig.authenticated_sessions
-                ? 'Authenticated sessions are created with the server\'s API key, so they only work for recipients that key can access.'
-                : '';
+    function renderCredentialsSummary() {
+        const saved = global.DemoCredentials.get();
+        const rows = [
+            ['Client ID', saved.client_id],
+            ['Recipient code', saved.code],
+            ['API key', saved.api_key && global.DemoCredentials.mask(saved.api_key)],
+        ];
+        $('demo-credentials-summary').replaceChildren(...rows.flatMap(([term, value]) => {
+            const dd = el('dd', value ? null : 'fw-cred-missing', value || 'Not set');
+            return [el('dt', null, term), dd];
+        }));
     }
 
     function renderCodePreview(flow) {
@@ -781,13 +760,6 @@
 
     function setRadio(name, value) {
         document.querySelectorAll(`input[name="${name}"]`).forEach((input) => { input.checked = input.value === value; });
-    }
-
-    /** Updates a text input without clobbering what the user is typing. */
-    function syncInput(id, value, placeholder) {
-        const input = $(id);
-        if (document.activeElement !== input && input.value.trim() !== value) input.value = value;
-        input.placeholder = placeholder;
     }
 
     function setDisabled(id, reason) {

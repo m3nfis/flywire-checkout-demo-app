@@ -2,12 +2,14 @@
 
 A **luxury hotel booking demo** for *The Caldera House* (Santorini): guests pick a room, enter details, then pay with **Flywire Checkout V2** (sandbox). The UI is a static front end served by a small **Express** server.
 
+> **Demo environment only, no built-in credentials.** Every user first enters their own Flywire **demo** credentials (client ID, recipient code, API key) in the hotel back office at `/dashboard`. Until then the drawers show an *Add your Flywire demo credentials* banner and the pay button is disabled. All Flywire API calls go to `https://api-platform.demo.flywire.com`; there is no setting to point the demo at production, and production keys are rejected by the demo API.
+
 It serves two audiences:
 
-- **Flywire sales** use it to show Checkout V2 to travel clients (boutique hotels, liveaboard dive operators, experience travel agencies). The small cog next to *Oia, Santorini* in the header opens a drawer where you pick the flow and options to demo.
+- **Presenters** use it to show what Checkout V2 can do for travel businesses (boutique hotels, liveaboard dive operators, experience travel agencies). The small cog next to *Oia, Santorini* in the header opens a drawer where you pick the flow and options to show.
 - **Developers** can copy a single self-contained module ([`public/flywire-checkout.js`](public/flywire-checkout.js)) plus the matching server proxy in [`server.js`](server.js).
 
-## Demo drawer — what sales can show
+## Settings drawer — what you can show
 
 Click the cog next to *Oia, Santorini* in the header to open **Checkout settings**. Settings are saved in the browser and apply the next time checkout opens. The guest-facing payment panel and button label update to match the selected flow.
 
@@ -43,11 +45,11 @@ For each booking you can run the session-based actions from the playground's *Au
 | **Extend hold** | Reserve & hold flows; resets the hold to 7 days, can raise (never lower) the amount | `POST /payments/v1/payments/{id}/authorization_adjustments` | [Extend a preauth payment](https://checkout.demo.flywire.com/playground/authenticated_sessions/extend_preauth) |
 | **Charge saved card** | card-on-file flows; token details come from the session's `tokenization_report` or can be pasted | `POST /payments/v1/payments/charge` | [Charge token](https://checkout.demo.flywire.com/playground/authenticated_sessions/charge_token) |
 
-Actions that don't apply are disabled with the reason listed. Each booking keeps an activity log with the request and Flywire's response.
+Each action opens a developer panel first: the HTTP method and Flywire endpoint, an **Open in playground** link, the form fields, and a live **curl / Node fetch** preview of the exact request (real IDs and amounts, key shown as `$FLYWIRE_DEMO_API_KEY`) with a Copy button. Nothing is sent until you press **Send GET/POST request**. Actions that don't apply open an explanation instead. Each booking keeps an activity log with the Flywire endpoint, status, response time, the request as curl and Flywire's response.
 
-**Flywire connection** at the top of the dashboard sets the Client ID, recipient code and API key used by both pages (saved in localStorage; empty fields fall back to the server's `.env`). Pasted values are cleaned automatically: surrounding quotes, a `X-Authentication-Key:` / `Bearer` prefix, line breaks, spaces and invisible characters are removed, and the page says what it fixed. **Save & test connection** checks the key without creating anything; **Use server defaults** clears the saved values.
+**Flywire connection** at the top of the dashboard (marked *DEMO only*) is where each user enters the Client ID, recipient code and API key of a Flywire demo account. They are saved in that browser's localStorage and used by both pages; the server has no credentials of its own. Pasted values are cleaned automatically: surrounding quotes, a `X-Authentication-Key:` / `Bearer` prefix, line breaks, spaces and invisible characters are removed, and the page says what it fixed. **Save & test connection** checks the key against the demo API without creating anything (production keys come back *Key rejected*); **Clear credentials** removes them.
 
-> Demo only: the browser sends its saved key to this demo's server in `X-Demo-Api-Key`, and the server uses it instead of `CPX_API_KEY`. In production the API key stays on your server.
+> Demo only: the browser sends its saved key to this demo's server in `X-Demo-Api-Key`, which forwards it to the Flywire demo API. In a real integration the API key stays on your server.
 
 ## Checkout activity drawer — what Checkout V2 returns
 
@@ -71,7 +73,7 @@ After checkout, the success screen shows what Flywire returned for the session (
 | [`server.js`](server.js)                                                             | Express backend; `POST /api/flywire-session` and `GET /api/flywire-session/:id` are the integration part. |
 | [`docs/flywire-checkout-v2-integration.md`](docs/flywire-checkout-v2-integration.md) | Step-by-step integration guide with playground crosswalk and curl examples.                              |
 
-Everything else is **demo scaffolding**: `app.js` (booking views), `demo-config.js` / `demo-config.css` (sales drawer), `styles.css`, room data and the guest form.
+Everything else is **demo scaffolding**: `app.js` (booking views), `demo-config.js` / `demo-config.css` (settings drawer), `styles.css`, room data and the guest form.
 
 ## Stack
 
@@ -88,7 +90,7 @@ The frontend loads the gateway script, which exposes `window.cpx_core`. When the
 
 ```js
 window.cpx_core.start({
-  recipient:   { client_id, code },                                  // public; from /api/config
+  recipient:   { client_id, code },                                  // public; entered in /dashboard
   transaction: { type, details: { amount, authorization?, split?, waive_adjustments? } },
   payer:       { fields: { first_name, last_name, email, ... } },   // prefilled from the guest form
   config:      { locale, embed_to?, offer_rules?, timeout? },
@@ -103,17 +105,17 @@ window.cpx_core.start({
 
 3. On `on_end('completed')`, asks this server for the session outcome (`GET /api/flywire-session/:id`) instead of trusting the browser, then shows the success or declined screen. `canceled` returns to the booking panel; `timeout` shows a "Time's up" screen.
 
-The server proxies to `${CPX_API_BASE}/commercial_payex/v2/session` with the server-only `X-Authentication-Key`.
+The server proxies to `https://api-platform.demo.flywire.com/commercial_payex/v2/session` with the user's demo key as `X-Authentication-Key`.
 
 ## Local development
 
 ```bash
 npm install
-cp .env.example .env   # then fill in your demo client id / code / api key
+cp .env.example .env   # optional settings only; no credentials go here
 npm run dev            # or: npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000/dashboard/](http://localhost:3000/dashboard/), enter your Flywire demo credentials, then go to the booking site.
 
 ## Environment variables
 
@@ -121,16 +123,12 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Variable               | Description                                                                                                                                              |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CPX_CLIENT_ID`        | Recipient `client_id` (UUID), exposed to the browser via `/api/config`                                                                                   |
-| `CPX_CODE`             | Recipient `code` (e.g. `DTT` for Demo Travel)                                                                                                            |
-| `CPX_API_KEY`          | **Server-only** secret (`X-Authentication-Key`) for authenticated sessions. Required for every card-on-file flow; without it only anonymous payments work. |
-| `CPX_API_BASE`         | Public API base URL. Defaults to `https://api-platform.demo.flywire.com`. The retired `https://checkout.demo.flywire.com/public-api-demo` is mapped automatically with a warning. |
 | `CPX_EVENT_URL`        | Optional. Sent as `config.event_url` when creating sessions so Flywire posts session events there.                                                        |
-| `CPX_SPLIT_RECIPIENTS` | Optional. Comma-separated recipient codes for *Split with partners*. Defaults to `EVT,UUI`.                                                             |
+| `CPX_SPLIT_RECIPIENTS` | Optional. Comma-separated partner recipient codes to prefill in *Split with partners*. Empty by default; the split editor starts with one blank partner. |
 | `CPX_PREVIEW_FEATURES` | Optional. Comma-separated capabilities to unlock before they reach every environment: `moto`, `timeout`.                                                 |
 | `PORT`                 | HTTP port (optional; defaults to `3000`. Render sets this automatically.)                                                                                |
 
-Never commit `.env`. It is listed in `.gitignore`.
+`CPX_CLIENT_ID`, `CPX_CODE`, `CPX_API_KEY` and `CPX_API_BASE` are no longer used: the server logs a warning and ignores them if they are still set. Never commit `.env`; it is listed in `.gitignore`.
 
 ## Deploy on Render
 
@@ -139,7 +137,7 @@ Never commit `.env`. It is listed in `.gitignore`.
 1. Push this repository to GitHub.
 2. In the [Render Dashboard](https://dashboard.render.com), choose **New** → **Blueprint**.
 3. Connect the repository and select the branch.
-4. When prompted, set `CPX_CLIENT_ID`, `CPX_CODE`, `CPX_API_KEY`, and optionally the other variables above.
+4. Optionally set the variables above (no credentials needed).
 5. Apply the blueprint.
 
 ### Option B — Web Service manually
@@ -148,7 +146,7 @@ Never commit `.env`. It is listed in `.gitignore`.
 2. **Runtime:** Node
 3. **Build command:** `npm install`
 4. **Start command:** `npm start`
-5. Add `CPX_CLIENT_ID`, `CPX_CODE`, `CPX_API_KEY`, and optionally the other variables under **Environment**.
+5. Optionally add the variables above under **Environment** (no credentials needed).
 6. Deploy.
 
 ## Project layout
@@ -158,7 +156,7 @@ Never commit `.env`. It is listed in `.gitignore`.
 ├── public/
 │   ├── index.html                             # Booking flow (rooms → guest → payment) + demo drawer markup
 │   ├── flywire-checkout.js                    # ★ Flywire Checkout V2 SDK integration (the interesting file)
-│   ├── demo-config.js                         # Sales drawer: flow catalog, options, code preview
+│   ├── demo-config.js                         # Settings drawer: flow catalog, options, code preview
 │   ├── demo-config.css                        # Settings cog + drawer styles (Flywire design tokens)
 │   ├── checkout-activity.js                   # Activity drawer: live trace of checkout callbacks and results
 │   ├── bookings-store.js                      # Demo bookings in localStorage (booking site ↔ dashboard)
@@ -173,10 +171,6 @@ Never commit `.env`. It is listed in `.gitignore`.
 ├── render.yaml                                # Render Blueprint
 └── .env.example                               # Template for local credentials
 ```
-
-## QA
-
-Remaining manual tests, setup and where to save evidence: [`docs/QA-HANDOFF.md`](docs/QA-HANDOFF.md).
 
 ## References
 
