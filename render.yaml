@@ -15,3 +15,9 @@ services:
         sync: false
       - key: CPX_API_BASE
         sync: false
+      - key: CPX_EVENT_URL
+        sync: false
+      - key: CPX_SPLIT_RECIPIENTS
+        sync: false
+      - key: CPX_PREVIEW_FEATURES
+        sync: false

@@ -36,8 +36,8 @@
           <p class="eyebrow">Minimal client guide</p>
           <h1>Integrate Flywire Checkout V2 with anonymous sessions</h1>
           <p class="lead">
-            Anonymous sessions let a frontend-only page start Flywire Checkout in
-            order to complete a payment.
+            Anonymous sessions let a frontend-only page start Flywire Checkout
+            in order to complete a payment.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="#steps">Start the steps</a>
@@ -77,21 +77,36 @@
           <span class="step-number">1</span>
           <div>
             <h3>Get your integration values</h3>
-            <p>Flywire provides two environments. Use the correct gateway origin when loading the checkout runtime:</p>
+            <p>
+              Flywire provides two environments. Use the correct gateway origin
+              when loading the checkout runtime:
+            </p>
             <ul>
               <li>
-                <strong>Demo</strong> &mdash; <code>https://checkout.demo.flywire.com</code><br>
-                Script: <code>https://checkout.demo.flywire.com/gateway/connect.js</code>
+                <strong>Demo</strong> &mdash;
+                <code>https://checkout.demo.flywire.com</code><br />
+                Script:
+                <code
+                  >https://checkout.demo.flywire.com/gateway/connect.js</code
+                >
               </li>
               <li>
-                <strong>Production</strong> &mdash; <code>https://checkout.flywire.com</code><br>
-                Script: <code>https://checkout.flywire.com/gateway/connect.js</code>
+                <strong>Production</strong> &mdash;
+                <code>https://checkout.flywire.com</code><br />
+                Script:
+                <code>https://checkout.flywire.com/gateway/connect.js</code>
               </li>
             </ul>
             <p>You also need:</p>
             <ul>
-              <li><code>YOUR_CLIENT_ID</code> &mdash; your client identifier (provided by Flywire).</li>
-              <li><code>YOUR_RECIPIENT_CODE</code> &mdash; the recipient configuration checkout should use.</li>
+              <li>
+                <code>YOUR_CLIENT_ID</code> &mdash; your client identifier
+                (provided by Flywire).
+              </li>
+              <li>
+                <code>YOUR_RECIPIENT_CODE</code> &mdash; the recipient
+                configuration checkout should use.
+              </li>
             </ul>
           </div>
         </article>
@@ -100,7 +115,10 @@
           <span class="step-number">2</span>
           <div>
             <h3>Load the Flywire Checkout browser runtime</h3>
-            <p>Add the connector script on the page where checkout starts. Use the URL matching your environment:</p>
+            <p>
+              Add the connector script on the page where checkout starts. Use
+              the URL matching your environment:
+            </p>
             <div class="code-card" data-label="HTML — Demo">
               <pre><code>&lt;script src="https://checkout.demo.flywire.com/gateway/connect.js" defer&gt;&lt;/script&gt;</code></pre>
             </div>
@@ -123,7 +141,7 @@
   transaction: {
     type: "payment",
     details: {
-      amount: "123.45"
+      amount: 12345
     }
   },
   response: {
@@ -150,12 +168,17 @@
             </p>
             <div class="code-card" data-label="Example payload">
               <pre><code>{
-  status: "COMPLETED",
-  paymentReport: {
+  session_report: {
+    status: "COMPLETED",
+  },
+  payment_report: {
     status: "FULLY_PAID",
-    amount: "123.45",
+    amount: 12345,
     currency: "USD",
-    paymentWatchlist: []
+    payment_watchlist: [{
+      payment_id: "DTT764285713",
+      payment_method: "card",
+    }]
   }
 }</code></pre>
             </div>
@@ -207,7 +230,7 @@
       transaction: {
         type: "payment",
         details: {
-          amount: "123.45"
+          amount: 12345
         }
       },
       response: {
@@ -244,49 +267,69 @@
         </p>
         <div class="feature-grid">
           <article>
-            <h3><a href="/full-docs/capabilities.html#payment-checkout">Payment checkout</a></h3>
+            <h3>
+              <a>Payment checkout</a>
+            </h3>
             <p>Collect a payment for a known amount.</p>
           </article>
           <article>
-            <h3><a href="/full-docs/capabilities.html#tokenization">Tokenization</a></h3>
+            <h3>
+              <a>Tokenization</a>
+            </h3>
             <p>Store a payer payment method for later use.</p>
           </article>
           <article>
-            <h3><a href="/full-docs/capabilities.html#optional-tokenization">Optional tokenization</a></h3>
+            <h3>
+              <a>Optional tokenization</a>
+            </h3>
             <p>Collect payment and optionally save the method.</p>
           </article>
           <article>
-            <h3><a href="/full-docs/capabilities.html#implicit-tokenization">Implicit tokenization</a></h3>
+            <h3>
+              <a>Implicit tokenization</a>
+            </h3>
             <p>Create a reusable method as part of checkout.</p>
           </article>
           <article>
-            <h3><a href="/full-docs/capabilities.html#embedded-checkout">Embedded checkout</a></h3>
+            <h3>
+              <a>Embedded checkout</a>
+            </h3>
             <p>
               Render checkout inside a page container with
               <code>config.embed_to</code>.
             </p>
           </article>
           <article>
-            <h3><a href="/full-docs/capabilities.html#localization-forms">Localization</a></h3>
+            <h3>
+              <a>Localization</a>
+            </h3>
             <p>Request a supported checkout language or locale.</p>
           </article>
           <article>
-            <h3><a href="/full-docs/capabilities.html#offer-rules">Offer controls</a></h3>
+            <h3>
+              <a>Offer controls</a>
+            </h3>
             <p>Influence available payment methods and ordering.</p>
           </article>
           <article>
-            <h3><a href="/full-docs/capabilities.html#preauthorization">Preauthorization</a></h3>
+            <h3>
+              <a>Preauthorization</a>
+            </h3>
             <p>Authorize funds before capture when the flow supports it.</p>
           </article>
           <article>
-            <h3><a href="/full-docs/events.html">Events and status visibility</a></h3>
+            <h3>
+              <a>Events and status visibility</a>
+            </h3>
             <p>
               Contact Flywire if you need event notifications or stronger
               payment follow-up.
             </p>
           </article>
           <article>
-            <h3><a href="/full-docs/sessions.html#authenticated">Stronger security</a></h3>
+            <h3>
+              <a>Stronger security</a>
+            </h3>
             <p>
               Contact Flywire if your checkout requires stronger security or
               operational controls.
@@ -304,7 +347,12 @@
           preauthorization, embedded mode, and authenticated sessions.
         </p>
         <p>
-          <a href="https://checkout.demo.flywire.com/playground/1_payment/1_payment_minimum_fields/" target="_blank" rel="noopener" class="btn btn-primary">
+          <a
+            href="https://checkout.demo.flywire.com/playground/1_payment/2_payment_common_fields/"
+            target="_blank"
+            rel="noopener"
+            class="btn btn-primary"
+          >
             Open Playground &rarr;
           </a>
         </p>
@@ -319,8 +367,10 @@
             code.
           </li>
           <li>
-            Load <code>connect.js</code> from the correct environment
-            (<code>checkout.demo.flywire.com</code> or <code>checkout.flywire.com</code>) before starting checkout.
+            Load <code>connect.js</code> from the correct environment (<code
+              >checkout.demo.flywire.com</code
+            >
+            or <code>checkout.flywire.com</code>) before starting checkout.
           </li>
           <li>
             Handle <code>completed</code> and <code>canceled</code> in

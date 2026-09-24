@@ -4,171 +4,170 @@
  *
  * This single file is the entire Flywire Checkout V2 integration for this
  * demo. Copy it into your own project (along with the matching
- * `<script src="…/gateway/connect.js">` tag and a server-side session
- * endpoint) to add Flywire Checkout V2 to any web app.
+ * `<script src="…/gateway/connect.js">` tag and the two server-side session
+ * endpoints in `server.js`) to add Flywire Checkout V2 to any web app.
  *
  * Playground (canonical reference for every payload below):
- *   - Payment minimum fields:    https://checkout.demo.flywire.com/playground/1_payment/1_payment_minimum_fields/
- *   - Payment common fields:     https://checkout.demo.flywire.com/playground/1_payment/2_payment_common_fields/
- *   - Payment with preauth:      https://checkout.demo.flywire.com/playground/1_payment/6_payment_with_preauth/
- *   - Tokenization (no amount):  https://checkout.demo.flywire.com/playground/2_tokenization/1_tokenization_without_amount/
- *   - Create session (server):   https://checkout.demo.flywire.com/playground/4_authenticated_sessions/1_create_session/
+ *   https://checkout.demo.flywire.com/playground/
  *
  * The SDK script (loaded separately in the HTML) installs `window.cpx_core`,
  * which exposes a single method:
  *
- *     cpx_core.start(initFields)   // opens the full-screen checkout overlay
+ *     cpx_core.start(initFields)   // opens the checkout (overlay, or embedded with config.embed_to)
  *
- * `initFields` shape (all keys are snake_case as of the current SDK version):
+ * `initFields` shape (all keys are snake_case):
  *
  *     {
- *       recipient:   { client_id, code },                 // required — who receives the payment
- *       transaction: { type, details?: { amount } },        // required — amount is integer in cents; see buildTransaction()
- *       payer?:      { fields: { first_name, ... } },     // optional — prefill payer info
- *       session?:    { id, run_id, run_token },           // required for tokenization, optional otherwise
- *       config?:     { embed_to: '#css-selector' },       // optional — embedded mode instead of overlay
+ *       recipient:   { client_id, code },                  // required — who receives the payment
+ *       transaction: { type, details? },                   // required — see below
+ *       payer?:      { fields: { first_name, ... } },      // optional — prefill payer info
+ *       session?:    { id, run_id, run_token },            // authenticated session (recommended; required for tokenization)
+ *       config?:     { locale, embed_to, offer_rules, timeout },
+ *       styles?:     { primary_color, primary_font, base_font_size, base_space },
  *       response: {
- *         on_end:   (reason, payload) => {},              // required — fired on completion or cancel
- *         on_error: (type,   payload) => {},              // optional — fired on errors
+ *         on_end:   (reason, payload) => {},               // required — 'completed' | 'canceled' | 'timeout'
+ *         on_error: (type,   payload) => {},               // optional — informational, checkout stays open
  *       },
  *     }
  *
- * `on_end`'s `reason` is `'canceled'` when the payer dismisses the overlay;
- * otherwise the flow completed successfully. Any non-cancel termination is
- * treated as success in this wrapper — your backend webhook is the source of
- * truth for the final transaction state.
+ * `transaction.type` is one of:
+ *   'payment'                — one-off charge (details.amount required)
+ *   'tokenization'           — save a reusable token, optionally charging details.amount
+ *   'optional_tokenization'  — charge, and the payer may opt in to saving the method
+ *   'implicit_tokenization'  — charge, and save the method whenever it supports recurring use
+ *
+ * `transaction.details` (amount is an integer in minor units, e.g. 735000 = $7,350.00):
+ *   amount, authorization: 'preauth', split: [{ recipient, amount, description }],
+ *   waive_adjustments: ['surcharge'], channel: 'moto' (payment only)
  */
 (function (global) {
     'use strict';
 
     const SDK_LOAD_TIMEOUT_MS = 15000;
 
-    // Your own server proxy that calls Flywire's
-    // `POST /commercial-payex/v2/session` with the secret `X-Authentication-Key`.
-    // The key MUST stay server-side; never expose it to the browser.
+    // Your own server proxy for Flywire's session API. It holds the secret
+    // `X-Authentication-Key`; never expose that key to the browser.
     const SESSION_ENDPOINT = '/api/flywire-session';
 
     /**
-     * Launch the Flywire Checkout V2 overlay.
+     * Launch Flywire Checkout V2.
      *
      * @param {Object} opts
-     * @param {'payment'|'tokenization'|'preauth'} opts.flow
-     *        Which playground pattern to run.
      * @param {{client_id: string, code: string}} opts.recipient
-     *        Recipient identifiers (public; safe to ship to the browser).
- * @param {number} [opts.amount]
- *        Integer in minor units (cents), e.g. `735000` for $7,350.00. Required for
- *        `payment` and `preauth`; ignored for `tokenization`.
-     * @param {Object} [opts.payer]
-     *        Optional prefill: `{ first_name, last_name, email, phone, address, city, country }`.
-     * @param {string} [opts.embedTo]
-     *        CSS selector of the element to embed the checkout iframe into.
-     *        When omitted (default), the SDK opens a full-page overlay.
-     *        Maps to `initFields.config.embed_to`.
-     *        Playground: https://checkout.demo.flywire.com/playground/1_payment/4_payment_embedded/
-     * @param {Function} [opts.onSuccess]   Called when the payer completes the flow.
-     * @param {Function} [opts.onCancel]    Called when the payer dismisses the overlay.
-     * @param {Function} [opts.onError]     Called with `{ type, payload }` on errors.
+     * @param {{type: string, details?: Object}} opts.transaction
+     * @param {Object} [opts.payer]    Prefill: `{ first_name, last_name, email, phone, address, city, zip, country }`.
+     * @param {Object} [opts.config]   `initFields.config` (locale, embed_to, offer_rules, timeout).
+     * @param {Object} [opts.styles]   `initFields.styles`.
+     * @param {boolean} [opts.authenticated=true]
+     *        Create a server-side session first. Required for every tokenization type;
+     *        anonymous sessions only support one-off payments.
+     * @param {{id: string, run_id: string, run_token: string}} [opts.session]
+     *        Existing session credentials, e.g. from resuming a session on your server.
+     * @param {Function} [opts.onComplete]  `({ report, sessionId })` — report is `{ session_report, payment_report }`.
+     * @param {Function} [opts.onCancel]    The payer closed the checkout.
+     * @param {Function} [opts.onTimeout]   `config.timeout` expired.
+     * @param {Function} [opts.onError]     `({ type, payload })` — the checkout stays open so the payer can retry.
+     * @param {Function} [opts.onEvent]     `(name, detail)` — optional trace of every step, for logging or debugging:
+     *        'session_created' | 'session_resumed' | 'start' | 'on_error' | 'on_end' | 'session_report' | 'session_report_failed'.
      */
     async function launch(opts) {
+        const emit = (name, detail) => opts.onEvent?.(name, detail);
+        const authenticated = opts.authenticated !== false;
+        if (!authenticated && opts.transaction.type !== 'payment') {
+            throw new Error(`FlywireCheckout: '${opts.transaction.type}' requires an authenticated session.`);
+        }
+
         await waitForSDK();
 
-        const initFields = {
-            recipient: opts.recipient,
-            transaction: buildTransaction(opts.flow, opts.amount),
+        // A resumed session (from your server's resume endpoint) replaces creating a new one.
+        const session = opts.session || (authenticated ? await createSession() : undefined);
+        if (session) emit(opts.session ? 'session_resumed' : 'session_created', { session });
+
+        const initFields = buildInitFields({
+            ...opts,
+            session,
             response: {
-                on_end: (reason, payload) => {
+                on_end: async (reason, payload) => {
                     console.log('[FlywireCheckout] on_end', { reason, payload });
-                    if (reason === 'canceled') {
-                        opts.onCancel?.(payload);
-                    } else {
-                        opts.onSuccess?.({ reason, payload });
+                    emit('on_end', { reason, payload });
+                    if (reason === 'canceled') return opts.onCancel?.();
+                    if (reason === 'timeout') return opts.onTimeout?.();
+
+                    // Authenticated: ask your backend for the outcome instead of trusting the browser.
+                    let report = payload;
+                    if (session) {
+                        try {
+                            report = await getSession(session.id);
+                            emit('session_report', { sessionId: session.id, report });
+                        } catch (error) {
+                            emit('session_report_failed', { sessionId: session.id, error: error.message });
+                        }
                     }
+                    opts.onComplete?.({ report, sessionId: session?.id });
                 },
                 on_error: (type, payload) => {
                     console.error('[FlywireCheckout] on_error', { type, payload });
+                    emit('on_error', { type, payload });
                     opts.onError?.({ type, payload });
                 },
             },
-        };
-
-        if (opts.payer) {
-            initFields.payer = { fields: opts.payer };
-        }
-
-        // Display mode: full-page overlay (default) vs embedded into a host element.
-        // https://checkout.demo.flywire.com/playground/1_payment/4_payment_embedded/
-        if (opts.embedTo) {
-            initFields.config = { embed_to: opts.embedTo };
-        }
-
-        // Tokenization (Save Card) requires an authenticated session. The other
-        // two flows can run anonymously with just `recipient` + `transaction`.
-        if (opts.flow === 'tokenization') {
-            initFields.session = await createSession();
-        }
+        });
 
         console.log('[FlywireCheckout] cpx_core.start', initFields);
+        emit('start', { initFields });
         global.cpx_core.start(initFields);
     }
 
     /**
-     * Map a flow name to the V2 `transaction` payload, mirroring the
-     * playground samples one-to-one.
+     * Assemble `initFields` from its parts, omitting empty sections.
+     * Exposed so host apps can preview exactly what will be sent.
      */
-    function buildTransaction(flow, amount) {
-        switch (flow) {
-            // https://checkout.demo.flywire.com/playground/1_payment/1_payment_minimum_fields/
-            case 'payment':
-                requireAmount(flow, amount);
-                return { type: 'payment', details: { amount } };
+    function buildInitFields({ recipient, transaction, payer, config, styles, session, response }) {
+        const initFields = { recipient, transaction: compact(transaction) };
 
-            // https://checkout.demo.flywire.com/playground/1_payment/6_payment_with_preauth/
-            // `authorization: 'preauth'` authorizes the card without capturing.
-            // Capture later via the Flywire Checkout V2 API.
-            case 'preauth':
-                requireAmount(flow, amount);
-                return { type: 'payment', details: { amount, authorization: 'preauth' } };
+        if (payer && Object.keys(payer).length) initFields.payer = { fields: payer };
+        if (config && Object.keys(compact(config)).length) initFields.config = compact(config);
+        if (styles && Object.keys(compact(styles)).length) initFields.styles = compact(styles);
+        if (session) initFields.session = session;
+        if (response) initFields.response = response;
 
-            // https://checkout.demo.flywire.com/playground/2_tokenization/1_tokenization_without_amount/
-            // Stores a reusable token for later charges; no amount, no charge now.
-            case 'tokenization':
-                return { type: 'tokenization' };
-
-            default:
-                throw new Error(`FlywireCheckout: unknown flow "${flow}". Expected 'payment' | 'tokenization' | 'preauth'.`);
-        }
-    }
-
-    function requireAmount(flow, amount) {
-        if (!amount) {
-            throw new Error(`FlywireCheckout: 'amount' is required for flow "${flow}".`);
-        }
+        return initFields;
     }
 
     /**
-     * Hit the local server proxy to create a Flywire Checkout V2 session.
-     *
-     * The proxy maps to:
-     *
-     *   POST {API_BASE}/commercial-payex/v2/session
-     *     headers: { 'X-Authentication-Key': '<server-only secret>' }
-     *
-     * Returns `{ id, run_id, run_token }` which is passed straight into
-     * `initFields.session`. See `server.js` (`/api/flywire-session`) for the
-     * server-side half.
-     *
-     * Playground reference:
-     *   https://checkout.demo.flywire.com/playground/4_authenticated_sessions/1_create_session/
+     * Create an authenticated session via your server:
+     *   POST {API_BASE}/commercial_payex/v2/session  (X-Authentication-Key on the server)
+     * Returns `{ id, run_id, run_token }`, passed straight into `initFields.session`.
      */
     async function createSession() {
-        const res = await fetch(SESSION_ENDPOINT, { method: 'POST' });
+        return requestJson(SESSION_ENDPOINT, { method: 'POST' }, 'Session creation failed');
+    }
+
+    /**
+     * Read the session outcome via your server:
+     *   GET {API_BASE}/commercial_payex/v2/session/{id}
+     */
+    async function getSession(id) {
+        return requestJson(`${SESSION_ENDPOINT}/${encodeURIComponent(id)}`, {}, 'Session lookup failed');
+    }
+
+    async function requestJson(url, init, failureMessage) {
+        const res = await fetch(url, init);
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-            const msg = data.error || data.message || `Session creation failed (${res.status})`;
-            throw new Error(msg);
+            throw new Error(data.error || data.detail || data.message || `${failureMessage} (${res.status})`);
         }
         return data;
+    }
+
+    function compact(obj) {
+        if (!obj) return obj;
+        const out = {};
+        for (const [key, value] of Object.entries(obj)) {
+            if (value === undefined) continue;
+            out[key] = value && typeof value === 'object' && !Array.isArray(value) ? compact(value) : value;
+        }
+        return out;
     }
 
     /**
@@ -185,5 +184,5 @@
         }
     }
 
-    global.FlywireCheckout = { launch };
+    global.FlywireCheckout = { launch, buildInitFields, getSession };
 })(window);

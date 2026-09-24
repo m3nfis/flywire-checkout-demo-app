@@ -8,12 +8,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/demo-config.css">
 
     <!--
       Flywire Checkout V2 SDK loader.
       Installs `window.cpx_core` once it finishes loading. The integration code
       that drives `cpx_core.start(initFields)` lives in `/flywire-checkout.js`.
-      Playground: https://checkout.demo.flywire.com/playground/1_payment/1_payment_minimum_fields/
+      Playground: https://checkout.demo.flywire.com/playground/payment/minimum_fields
     -->
     <script src="https://checkout.demo.flywire.com/gateway/connect.js" async></script>
 </head>
@@ -24,7 +25,26 @@
         <header>
             <div class="header-inner">
                 <a href="/" class="logo">The Caldera House</a>
-                <span class="header-tag">Oia, Santorini</span>
+                <div class="header-actions">
+                    <span class="header-tag">Oia, Santorini</span>
+                    <!-- Flywire demo tooling: live checkout events and results (public/checkout-activity.js). -->
+                    <button type="button" class="demo-cog" data-activity-open
+                            aria-haspopup="dialog" aria-controls="activity-drawer"
+                            aria-label="Checkout activity" title="Checkout activity">
+                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        <span class="demo-badge" data-activity-badge hidden></span>
+                    </button>
+                    <!-- Flywire demo tooling: hotel back office with post-checkout actions (public/dashboard/). -->
+                    <a class="demo-cog" href="/dashboard/" aria-label="Hotel back office" title="Hotel back office">
+                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                    </a>
+                    <!-- Flywire demo tooling: opens the checkout settings drawer (public/demo-config.js). -->
+                    <button type="button" id="demo-config-open" class="demo-cog"
+                            aria-haspopup="dialog" aria-controls="demo-drawer" aria-expanded="false"
+                            aria-label="Checkout settings" title="Checkout settings">
+                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
             </div>
         </header>
         <div id="stepper" class="stepper-bar">
@@ -58,7 +78,13 @@
             <div class="rooms-hero-content">
                 <p class="rooms-hero-eyebrow">The Caldera House &middot; Oia, Santorini</p>
                 <h1 class="rooms-hero-title">Choose Your Suite</h1>
-                <p class="rooms-hero-sub">April 15 &ndash; 18, 2026 &middot; 3 Nights &middot; 2 Guests</p>
+                <button type="button" id="stay-trigger" class="rooms-hero-sub stay-trigger" data-stay-trigger
+                        aria-haspopup="dialog" aria-controls="stay-popover" aria-expanded="false"
+                        title="Change dates and guests">
+                    <span id="stay-summary"></span>
+                    <svg class="stay-pencil" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                    <span class="visually-hidden">Change dates and guests</span>
+                </button>
             </div>
         </div>
 
@@ -270,7 +296,14 @@
 
                 <aside class="guest-summary-panel">
                     <div class="guest-summary-sticky">
-                        <h3 class="panel-title">Your Selection</h3>
+                        <div class="panel-title-row">
+                            <h3 class="panel-title">Your Selection</h3>
+                            <button type="button" class="stay-edit" data-stay-trigger
+                                    aria-haspopup="dialog" aria-controls="stay-popover" aria-expanded="false"
+                                    aria-label="Change dates and guests" title="Change dates and guests">
+                                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                            </button>
+                        </div>
 
                         <div class="guest-room-preview">
                             <img id="summary-room-img" src="" alt="">
@@ -284,29 +317,33 @@
 
                         <div class="summary-row">
                             <span class="summary-label">Check-in</span>
-                            <span class="summary-value">Tue, Apr 15, 2026</span>
+                            <span class="summary-value" data-stay="check-in"></span>
                         </div>
                         <div class="summary-row">
                             <span class="summary-label">Check-out</span>
-                            <span class="summary-value">Fri, Apr 18, 2026</span>
+                            <span class="summary-value" data-stay="check-out"></span>
                         </div>
                         <div class="summary-row">
                             <span class="summary-label">Guests</span>
-                            <span class="summary-value">2 Adults</span>
+                            <span class="summary-value" data-stay="guests"></span>
                         </div>
 
                         <div class="summary-divider"></div>
 
                         <div class="summary-row">
-                            <span class="summary-label">3 nights &times; <span id="summary-price-night">$2,450</span></span>
-                            <span class="summary-value" id="summary-total">$7,350.00</span>
+                            <span class="summary-label" data-stay="nightly-calc"></span>
+                            <span class="summary-value" data-stay="room-subtotal"></span>
+                        </div>
+                        <div class="summary-row" data-stay="extra-row" hidden>
+                            <span class="summary-label" data-stay="extra-calc"></span>
+                            <span class="summary-value" data-stay="extra-subtotal"></span>
                         </div>
 
                         <div class="summary-divider"></div>
 
                         <div class="summary-row summary-total">
                             <span>Total</span>
-                            <span id="summary-grand-total">$7,350.00</span>
+                            <span data-stay="grand-total"></span>
                         </div>
                     </div>
                 </aside>
@@ -389,7 +426,14 @@
                     <button id="back-to-guest" class="btn-text-back">&larr; Back to guest details</button>
 
                     <div class="booking-summary">
-                        <h3 class="panel-title">Your Stay</h3>
+                        <div class="panel-title-row">
+                            <h3 class="panel-title">Your Stay</h3>
+                            <button type="button" class="stay-edit" data-stay-trigger
+                                    aria-haspopup="dialog" aria-controls="stay-popover" aria-expanded="false"
+                                    aria-label="Change dates and guests" title="Change dates and guests">
+                                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                            </button>
+                        </div>
 
                         <div class="summary-row">
                             <span class="summary-label">Suite</span>
@@ -397,29 +441,33 @@
                         </div>
                         <div class="summary-row">
                             <span class="summary-label">Check-in</span>
-                            <span class="summary-value">Tue, Apr 15, 2026</span>
+                            <span class="summary-value" data-stay="check-in"></span>
                         </div>
                         <div class="summary-row">
                             <span class="summary-label">Check-out</span>
-                            <span class="summary-value">Fri, Apr 18, 2026</span>
+                            <span class="summary-value" data-stay="check-out"></span>
                         </div>
                         <div class="summary-row">
                             <span class="summary-label">Guests</span>
-                            <span class="summary-value">2 Adults</span>
+                            <span class="summary-value" data-stay="guests"></span>
                         </div>
 
                         <div class="summary-divider"></div>
 
                         <div class="summary-row">
-                            <span class="summary-label" id="booking-nightly-calc">3 nights &times; $2,450</span>
-                            <span class="summary-value" id="booking-subtotal">$7,350.00</span>
+                            <span class="summary-label" data-stay="nightly-calc"></span>
+                            <span class="summary-value" data-stay="room-subtotal"></span>
+                        </div>
+                        <div class="summary-row" data-stay="extra-row" hidden>
+                            <span class="summary-label" data-stay="extra-calc"></span>
+                            <span class="summary-value" data-stay="extra-subtotal"></span>
                         </div>
 
                         <div class="summary-divider"></div>
 
                         <div class="summary-row summary-total">
                             <span>Total</span>
-                            <span id="booking-total">$7,350.00</span>
+                            <span data-stay="grand-total"></span>
                         </div>
                     </div>
 
@@ -427,48 +475,21 @@
                     <div id="payment-section">
                         <h3 class="panel-title">Payment</h3>
 
-                        <div id="payment-options">
-                            <label class="payment-option selected">
-                                <input type="radio" name="payment-type" value="payment" checked>
-                                <div class="option-content">
-                                    <span class="option-title">Pay in Full</span>
-                                    <span class="option-desc">One-time payment of $7,350</span>
-                                </div>
-                            </label>
-
-                            <label class="payment-option">
-                                <input type="radio" name="payment-type" value="tokenization">
-                                <div class="option-content">
-                                    <span class="option-title">Save Card</span>
-                                    <span class="option-desc">Store card for future charges</span>
-                                </div>
-                            </label>
-
-                            <label class="payment-option">
-                                <input type="radio" name="payment-type" value="preauth">
-                                <div class="option-content">
-                                    <span class="option-title">Reserve &amp; Hold</span>
-                                    <span class="option-desc">Pre-authorize $7,350</span>
-                                </div>
-                            </label>
+                        <!-- Flow is chosen in the Flywire demo drawer (public/demo-config.js). -->
+                        <div id="payment-options" class="payment-option selected">
+                            <span class="payment-option-mark" aria-hidden="true"></span>
+                            <div class="option-content">
+                                <span class="option-title" id="payment-option-title">Pay in Full</span>
+                                <span class="option-desc" id="payment-option-desc">One-time payment of $7,350</span>
+                                <span class="option-notes" id="payment-option-notes"></span>
+                            </div>
                         </div>
+
+                        <p id="payment-notice" class="payment-notice" role="status" hidden></p>
 
                         <button id="proceed-btn" class="btn-primary">Continue to Payment</button>
 
-                        <!--
-                          Demo-only toggle: switch between the SDK's default full-page
-                          overlay and embedded mode (`config.embed_to` in initFields).
-                          See public/flywire-checkout.js → launch({ embedTo }) and the
-                          "Payment embedded" playground sample.
-                        -->
-                        <label class="dev-mode-toggle" title="Demo: switch between full-page overlay and embedded iframe">
-                            <input type="checkbox" id="display-mode-toggle">
-                            <span class="dev-mode-track" aria-hidden="true"></span>
-                            <span class="dev-mode-text">Embed checkout in page</span>
-                            <span class="dev-mode-hint">demo only</span>
-                        </label>
-
-                        <!-- Mount point for `config.embed_to` when the toggle is on. -->
+                        <!-- Mount point for `config.embed_to` when "Embedded in page" is selected. -->
                         <div id="payment-embed-target"></div>
                     </div>
 
@@ -491,19 +512,20 @@
 
         <div class="success-content">
             <div class="success-inner">
-                <p class="success-eyebrow">Booking Confirmed</p>
+                <p class="success-eyebrow" id="success-eyebrow">Booking Confirmed</p>
                 <h1 class="success-title">Your Santorini<br>Escape Awaits</h1>
                 <p class="success-guest-greeting">Welcome, <span id="success-guest-name">Guest</span></p>
+                <p class="success-payment-note" id="success-payment-note"></p>
                 <div class="success-line"></div>
 
                 <div class="success-details">
                     <div class="success-detail">
                         <span class="detail-label">Check-in</span>
-                        <span class="detail-value">April 15, 2026</span>
+                        <span class="detail-value" data-stay="check-in-long"></span>
                     </div>
                     <div class="success-detail">
                         <span class="detail-label">Check-out</span>
-                        <span class="detail-value">April 18, 2026</span>
+                        <span class="detail-value" data-stay="check-out-long"></span>
                     </div>
                     <div class="success-detail">
                         <span class="detail-label">Suite</span>
@@ -521,6 +543,16 @@
                     </ul>
                 </div>
 
+                <!-- Demo-only: what Flywire returned for this session. -->
+                <div class="fw-result" id="flywire-result" hidden>
+                    <p class="fw-result-label">Returned by Flywire &middot; demo</p>
+                    <dl id="flywire-result-list"></dl>
+                    <div class="fw-result-links">
+                        <button type="button" class="fw-result-link" data-activity-open>View checkout activity &rarr;</button>
+                        <a class="fw-result-link" id="flywire-dashboard-link" href="/dashboard/">Open in hotel dashboard &rarr;</a>
+                    </div>
+                </div>
+
                 <button class="btn-light" onclick="window.location.reload()">Book Another Stay</button>
             </div>
         </div>
@@ -529,20 +561,306 @@
     <!-- ═══════════════════ ERROR VIEW ═══════════════════ -->
     <div id="error-view" class="view hidden">
         <div class="error-content">
-            <div class="error-x">&#10005;</div>
-            <h1 class="error-title">Woopsie!</h1>
-            <p class="error-subtitle">Denied!</p>
+            <div class="error-x" id="error-icon">&#10005;</div>
+            <h1 class="error-title" id="error-title">Woopsie!</h1>
+            <p class="error-subtitle" id="error-subtitle">Denied!</p>
             <div class="error-line"></div>
-            <p class="error-message">
+            <p class="error-message" id="error-message">
                 Your payment could not be processed.<br>
                 Perhaps the universe is telling you to try a different card.
             </p>
             <button id="retry-btn" class="btn-retry">Try Again</button>
+            <button type="button" class="fw-result-link fw-result-link-block" data-activity-open>View checkout activity &rarr;</button>
         </div>
     </div>
 
+    <!-- ═══════════════════ FLYWIRE DEMO DRAWER ═══════════════════ -->
+    <div id="demo-drawer" class="fw-drawer" hidden>
+        <div class="fw-drawer-backdrop" data-drawer-close></div>
+        <aside class="fw-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="demo-drawer-title">
+            <header class="fw-drawer-header">
+                <div>
+                    <p class="fw-overline">Flywire Checkout V2</p>
+                    <h2 id="demo-drawer-title" tabindex="-1">Checkout settings</h2>
+                    <p class="fw-drawer-sub">Pick what to show. Settings apply the next time checkout opens and are saved in this browser.</p>
+                </div>
+                <button type="button" class="fw-icon-btn" data-drawer-close aria-label="Close checkout settings">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+                </button>
+            </header>
+
+            <div class="fw-drawer-body">
+                <section class="fw-section" aria-labelledby="demo-sec-flow">
+                    <h3 id="demo-sec-flow" class="fw-section-title"><span class="fw-step">1</span>Flow</h3>
+                    <div id="demo-flow-list" class="fw-flow-list"></div>
+                </section>
+
+                <section class="fw-section" aria-labelledby="demo-sec-display">
+                    <h3 id="demo-sec-display" class="fw-section-title"><span class="fw-step">2</span>Display</h3>
+                    <div class="fw-segmented" role="radiogroup" aria-labelledby="demo-sec-display">
+                        <label><input type="radio" name="demo-display" value="overlay"><span>Full-screen overlay</span></label>
+                        <label><input type="radio" name="demo-display" value="embedded"><span>Embed checkout in page</span></label>
+                    </div>
+                    <p class="fw-help">Embedded mounts checkout inside the booking panel with <code>config.embed_to</code>.</p>
+                </section>
+
+                <section class="fw-section" aria-labelledby="demo-sec-pages">
+                    <h3 id="demo-sec-pages" class="fw-section-title"><span class="fw-step">3</span>Pages &amp; guest experience</h3>
+
+                    <p class="fw-field-label" id="demo-payer-form-label">Payer details page <span class="fw-label-hint">show_payer_form</span></p>
+                    <div class="fw-segmented fw-segmented-3" role="radiogroup" aria-labelledby="demo-payer-form-label">
+                        <label><input type="radio" name="demo-payer-form" value="auto"><span>Auto</span></label>
+                        <label><input type="radio" name="demo-payer-form" value="true"><span>Always show</span></label>
+                        <label><input type="radio" name="demo-payer-form" value="false"><span>Hide</span></label>
+                    </div>
+
+                    <p class="fw-field-label" id="demo-recipient-form-label">Custom fields page <span class="fw-label-hint">show_recipient_form</span></p>
+                    <div class="fw-segmented fw-segmented-3" role="radiogroup" aria-labelledby="demo-recipient-form-label">
+                        <label><input type="radio" name="demo-recipient-form" value="auto" id="demo-recipient-form-auto"><span>Auto</span></label>
+                        <label><input type="radio" name="demo-recipient-form" value="true" id="demo-recipient-form-true"><span>Always show</span></label>
+                        <label><input type="radio" name="demo-recipient-form" value="false" id="demo-recipient-form-false"><span>Hide</span></label>
+                    </div>
+                    <p class="fw-help" id="demo-pages-note">Auto skips a page when everything on it is already filled in, which is the case for the prefilled guest details.</p>
+
+                    <p class="fw-field-label" id="demo-disabled-fields-label">Read-only payer fields <span class="fw-label-hint">disabled_fields</span></p>
+                    <div id="demo-disabled-fields" class="fw-chips" role="group" aria-labelledby="demo-disabled-fields-label"></div>
+                    <p class="fw-help" id="demo-disabled-fields-note"></p>
+
+                    <div class="fw-toggle-row fw-toggle-row-spaced">
+                        <label class="fw-switch"><input type="checkbox" id="demo-hide-close"><span class="fw-switch-track" aria-hidden="true"></span>
+                            <span class="fw-toggle-text"><strong>Hide the close button</strong> <span class="fw-label-hint">close_button: 'hidden'</span>
+                                <span>The guest can't dismiss checkout, so they finish or the timeout ends it. Best with the embedded display.</span>
+                            </span>
+                        </label>
+                        <p class="fw-toggle-reason"></p>
+                    </div>
+
+                    <div class="fw-toggle-row">
+                        <label class="fw-switch"><input type="checkbox" id="demo-disable-emails"><span class="fw-switch-track" aria-hidden="true"></span>
+                            <span class="fw-toggle-text"><strong>Don't email the payer</strong> <span class="fw-label-hint">disable_payer_emails</span>
+                                <span>Flywire won't send payment status emails, so the hotel can send its own branded confirmations.</span>
+                            </span>
+                        </label>
+                        <p class="fw-toggle-reason"></p>
+                    </div>
+                </section>
+
+                <section class="fw-section" aria-labelledby="demo-sec-options">
+                    <h3 id="demo-sec-options" class="fw-section-title"><span class="fw-step">4</span>Payment options</h3>
+
+                    <div class="fw-toggle-row">
+                        <label class="fw-switch"><input type="checkbox" id="demo-split"><span class="fw-switch-track" aria-hidden="true"></span>
+                            <span class="fw-toggle-text"><strong>Split with partners</strong> <span class="fw-label-hint">transaction.details.split</span>
+                                <span>Send part of the payment straight to partner portals (excursions, spa, dive boats). The rest goes to the hotel.</span>
+                            </span>
+                        </label>
+                        <p class="fw-toggle-reason"></p>
+                        <div id="demo-split-editor" class="fw-split-editor" hidden></div>
+                    </div>
+
+                    <div class="fw-toggle-row">
+                        <label class="fw-switch"><input type="checkbox" id="demo-waive"><span class="fw-switch-track" aria-hidden="true"></span>
+                            <span class="fw-toggle-text"><strong>Waive card surcharge</strong>
+                                <span>Absorb the surcharge for this booking only, without changing portal settings.</span>
+                            </span>
+                        </label>
+                        <p class="fw-toggle-reason"></p>
+                    </div>
+
+                    <div class="fw-toggle-row">
+                        <label class="fw-switch"><input type="checkbox" id="demo-timeout"><span class="fw-switch-track" aria-hidden="true"></span>
+                            <span class="fw-toggle-text"><strong>Checkout timeout</strong> <span class="fw-label-hint">config.timeout</span>
+                                <span>Show a countdown and close checkout when it expires, e.g. to release held rooms.</span>
+                            </span>
+                        </label>
+                        <p class="fw-toggle-reason"></p>
+                        <p class="fw-toggle-note" id="demo-timeout-note"></p>
+                        <div id="demo-timeout-fields" class="fw-inline-fields" hidden>
+                            <label>Countdown
+                                <select id="demo-timeout-type">
+                                    <option value="checkout">Whole checkout</option>
+                                    <option value="operation">Each payment attempt</option>
+                                </select>
+                            </label>
+                            <label>Duration
+                                <select id="demo-timeout-minutes">
+                                    <option value="3">3 minutes</option>
+                                    <option value="5">5 minutes</option>
+                                    <option value="10">10 minutes</option>
+                                    <option value="15">15 minutes</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="fw-section" aria-labelledby="demo-sec-methods">
+                    <h3 id="demo-sec-methods" class="fw-section-title"><span class="fw-step">5</span>Payment methods &amp; currency</h3>
+                    <p class="fw-help">Controls which offers the guest sees, using <code>config.offer_rules</code>.</p>
+                    <div id="demo-methods" class="fw-chips" role="group" aria-label="Payment methods to show"></div>
+                    <label class="fw-checkbox"><input type="checkbox" id="demo-hide-amex"><span>Hide American Express</span></label>
+                    <label class="fw-field">Currencies offered
+                        <select id="demo-currency">
+                            <option value="all">All available currencies</option>
+                            <option value="payer_currency">Guest's home currency only</option>
+                            <option value="recipient_currency">Hotel's currency only</option>
+                        </select>
+                    </label>
+                </section>
+
+                <section class="fw-section" aria-labelledby="demo-sec-brand">
+                    <h3 id="demo-sec-brand" class="fw-section-title"><span class="fw-step">6</span>Branding &amp; language</h3>
+                    <div class="fw-toggle-row">
+                        <label class="fw-switch"><input type="checkbox" id="demo-branding"><span class="fw-switch-track" aria-hidden="true"></span>
+                            <span class="fw-toggle-text"><strong>Match the client's brand</strong>
+                                <span>Set checkout colour, font, text size and spacing with <code>styles</code>.</span>
+                            </span>
+                        </label>
+                        <p class="fw-toggle-reason"></p>
+                        <div id="demo-branding-fields" class="fw-inline-fields" hidden>
+                            <label>Primary colour
+                                <span class="fw-color">
+                                    <input type="color" id="demo-brand-color">
+                                    <span id="demo-brand-color-value"></span>
+                                </span>
+                            </label>
+                            <label>Font
+                                <select id="demo-brand-font">
+                                    <option>Cormorant Garamond</option>
+                                    <option>Playfair Display</option>
+                                    <option>Lora</option>
+                                    <option>DM Sans</option>
+                                </select>
+                            </label>
+                            <label>Text size <span class="fw-label-hint">base_font_size</span>
+                                <select id="demo-brand-font-size">
+                                    <option value="">Checkout default</option>
+                                    <option value="14px">Small · 14px</option>
+                                    <option value="16px">Regular · 16px</option>
+                                    <option value="18px">Large · 18px</option>
+                                    <option value="20px">Extra large · 20px</option>
+                                </select>
+                            </label>
+                            <label>Spacing <span class="fw-label-hint">base_space</span>
+                                <select id="demo-brand-space">
+                                    <option value="">Checkout default</option>
+                                    <option value="0.75rem">Compact · 0.75rem</option>
+                                    <option value="1rem">Standard · 1rem</option>
+                                    <option value="1.25rem">Roomy · 1.25rem</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <label class="fw-field">Checkout language
+                        <select id="demo-locale">
+                            <option value="en">English</option>
+                            <option value="en-GB">English (United Kingdom)</option>
+                            <option value="es">Español</option>
+                            <option value="es-419">Español (Latinoamérica)</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="it">Italiano</option>
+                            <option value="pt">Português</option>
+                            <option value="pt-BR">Português (Brasil)</option>
+                            <option value="pl">Polski</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                            <option value="id">Bahasa Indonesia</option>
+                            <option value="vi">Tiếng Việt</option>
+                        </select>
+                    </label>
+                </section>
+
+                <section class="fw-section" aria-labelledby="demo-sec-session">
+                    <h3 id="demo-sec-session" class="fw-section-title"><span class="fw-step">7</span>Session</h3>
+                    <div class="fw-segmented" role="radiogroup" aria-labelledby="demo-sec-session">
+                        <label><input type="radio" name="demo-session" id="demo-session-authenticated" value="authenticated"><span>Authenticated</span></label>
+                        <label><input type="radio" name="demo-session" id="demo-session-anonymous" value="anonymous"><span>Anonymous</span></label>
+                    </div>
+                    <p class="fw-help" id="demo-session-note"></p>
+                </section>
+
+                <section class="fw-section" aria-labelledby="demo-sec-recipient">
+                    <h3 id="demo-sec-recipient" class="fw-section-title"><span class="fw-step">8</span>Recipient</h3>
+                    <p class="fw-help">Who receives the payment, sent as <code>recipient</code>. Saved in this browser and kept when you reset the other settings. Leave empty to use the server's recipient.</p>
+                    <div class="fw-recipient-fields">
+                        <label class="fw-field">Client ID
+                            <input type="text" id="demo-recipient-client-id" autocomplete="off" spellcheck="false">
+                        </label>
+                        <label class="fw-field">Code
+                            <input type="text" id="demo-recipient-code" autocomplete="off" spellcheck="false">
+                        </label>
+                    </div>
+                    <div class="fw-recipient-footer">
+                        <p class="fw-help" id="demo-recipient-note"></p>
+                        <p class="fw-help"><a class="fw-link" href="/dashboard/">Change the API key in the hotel back office</a></p>
+                        <button type="button" id="demo-recipient-clear" class="fw-btn fw-btn-ghost" hidden>Use server recipient</button>
+                    </div>
+                </section>
+
+                <details class="fw-section fw-code">
+                    <summary class="fw-section-title"><span class="fw-step">&lt;/&gt;</span>Integration code</summary>
+                    <div class="fw-code-toolbar">
+                        <span class="fw-muted">What this page sends to <code>cpx_core.start()</code></span>
+                        <button type="button" id="demo-copy-code" class="fw-btn fw-btn-ghost">Copy</button>
+                    </div>
+                    <pre><code id="demo-code"></code></pre>
+                    <p class="fw-help">Matching playground samples:</p>
+                    <ul id="demo-playground-links" class="fw-links"></ul>
+                </details>
+            </div>
+
+            <footer class="fw-drawer-footer">
+                <button type="button" id="demo-reset" class="fw-btn fw-btn-secondary">Reset</button>
+                <button type="button" class="fw-btn fw-btn-primary" data-drawer-close>Done</button>
+            </footer>
+        </aside>
+    </div>
+
+    <!-- ═══════════════════ FLYWIRE CHECKOUT ACTIVITY DRAWER ═══════════════════ -->
+    <div id="activity-drawer" class="fw-drawer" hidden>
+        <div class="fw-drawer-backdrop" data-activity-close></div>
+        <aside class="fw-drawer-panel fw-drawer-panel-wide" role="dialog" aria-modal="true" aria-labelledby="activity-drawer-title">
+            <header class="fw-drawer-header">
+                <div>
+                    <p class="fw-overline">Flywire Checkout V2</p>
+                    <h2 id="activity-drawer-title" tabindex="-1">Checkout activity</h2>
+                    <p class="fw-drawer-sub">What checkout returns, as it happens: the session, every callback and the final outcome read from your server. Saved in this browser until you clear it.</p>
+                </div>
+                <button type="button" class="fw-icon-btn" data-activity-close aria-label="Close checkout activity">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+                </button>
+            </header>
+
+            <div class="fw-drawer-body" id="activity-body" aria-live="polite"></div>
+
+            <footer class="fw-drawer-footer">
+                <div class="fw-footer-group">
+                    <button type="button" id="activity-clear" class="fw-btn fw-btn-secondary">Clear</button>
+                    <button type="button" id="activity-copy" class="fw-btn fw-btn-secondary">Copy log</button>
+                </div>
+                <button type="button" class="fw-btn fw-btn-primary" data-activity-close>Done</button>
+            </footer>
+        </aside>
+    </div>
+
+    <!-- Stay dates & guests popover (opened from the hero line on the rooms page). -->
+    <div id="stay-popover" class="stay-popover" role="dialog" aria-label="Change dates and guests" hidden></div>
+
+    <!-- Demo credentials (saved in the browser) and the demo bookings store shared with /dashboard. -->
+    <script src="/demo-credentials.js"></script>
+    <script src="/bookings-store.js"></script>
     <!-- Flywire Checkout V2 integration module — keeps the SDK call surface in one file. -->
     <script src="/flywire-checkout.js"></script>
+    <!-- Demo configuration drawer — sales tooling that picks which capability to demo. -->
+    <script src="/demo-config.js"></script>
+    <!-- Card brand icons for payment results. -->
+    <script src="/card-brands.js"></script>
+    <!-- Checkout activity drawer — live trace of what checkout returns. -->
+    <script src="/checkout-activity.js"></script>
+    <!-- Stay dates & guests (demo scaffolding). -->
+    <script src="/stay.js"></script>
     <!-- Demo host app — wires the booking UI to FlywireCheckout.launch(). -->
     <script src="/app.js"></script>
 </body>

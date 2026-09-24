@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Back office &mdash; The Caldera House</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Inter:wght@400;500;600&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/dashboard/dashboard.css">
+
+    <!-- Needed to resume a session: the dashboard reopens checkout for an existing booking. -->
+    <script src="https://checkout.demo.flywire.com/gateway/connect.js" async></script>
+</head>
+<body>
+    <header class="db-header">
+        <div class="db-header-inner">
+            <div class="db-brand">
+                <a href="/" class="db-logo">The Caldera House</a>
+                <span class="db-brand-tag">Back office</span>
+            </div>
+            <div class="db-header-meta">
+                <span class="db-demo-tag">Flywire Checkout V2 demo &middot; data saved in this browser</span>
+                <a href="/" class="db-link">&larr; Booking site</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="db-main">
+        <section class="db-card" aria-labelledby="db-credentials-title">
+            <div class="db-card-head">
+                <div>
+                    <h2 id="db-credentials-title">Flywire connection</h2>
+                    <p class="db-muted">Credentials used by the booking site and by the actions on this page. Leave a field empty to use the server's value.</p>
+                </div>
+                <span id="db-connection-status" class="db-pill db-pill-neutral">Not checked</span>
+            </div>
+
+            <form id="db-credentials-form" class="db-credentials" autocomplete="off" novalidate>
+                <label class="db-field">
+                    <span>Client ID</span>
+                    <input type="text" id="db-client-id" spellcheck="false">
+                </label>
+                <label class="db-field db-field-narrow">
+                    <span>Recipient code</span>
+                    <input type="text" id="db-code" spellcheck="false">
+                </label>
+                <label class="db-field db-field-wide">
+                    <span>API key <span class="db-hint">X-Authentication-Key</span></span>
+                    <span class="db-secret">
+                        <input type="password" id="db-api-key" spellcheck="false" autocomplete="new-password">
+                        <button type="button" id="db-api-key-toggle" class="db-btn db-btn-ghost db-btn-sm" aria-pressed="false">Show</button>
+                    </span>
+                </label>
+                <div class="db-credentials-actions">
+                    <button type="submit" class="db-btn db-btn-primary">Save &amp; test connection</button>
+                    <button type="button" id="db-credentials-reset" class="db-btn db-btn-secondary">Use server defaults</button>
+                </div>
+            </form>
+            <p id="db-credentials-fixes" class="db-notice db-notice-info" role="status" hidden></p>
+            <p id="db-credentials-result" class="db-notice" role="status" hidden></p>
+            <p class="db-muted db-small">Demo only: the key is stored in this browser and sent to this demo's server, which uses it instead of <code>CPX_API_KEY</code>. In production your API key stays on your server.</p>
+        </section>
+
+        <div class="db-layout">
+            <section class="db-card db-bookings" aria-labelledby="db-bookings-title">
+                <div class="db-card-head">
+                    <div>
+                        <h2 id="db-bookings-title">Bookings</h2>
+                        <p class="db-muted" id="db-bookings-count"></p>
+                    </div>
+                    <button type="button" id="db-clear-bookings" class="db-btn db-btn-secondary db-btn-sm">Clear all</button>
+                </div>
+                <div id="db-bookings-list"></div>
+            </section>
+
+            <section class="db-card db-detail" id="db-detail" aria-live="polite"></section>
+        </div>
+    </main>
+
+    <script src="/demo-credentials.js"></script>
+    <script src="/bookings-store.js"></script>
+    <script src="/flywire-checkout.js"></script>
+    <script src="/card-brands.js"></script>
+    <script src="/dashboard/dashboard.js"></script>
+</body>
+</html>
