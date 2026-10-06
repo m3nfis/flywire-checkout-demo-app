@@ -1,0 +1,1288 @@
+# =============================================================================
+# The Caldera House — English source strings
+# Locale: it
+#
+# This file is the source the translation team edits. The page reads it at
+# runtime (see public/i18n.js). Comments are for translators and are not shown.
+#
+# How to read a key
+# - The comment directly above a key says where it appears and any constraint.
+# - Nested keys become dotted names in the app, e.g. rooms.hero.title.
+#
+# Rules
+# - Keep every {placeholder} exactly, including the braces. The app fills them
+#   in. Example: "{amount} paid in full." — translate the words, leave {amount}.
+# - Keys that end in _one, _other, _two, _few, _many or _zero are plural forms.
+#   {count} is the number. English only needs _one (exactly 1) and _other
+#   (everything else). Add the other suffixes if your language needs them
+#   (Polish, Arabic, Russian, and others). If a form is missing, the app uses
+#   _other.
+# - [html] means the value contains tags such as <br>, <strong>, <em>, <a> or
+#   <code>. Translate the words. Leave tags, hrefs and class names unchanged.
+# - [do not translate] means the value is a proper noun, brand, code or
+#   endonym and must stay as written.
+# - Tone: sections under "guest" voice speak to the hotel guest (warm, luxury,
+#   second person). Sections marked "presenter" speak to the person running
+#   the demo or the hotel back office (plain instructions).
+# - Keep button and stepper labels short. Where length matters, the comment says so.
+# - Do not translate API field names, URLs, currency codes, portal codes, or
+#   the sample code in the integration preview. Those are not in this file.
+#
+# Not in this file
+# - Developer documentation under public/full-docs and public/minimal-docs.
+# - Code comments, console messages, and the generated checkout payload.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Shared words used on more than one screen
+# -----------------------------------------------------------------------------
+common:
+  # Booking total row. Short label, paired with a money amount.
+  total: "Totale"
+  # Date the guest arrives. Short label in a summary list.
+  checkIn: "Arrivo"
+  # Date the guest leaves. Short label in a summary list.
+  checkOut: "Partenza"
+  # How many people are staying. Short label in a summary list.
+  guests: "Ospiti"
+  # The room that was booked. Short label.
+  suite: "Suite"
+  # Closes a popover or drawer. Button.
+  done: "Fine"
+  # Restores the previous dates and guest counts. Text button in the date popover.
+  reset: "Reimpostare"
+  # Copies text to the clipboard. Small button. Restored after "Copied".
+  copy: "Copiare"
+  # Shown for about a second after a copy succeeds. Same button as "Copy".
+  copied: "Copiato"
+  # Shown for about a second when the browser blocks clipboard access.
+  copyFailed: "Copia non riuscita"
+  # Reveals a secret field (the API key). Small button. Opposite of "Hide".
+  show: "Mostrare"
+  # Masks a secret field. Small button. Opposite of "Show".
+  hide: "Nascondere"
+  # Fallback when the guest has not given a name yet. Used in greetings.
+  guest: "Ospite"
+  # Empty value in a definition list, e.g. a credential that has not been entered.
+  notSet: "Non impostato"
+  # Word before the last item of a list: "Client ID, recipient code and API key".
+  and: "e"
+  # Placeholder when a value is unknown. A single em dash. [do not translate]
+  dash: "—"
+
+# -----------------------------------------------------------------------------
+# Browser tab titles
+# -----------------------------------------------------------------------------
+meta:
+  # Browser tab title for the public booking site.
+  # "The Caldera House" is the hotel name. "Oia" and "Santorini" are place names.
+  # [do not translate] the hotel name and the place names. The em dash can stay.
+  bookingTitle: "The Caldera House — Oia, Santorini"
+  # Browser tab title for the hotel back office (staff page, not the guest page).
+  # [do not translate] "The Caldera House".
+  backOfficeTitle: "Back office — The Caldera House"
+
+# -----------------------------------------------------------------------------
+# Top bar of the booking site
+# -----------------------------------------------------------------------------
+nav:
+  # Logo text. Hotel name. [do not translate]
+  logo: "The Caldera House"
+  # Small location label next to the logo. Place names. [do not translate]
+  location: "Oia, Santorini"
+  # Tooltip and screen-reader name for the heartbeat icon. Opens a presenter drawer
+  # that lists what the payment checkout returned. Not part of the guest story.
+  checkoutActivity: "Attività del checkout"
+  # Tooltip and screen-reader name for the grid icon. Opens the staff back office.
+  backOffice: "Back office dell’hotel"
+  # Tooltip and screen-reader name for the gear icon. Opens presenter checkout settings.
+  # {flow} is the name of the selected payment flow, e.g. "Pay in full".
+  checkoutSettings: "Impostazioni del checkout"
+  checkoutSettingsWithFlow: "Impostazioni del checkout · {flow}"
+
+# -----------------------------------------------------------------------------
+# Three-step progress bar under the header. Keep each label short.
+# -----------------------------------------------------------------------------
+stepper:
+  # Step 1. Guest is choosing a room.
+  selectRoom: "Scelta della camera"
+  # Step 2. Guest is entering name, email and address.
+  guestDetails: "Dati dell’ospite"
+  # Step 3. Guest is about to pay.
+  payment: "Pagamento"
+
+# -----------------------------------------------------------------------------
+# Page 1 — room selection. Guest voice.
+# -----------------------------------------------------------------------------
+rooms:
+  # Decorative photo behind the headline. Describe the picture, not the hotel brand.
+  heroAlt: "Le cupole blu di Santorini affacciate sull’Aegean"
+  # Small line above the headline. Hotel name and place. [do not translate]
+  eyebrow: "The Caldera House · Oia, Santorini"
+  # Main headline on the room list.
+  title: "Scelga la Sua suite"
+  # Tooltip, screen-reader text, and the date popover name. Opens the date and guest picker.
+  changeDates: "Modificare date e ospiti"
+  # Price suffix when the hotel bills in US dollars. Keep the leading slash.
+  perNight: "/notte"
+  # Price suffix when the hotel bills in another currency.
+  # {currency} is an ISO code such as EUR or GBP. Do not translate the code.
+  perNightWithCurrency: "/notte · {currency}"
+  # Button on every room card. Keep it short enough for a card footer.
+  selectSuite: "Scegliere questa suite"
+
+  # Hero line under the headline, built in script.
+  # {range} is the dates, e.g. "June 12 – 15, 2026".
+  # {nights} and {guests} are already-translated phrases such as "3 Nights" and "2 Guests".
+  staySummary: "{range} · {nights} · {guests}"
+
+  cards:
+    royal-caldera:
+      # Marketing name of the featured suite. "Caldera" is the volcanic bay at Santorini;
+      # keep it. "Royal" and "Suite" may be translated.
+      name: "Suite Royal Caldera"
+      # Alt text for the suite photo. Same name guests see on the card.
+      alt: "Suite Royal Caldera"
+      # Ribbon on the photo. One word if possible.
+      badge: "Consigliata"
+      # Facts line under the name. Middle dots separate three facts. "m²" is square metres.
+      specs: "120 m² · Vista sulla Caldera · Infinity pool privata"
+      # Size only, reused in the booking summary. Keep "m²".
+      size: "120 m²"
+      # View only, reused in the booking summary.
+      view: "Vista sulla Caldera"
+      # Paragraph on the card. Warm, descriptive.
+      description: "Il gioiello di The Caldera House. Un ampio santuario con vetrate a tutta altezza che incorniciano la caldera, un’infinity pool privata e una terrazza pensata per il tramonto più celebre del mondo."
+      # Short amenity chips. Keep each to one or two words.
+      tagPool: "Piscina privata"
+      tagButler: "Servizio maggiordomo"
+      tagTerrace: "Terrazza"
+      tagKitchen: "Cucina dello chef"
+
+    sunset-villa:
+      # Marketing name. "Sunset" and "Honeymoon" may be translated. "Villa" may be translated.
+      name: "Villa luna di miele al tramonto"
+      alt: "Villa luna di miele al tramonto"
+      specs: "95 m² · Vista sul tramonto · Vasca all’aperto"
+      size: "95 m²"
+      view: "Vista sul tramonto"
+      description: "Una villa appartata avvolta dalle buganvillee, con cortile privato, vasca in rame all’aperto e viste ininterrotte sul leggendario tramonto di Oia."
+      tagBath: "Vasca all’aperto"
+      tagCourtyard: "Cortile"
+      tagSunset: "Vista sul tramonto"
+
+    captains-quarters:
+      # Marketing name. Nautical theme. The apostrophe is the hotel’s name for the room.
+      name: "Cabina del capitano"
+      alt: "Cabina del capitano"
+      specs: "65 m² · Vista sul porto · Piscina plunge"
+      size: "65 m²"
+      view: "Vista sul porto"
+      description: "Ispirata al patrimonio marinaro di Santorini, con soffitti a volta imbiancati a calce, antichità selezionate a mano e un cortile privato con piscina plunge."
+      tagPlunge: "Piscina plunge"
+      tagVaulted: "Soffitto a volta"
+      tagCourtyard: "Cortile"
+
+    aegean-studio:
+      # Marketing name. "Aegean" is the sea; keep it. "Cliff" and "Studio" may be translated.
+      name: "Studio sulla scogliera Aegean"
+      alt: "Studio sulla scogliera Aegean"
+      specs: "45 m² · Vista sul mare · Balcone privato"
+      size: "45 m²"
+      view: "Vista sul mare"
+      description: "Un rifugio raffinato scavato nella scogliera vulcanica, con un balcone privato sospeso sull’Aegean. Linee pulite incontrano la pietra naturale in questo studio progettato da un architetto."
+      tagSea: "Vista sul mare"
+      tagBalcony: "Balcone"
+      tagShower: "Doccia a pioggia"
+
+# -----------------------------------------------------------------------------
+# Date and guest popover. Guest voice. Opened from "Change dates and guests".
+# -----------------------------------------------------------------------------
+stay:
+  # Plural of nights, lowercase, used inside sentences and the price breakdown.
+  # {count} is a number. See the plural rules at the top of this file.
+  night_one: "{count} notte"
+  night_other: "{count} notti"
+  # Same idea, title case, used in the hero summary ("3 Nights").
+  nightTitle_one: "{count} notte"
+  nightTitle_other: "{count} notti"
+  # Title case, hero summary ("2 Guests").
+  guestTitle_one: "{count} ospite"
+  guestTitle_other: "{count} ospiti"
+  # Guest count in the summary panel ("2 Adults").
+  adult_one: "{count} adulto"
+  adult_other: "{count} adulti"
+  # Guest count when there are children. English "Child" / "Children" is irregular.
+  child_one: "{count} bambino"
+  child_other: "{count} bambini"
+  # Extra people beyond the two guests included in the rate. Lowercase, mid-sentence.
+  extraGuest_one: "{count} ospite aggiuntivo"
+  extraGuest_other: "{count} ospiti aggiuntivi"
+  # Bookings count on the back office list.
+  booking_one: "{count} prenotazione effettuata dal sito di prenotazione"
+  booking_other: "{count} prenotazioni effettuate dal sito di prenotazione"
+  # Nights column in the back office table.
+  nightShort_one: "{count} notte"
+  nightShort_other: "{count} notti"
+  # Relative time in the back office. {count} is minutes or hours.
+  minutesAgo_one: "{count} min fa"
+  minutesAgo_other: "{count} min fa"
+  hoursAgo_one: "{count} h fa"
+  hoursAgo_other: "{count} h fa"
+  # Less than a minute ago.
+  justNow: "adesso"
+
+  # Popover heading while the guest still needs to pick the departure date.
+  selectCheckout: "Selezioni la data di partenza"
+  # Subtitle before a departure date is chosen.
+  # {checkIn} is a short date such as "Fri, Jun 12, 2026". {max} is a number (30).
+  checkoutHint: "Arrivo {checkIn} · fino a {max} notti"
+  # Screen-reader name for the previous-month arrow.
+  previousMonth: "Mese precedente"
+  # Screen-reader name for the next-month arrow.
+  nextMonth: "Mese successivo"
+  # Stepper label. Adults are ages 13+.
+  adults: "Adulti"
+  # Hint under "Adults".
+  adultsHint: "Dai 13 anni in su"
+  # Stepper label.
+  children: "Bambini"
+  # Hint under "Children". An en dash between the ages.
+  childrenHint: "Da 2 a 12 anni"
+  # Note under the steppers. {guests} is a number (2). {amount} is a money amount.
+  extraGuestFee: "Le tariffe includono {guests} ospiti. Ogni ospite aggiuntivo costa {amount} a notte."
+  # Screen-reader name for the minus button. {who} is "adults" or "children", lowercase.
+  removeGuests: "Rimuova {who}"
+  # Screen-reader name for the plus button. {who} is "adults" or "children", lowercase.
+  addGuests: "Aggiunga {who}"
+  # Lowercase plural used only inside the screen-reader phrases above.
+  adultsLower: "adulti"
+  childrenLower: "bambini"
+
+  # Column headers of the month grid, Sunday through Saturday, in that order.
+  # The grid starts on Sunday. Do not reorder these seven keys.
+  # Keep them very short (about 2 letters in English).
+  weekdaySu: "Do"
+  weekdayMo: "Lu"
+  weekdayTu: "Ma"
+  weekdayWe: "Me"
+  weekdayTh: "Gi"
+  weekdayFr: "Ve"
+  weekdaySa: "Sa"
+
+# -----------------------------------------------------------------------------
+# Page 2 — guest details form. Guest voice.
+# -----------------------------------------------------------------------------
+guest:
+  # Form heading.
+  title: "Informazioni sull’ospite"
+  # Line under the heading.
+  subtitle: "La preghiamo di confermare i Suoi dati per la prenotazione"
+  # Form labels. Each sits above an empty text field.
+  firstName: "Nome"
+  lastName: "Cognome"
+  email: "Indirizzo e-mail"
+  phone: "Numero di telefono"
+  address: "Indirizzo"
+  city: "Città"
+  # Postal code. "ZIP" is the US term; "Postal" covers other countries. Keep both ideas.
+  zip: "CAP"
+  country: "Paese"
+  # First option in the country menu, shown before a country is chosen.
+  countryPlaceholder: "Selezionare…"
+  # Returns to the room list. The arrow is part of the label; you may use your language’s back arrow.
+  backToRooms: "← Tornare alle camere"
+  # Submits the form and opens the payment step. Button.
+  continueToPayment: "Procedere al pagamento"
+  # Heading of the side panel that repeats the chosen room.
+  yourSelection: "La Sua selezione"
+
+  # Country menu. The stored value is the two-letter code; only the name is translated.
+  # Use the country’s usual name in your language.
+  countries:
+    ES: "Spagna"
+    GR: "Grecia"
+    IT: "Italia"
+    FR: "Francia"
+    DE: "Germania"
+    GB: "Regno Unito"
+    US: "Stati Uniti"
+    PT: "Portogallo"
+    NL: "Paesi Bassi"
+    CH: "Svizzera"
+    AT: "Austria"
+    BE: "Belgio"
+    SE: "Svezia"
+    NO: "Norvegia"
+    DK: "Danimarca"
+    AU: "Australia"
+    CA: "Canada"
+    JP: "Giappone"
+
+# -----------------------------------------------------------------------------
+# Page 3 — payment. Guest voice, plus a few presenter warnings.
+# -----------------------------------------------------------------------------
+booking:
+  # Large photo on the payment page.
+  heroAlt: "Veduta della caldera di Santorini al tramonto"
+  # Three gallery captions under the payment-page photos.
+  gallerySuiteAlt: "Interni della Royal Suite"
+  gallerySuite: "La Royal Suite"
+  galleryPoolAlt: "Infinity pool"
+  galleryPool: "Infinity pool"
+  galleryDiningAlt: "Alta cucina"
+  galleryDining: "Cena privata"
+  # Property story heading.
+  sanctuaryTitle: "Un santuario sopra il mare"
+  # First paragraph of the property story. Place names stay.
+  sanctuaryBody1: "Arroccato sulle scogliere vulcaniche di Oia, The Caldera House è il luogo in cui l’Aegean incontra il cielo. Ogni suite si apre su viste senza ostacoli sulla caldera, con interni in pietra scolpita a mano, piscine plunge private e terrazze pensate per ammirare il tramonto più celebre del mondo."
+  # Second paragraph.
+  sanctuaryBody2: "Dalle cene a lume di candela preparate dal nostro chef residente allo yoga all’alba in cima alla scogliera, ogni dettaglio è stato curato perché Lei possa semplicemente essere presente."
+  # Amenity list. Short phrases.
+  amenityPool: "Infinity pool privata"
+  amenityChef: "Servizio chef in suite"
+  amenityTerrace: "Terrazza con vista sulla Caldera"
+  amenitySpa: "Spa e benessere"
+  amenitySailing: "Escursione in barca a vela al tramonto"
+  amenityAirport: "Concierge in aeroporto"
+  # Returns to the guest form. Arrow may be mirrored in RTL languages.
+  backToGuest: "← Tornare ai dati dell’ospite"
+  # Side panel heading on the payment step.
+  yourStay: "Il Suo soggiorno"
+  # Heading above the payment choice.
+  payment: "Pagamento"
+  # Security reassurance under the pay button.
+  secured: "Tutte le transazioni sono protette e crittografate."
+  # Line under that reassurance. {name} is the guest’s full name.
+  guestLine: "Ospite: {name}"
+  # Tooltip on the pay button while Flywire demo credentials are missing.
+  # Presenter voice — the person clicking has to open the back office first.
+  credentialsFirst: "Aggiunga prima le Sue credenziali demo Flywire nel back office dell’hotel"
+  # Notice when checkout rejects the configuration. {detail} is a technical field list from Flywire.
+  # Presenter voice.
+  configRejected: "Il checkout ha rifiutato questa configurazione: {detail}"
+  # Notice when checkout fails to open. {detail} is the error text.
+  couldNotStart: "Impossibile avviare il checkout: {detail}"
+  # Shown in the activity log when a card is saved and no money is taken.
+  noAmount: "Nessun importo (carta solo salvata)"
+  # Activity log value. Presenter voice. Checkout drawn on top of the page.
+  displayOverlay: "Overlay a schermo intero"
+  # Activity log value. Checkout placed inside the booking panel.
+  displayEmbedded: "Incorporato nella pagina"
+
+  # Price breakdown lines. {nights} is "3 nights". {amount} is the nightly rate.
+  nightlyCalc: "{nights} × {amount}"
+  # {extras} is "1 extra guest" or "2 extra guests". {amount} is the fee. {nights} is "3 nights".
+  extraCalc: "{extras} × {amount} × {nights}"
+
+# -----------------------------------------------------------------------------
+# Guest-facing names for the payment flow the presenter picked.
+# These replace the "Payment" card title, description and the pay button.
+# {amount} is a money amount such as "$7,350" or "€6.800".
+# -----------------------------------------------------------------------------
+flows:
+  pay_full:
+    # Guest sees this as the payment option title.
+    guestTitle: "Pagamento integrale"
+    guestDesc: "Pagamento unico di {amount}"
+    # Pay button. {amount} is included.
+    cta: "Pagare {amount}"
+    # Presenter sees this in the settings drawer, as the flow name.
+    title: "Pagamento integrale"
+    # Presenter. One sentence under the flow name.
+    pitch: "Tariffe prepagate, tour ed esperienze dell’ultimo minuto."
+    # Link to a matching sample. Presenter.
+    playground: "Pagamento con campi comuni"
+
+  reserve_hold:
+    guestTitle: "Prenotazione con preautorizzazione"
+    guestDesc: "Preautorizzazione di {amount} oggi, addebito all’arrivo"
+    cta: "Prenotare con preautorizzazione"
+    title: "Prenotazione con preautorizzazione"
+    # "Pre-authorize" means a card hold, not a charge. "API" is the Flywire programming interface; you may keep "API".
+    pitch: "Preautorizzazione alla prenotazione, incasso all’arrivo. Le preautorizzazioni possono essere prorogate o aumentate tramite API."
+    playground: "Pagamento con preautorizzazione"
+
+  moto:
+    # MOTO means Mail Order / Telephone Order: staff take the card, the guest is not on the website.
+    # You may spell that out if the abbreviation is unknown, but keep it short (it is a menu title).
+    guestTitle: "Pagamento tramite l’ufficio prenotazioni"
+    guestDesc: "Pagamento assistito di {amount}"
+    cta: "Incassare il pagamento di {amount}"
+    title: "Prenotazioni telefoniche e via e-mail (MOTO)"
+    pitch: "Il personale delle prenotazioni riceve il pagamento degli ospiti che prenotano per telefono o via e-mail."
+    playground: "Pagamento MOTO"
+
+  save_card:
+    guestTitle: "Garanzia con carta"
+    guestDesc: "La Sua carta garantisce la prenotazione. Oggi non viene addebitato nulla."
+    cta: "Salvare la carta e prenotare"
+    title: "Salvare la carta, addebitare in seguito"
+    pitch: "Garanzia con carta archiviata. Caparre, saldi o no-show possono essere addebitati in seguito con il token."
+    playground: "Tokenizzazione senza importo"
+
+  pay_save:
+    guestTitle: "Pagare e salvare la carta"
+    guestDesc: "Pagamento di {amount} ora; carta conservata per gli extra"
+    cta: "Pagare {amount} e salvare la carta"
+    title: "Pagare ora e salvare la carta"
+    pitch: "Addebitare ora e conservare la carta per gli extra: attrezzatura subacquea, spa, escursioni, saldi."
+    playground: "Tokenizzazione con importo"
+
+  hold_save:
+    guestTitle: "Preautorizzare e salvare la carta"
+    guestDesc: "Preautorizzazione di {amount}; carta conservata per il Suo conto finale"
+    cta: "Prenotare con preautorizzazione"
+    title: "Preautorizzare e salvare la carta"
+    pitch: "Preautorizzare il soggiorno e conservare la carta per il conto finale e le spese accessorie."
+    playground: "Tokenizzazione con preautorizzazione"
+
+  optional:
+    guestTitle: "Pagamento integrale"
+    guestDesc: "Pagamento unico di {amount}, con la possibilità di salvare la Sua carta"
+    cta: "Pagare {amount}"
+    title: "Pagare, l’ospite può salvare la carta"
+    pitch: "Gli ospiti decidono se conservare la carta per il prossimo viaggio. Ideale per gli ospiti abituali."
+    playground: "Tokenizzazione facoltativa"
+
+  optional_hold:
+    guestTitle: "Prenotazione con preautorizzazione"
+    guestDesc: "Preautorizzazione di {amount}, con la possibilità di salvare la Sua carta"
+    cta: "Prenotare con preautorizzazione"
+    title: "Preautorizzare, l’ospite può salvare la carta"
+    pitch: "Preautorizzare il soggiorno; l’ospite può scegliere di conservare la carta archiviata."
+    playground: "Tokenizzazione facoltativa con preautorizzazione"
+
+  implicit:
+    guestTitle: "Pagamento integrale"
+    guestDesc: "Pagamento unico di {amount}; carta conservata per il Suo soggiorno"
+    cta: "Pagare {amount}"
+    title: "Pagare e conservare la carta"
+    pitch: "La carta viene salvata automaticamente se il metodo lo consente. Ideale per saldi e piani a rate."
+    playground: "Tokenizzazione implicita"
+
+  implicit_hold:
+    guestTitle: "Prenotazione con preautorizzazione"
+    guestDesc: "Preautorizzazione di {amount}; carta conservata per il Suo soggiorno"
+    cta: "Prenotare con preautorizzazione"
+    title: "Preautorizzare e conservare la carta"
+    pitch: "Preautorizzare il soggiorno e salvare automaticamente la carta per addebiti successivi."
+    playground: "Tokenizzazione implicita con preautorizzazione"
+
+  # Extra sentence under the payment option when part of the money goes to partners.
+  # {parts} is a list such as "sunset catamaran excursion ($350) and couples spa ritual ($250)".
+  splitNote: "Include {parts}, con regolamento diretto presso i nostri partner."
+  # Joiner used inside {parts} before the last partner. Same role as common.and, kept here
+  # because it sits inside a guest sentence.
+  splitAnd: "e"
+  # Extra sentence when the hotel absorbs the card fee.
+  noSurcharge: "Nessun supplemento per la carta."
+
+  # Presenter. Group headings in the flow list.
+  groups:
+    payment: "Pagamenti"
+    tokenization: "Carta archiviata"
+    # Grey hint after the group name. Technical term for saving a card.
+    tokenizationHint: "Tokenizzazione"
+    optional: "L’ospite sceglie se salvare la carta"
+    optionalHint: "Tokenizzazione facoltativa"
+    implicit: "Carta salvata automaticamente"
+    implicitHint: "Tokenizzazione implicita"
+  # Presenter. Badge when a flow cannot be selected until an API key is saved.
+  needsApiKey: "Richiede una chiave API"
+  # Presenter. Appended to the technical summary when the flow does not charge now.
+  noAmountTech: "nessun importo"
+
+  # Presenter. Extra sample links that appear when the matching setting is on.
+  playground:
+    authenticated: "Pagamento con sessione autenticata"
+    embedded: "Pagamento incorporato"
+    split: "Pagamento con ripartizione"
+    waive: "Pagamento senza supplemento carta"
+    offerRules: "Pagamento con regole di offerta"
+    styles: "Pagamento con stili personalizzati"
+    timeout: "Pagamento con timeout"
+    docs: "Guida alla configurazione di Checkout V2"
+
+# -----------------------------------------------------------------------------
+# Confirmation page after a successful checkout. Guest voice.
+# -----------------------------------------------------------------------------
+success:
+  # Photo behind the confirmation.
+  backgroundAlt: "Tramonto a Santorini"
+  # Small line above the confirmation headline. Changes with the kind of payment.
+  eyebrowPaid: "Prenotazione confermata"
+  eyebrowHold: "Prenotazione trattenuta"
+  eyebrowCard: "Prenotazione garantita"
+  # Headline. The <br> is a deliberate line break. [html]
+  title: "La Sua fuga a<br>Santorini La attende"
+  # {name} is the guest’s first and last name.
+  welcome: "Le diamo il benvenuto, {name}"
+  # {amount} is the money amount.
+  notePaid: "Pagamento integrale di {amount} ricevuto."
+  noteHold: "Sulla Sua carta è stata preautorizzata la somma di {amount}. L’addebito avverrà all’arrivo."
+  noteCard: "La Sua carta è stata salvata in modo sicuro. Oggi non è stato addebitato nulla."
+  noteMoto: "Pagamento di {amount} ricevuto dal nostro ufficio prenotazioni."
+  # Appended after the note when the card was also stored. Leading space is intentional.
+  cardSaved: " La Sua carta è stata salvata per gli extra durante il soggiorno."
+  cardSavedIfChosen: " La Sua carta è stata salvata, se ha scelto di conservarla."
+  cardKeptWhereSupported: " La Sua carta resta archiviata, ove supportato."
+  # Heading above a short list of stay highlights.
+  awaits: "Cosa La attende"
+  highlightPool: "Infinity pool privata affacciata sulla caldera"
+  highlightDinner: "Cena al tramonto sulla Sua terrazza, preparata dal nostro chef"
+  highlightSailing: "Escursione esclusiva in catamarano all’ora d’oro"
+  highlightSpa: "Rituale spa per coppie in omaggio"
+  # Presenter-only box under the confirmation. Not guest marketing.
+  returnedBy: "Restituito da Flywire · demo"
+  viewActivity: "Visualizzare l’attività del checkout →"
+  openDashboard: "Aprire nella dashboard dell’hotel →"
+  # Reloads the site so the presenter can run the booking again.
+  bookAnother: "Prenotare un altro soggiorno"
+  # Labels in the presenter result list. The values next to them are ids and status codes.
+  resultBooking: "Prenotazione"
+  resultFlow: "Flusso"
+  resultSession: "Sessione"
+  resultSessionStatus: "Stato della sessione"
+  resultPaymentStatus: "Stato del pagamento"
+  resultMethod: "Metodo di pagamento"
+
+# -----------------------------------------------------------------------------
+# Failure page. Guest voice, slightly playful on the card decline.
+# -----------------------------------------------------------------------------
+error:
+  # Decline headline. Playful, not a formal banking error. Short.
+  declinedTitle: "Operazione non riuscita"
+  declinedSubtitle: "Rifiutato"
+  # [html] <br> is a line break.
+  declinedMessage: "Non è stato possibile elaborare il Suo pagamento.<br>Forse desidera provare con un’altra carta."
+  # Checkout timer ran out. The presenter enabled a countdown.
+  timeoutTitle: "Tempo scaduto"
+  timeoutSubtitle: "Il Suo checkout è scaduto"
+  # [html]
+  timeoutMessage: "Abbiamo riservato la Sua suite il più a lungo possibile.<br>Ricominci per completare la prenotazione."
+  # Returns the guest to the payment step.
+  tryAgain: "Riprovare"
+  viewActivity: "Visualizzare l’attività del checkout →"
+
+# -----------------------------------------------------------------------------
+# Warnings shown when Flywire demo credentials have not been entered.
+# Presenter voice. {missing} is a list such as "API key" or "Client ID and recipient code".
+# -----------------------------------------------------------------------------
+credentials:
+  # Field names used inside {missing}. "Client ID" and "API key" are product terms;
+  # translate them consistently everywhere in this file.
+  fields:
+    client_id: "ID client"
+    code: "codice destinatario"
+    api_key: "chiave API"
+  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "ID client, codice destinatario e chiave API"
+  # Payment step. Bold first line.
+  paymentTitle: "Il checkout richiede le credenziali demo Flywire."
+  # [html] Payment step, the sentence after the title. Keep the <a> and its href.
+  paymentBody: "Inserisca nel <a href=\"/dashboard/#credentials\">back office dell’hotel</a> quanto segue: {missing}. Poi torni qui per pagare."
+  # Settings drawer and activity drawer. Bold first line.
+  drawerTitle: "Aggiunga le Sue credenziali demo Flywire per iniziare"
+  # Drawer paragraph. {missing} is the same list as above.
+  drawerBody: "Questa demo non include credenziali. Inserisca nel back office dell’hotel quanto segue: {missing}. I dati vengono salvati in questo browser e funzionano solo con l’ambiente demo Flywire."
+  # Button in the drawer.
+  add: "Aggiungere credenziali"
+  # Back office banner. Bold first line, includes the period.
+  officeTitle: "Aggiunga le Sue credenziali demo Flywire per iniziare."
+  # Back office banner body. {missing} is the list. "Save & test connection" is the submit button; use the same translation as dashboard.saveAndTest.
+  officeBody: "Questa demo viene fornita senza credenziali. Inserisca i seguenti dati di un account demo Flywire: {missing}. Poi prema «Salvare e testare la connessione». Fino ad allora, il checkout sul sito di prenotazione resta disattivato."
+
+# -----------------------------------------------------------------------------
+# Checkout settings drawer (gear icon). Presenter voice throughout.
+# Technical tokens in <code> or in the "hint" strings are API names. Do not translate those tokens.
+# -----------------------------------------------------------------------------
+demo:
+  # Small label above the drawer title. Product name. [do not translate] "Flywire". "Checkout V2" is the product version.
+  overline: "Flywire Checkout V2"
+  title: "Impostazioni del checkout"
+  # Subtitle under the title.
+  subtitle: "Scelga cosa mostrare. Le impostazioni si applicano alla prossima apertura del checkout e vengono salvate in questo browser."
+  # Screen-reader name for the language icon in this header. The names in the menu (English, Español, …) are each language’s own name and are not in this file.
+  pageLanguage: "Lingua della pagina"
+  # Screen-reader name for the X button.
+  close: "Chiudere le impostazioni del checkout"
+  # Numbered section titles. The number is drawn separately; translate only the word.
+  sectionFlow: "Flusso"
+  sectionDisplay: "Visualizzazione"
+  sectionPages: "Pagine ed esperienza dell’ospite"
+  sectionOptions: "Opzioni di pagamento"
+  sectionMethods: "Metodi di pagamento e valuta"
+  sectionBrand: "Brand e lingua"
+  sectionSession: "Sessione"
+  sectionCredentials: "Credenziali demo Flywire"
+
+  # Display choices.
+  displayOverlay: "Overlay a schermo intero"
+  displayEmbedded: "Incorporare il checkout nella pagina"
+  # [html] Keep <code>config.embed_to</code> unchanged.
+  displayHelp: "La modalità incorporata inserisce il checkout nel pannello di prenotazione con <code>config.embed_to</code>. Il pannello mostra già l’hotel e il totale: quando lo incorpora, nasconda quindi qui sotto l’intestazione e l’importo del checkout."
+
+  # [html] The hint in the label is the API field. Do not translate show_payer_form.
+  payerFormLabel: "Pagina dei dati del pagatore <span class=\"fw-label-hint\">show_payer_form</span>"
+  # [html] Do not translate show_recipient_form.
+  recipientFormLabel: "Pagina dei campi personalizzati <span class=\"fw-label-hint\">show_recipient_form</span>"
+  # Three-way choice used for both pages above.
+  pageAuto: "Automatica"
+  pageAlways: "Sempre visibile"
+  pageHide: "Nascosta"
+  # Help under those choices. Changes with the selection.
+  pagesNoteAuto: "«Automatica» salta una pagina quando tutto ciò che contiene è già compilato, come nel caso dei dati dell’ospite precompilati."
+  pagesNoteHidePayer: "Nascondere la pagina del pagatore funziona solo se il checkout dispone già di tutti i dati obbligatori del pagatore. Il modulo dell’ospite li precompila."
+  # [html] Do not translate disabled_fields.
+  readOnlyLabel: "Campi del pagatore in sola lettura <span class=\"fw-label-hint\">disabled_fields</span>"
+  readOnlyNote: "L’ospite vede questi campi ma non può modificarli, ad esempio l’e-mail con cui è stata effettuata la prenotazione."
+  readOnlyNoteHidden: "Gli ospiti li vedono solo nella pagina del pagatore, che «Automatica» salta quando i dati sono precompilati. Imposti la pagina del pagatore su «Sempre visibile» per mostrarla."
+  # Payer field chips. Short. These match the guest form, but they are presenter labels.
+  fieldFirstName: "Nome"
+  fieldLastName: "Cognome"
+  fieldEmail: "E-mail"
+  fieldPhone: "Telefono"
+  fieldAddress: "Indirizzo"
+  fieldCity: "Città"
+  fieldZip: "CAP"
+  fieldCountry: "Paese"
+
+  # Toggle titles are the bold line. Hints in <span class="fw-label-hint"> are code. Descriptions are the second line.
+  # [html] on every *Label key. Do not translate the code inside the hint span.
+  hideCloseLabel: "<strong>Nascondere il pulsante di chiusura</strong> <span class=\"fw-label-hint\">close_button: 'hidden'</span>"
+  hideCloseHelp: "L’ospite non può chiudere il checkout: lo completa oppure lo termina il timeout. Ideale con la visualizzazione incorporata."
+  hideHeaderLabel: "<strong>Nascondere l’intestazione del checkout</strong> <span class=\"fw-label-hint\">header: 'hidden'</span>"
+  hideHeaderHelp: "La pagina di prenotazione indica già l’hotel. Il checkout omette la propria intestazione, sia in overlay sia incorporato."
+  hideAmountLabel: "<strong>Nascondere l’importo</strong> <span class=\"fw-label-hint\">show_amount_info: false</span>"
+  hideAmountHelp: "Il pannello di prenotazione mostra già il totale. Il checkout salta il proprio riepilogo dell’importo. Per impostazione predefinita l’importo è visibile."
+  disableEmailsLabel: "<strong>Non inviare e-mail al pagatore</strong> <span class=\"fw-label-hint\">disable_payer_emails</span>"
+  disableEmailsHelp: "Flywire non invierà e-mail sullo stato del pagamento, così l’hotel può inviare conferme personalizzate con il proprio marchio."
+
+  # [html]
+  splitLabel: "<strong>Ripartizione con i partner</strong> <span class=\"fw-label-hint\">transaction.details.split</span>"
+  splitHelp: "Inviare una parte del pagamento direttamente ai portali dei partner (escursioni, spa, barche per immersioni). Il resto va all’hotel."
+  waiveLabel: "<strong>Annullare il supplemento carta</strong>"
+  waiveHelp: "Assorbire il supplemento solo per questa prenotazione, senza modificare le impostazioni del portale."
+  # [html]
+  timeoutLabel: "<strong>Timeout del checkout</strong> <span class=\"fw-label-hint\">config.timeout</span>"
+  timeoutHelp: "Mostrare un conto alla rovescia e chiudere il checkout alla scadenza, ad esempio per liberare le camere trattenute."
+  timeoutCountdown: "Conto alla rovescia"
+  timeoutWhole: "Intero checkout"
+  timeoutEachAttempt: "Ogni tentativo di pagamento"
+  timeoutDuration: "Durata"
+  # {count} is 3, 5, 10 or 15. Keep short; it is a menu item.
+  minutes_one: "{count} minuto"
+  minutes_other: "{count} minuti"
+
+  # [html] Do not translate config.offer_rules.
+  methodsHelp: "Controlla quali offerte vede l’ospite e in quale ordine, tramite <code>config.offer_rules</code>."
+  # Screen-reader name for the method chips.
+  methodsGroup: "Metodi di pagamento da mostrare"
+  methodCards: "Carte"
+  methodDebit: "Addebito diretto"
+  methodOnline: "Metodi online locali"
+  methodTransfer: "Bonifico bancario"
+  hideAmex: "Nascondere American Express"
+  # [html] Do not translate filters.currency.
+  currenciesLabel: "Valute proposte <span class=\"fw-label-hint\">filters.currency</span>"
+  currencyAll: "Tutte le valute disponibili"
+  currencyPayer: "Solo la valuta di residenza dell’ospite"
+  currencyOtherThanPayer: "Diverse dalla valuta dell’ospite"
+  currencyHotel: "Solo la valuta dell’hotel"
+  currencyOtherThanHotel: "Diverse dalla valuta dell’hotel"
+  currencyBoth: "Valute dell’ospite e dell’hotel"
+  # [html] "sort · currency" is an API hint. Do not translate "sort" or "currency" inside the hint.
+  currencySortLabel: "Ordine delle offerte per valuta <span class=\"fw-label-hint\">sort · currency</span>"
+  sortDefault: "Predefinito del checkout"
+  sortPayerFirst: "Prima la valuta dell’ospite"
+  sortHotelFirst: "Prima la valuta dell’hotel"
+  sortOtherFirst: "Prima le altre valute"
+  # [html]
+  methodSortLabel: "Ordine delle offerte per metodo <span class=\"fw-label-hint\">sort · method</span>"
+  sortCardsFirst: "Prima le carte"
+  sortOnlineFirst: "Prima i metodi online locali"
+  sortDebitFirst: "Prima l’addebito diretto"
+  sortTransferFirst: "Prima il bonifico bancario"
+
+  # [html] Do not translate styles.
+  brandLabel: "<strong>Adattare il checkout al brand del cliente</strong>"
+  brandHelp: "Imposti colore, carattere, dimensione del testo e spaziatura del checkout con <code>styles</code>."
+  brandColor: "Colore primario"
+  brandFont: "Carattere"
+  # Menu item that reveals a free-text font field. "Google Font" is a product name; you may keep it.
+  brandFontCustom: "Google Font personalizzato"
+  # [html] Do not translate fonts.googleapis.com.
+  brandFontCustomLabel: "Google Font <span class=\"fw-label-hint\">fonts.googleapis.com</span>"
+  # Example text inside the empty font field.
+  brandFontPlaceholder: "Libre Baskerville oppure incolli un link CSS"
+  # Shown when the font name is accepted. {family} is the font name the user typed.
+  brandFontOk: "Il checkout carica «{family}» da fonts.googleapis.com."
+  brandFontEmpty: "Inserisca il nome di un carattere, ad esempio Libre Baskerville, oppure incolli un link CSS di fonts.googleapis.com."
+  brandFontBadUrl: "Questo link non è un URL valido."
+  brandFontOrigin: "Il checkout carica i caratteri solo da https://fonts.googleapis.com."
+  brandFontFamily: "Il link richiede un nome di carattere composto da lettere, numeri e spazi."
+  brandFontChars: "Usi solo lettere, numeri e spazi. Il checkout rifiuta altri caratteri nel nome del carattere."
+  # [html] Do not translate base_font_size. The sizes below keep the pixel value.
+  brandSizeLabel: "Dimensione del testo <span class=\"fw-label-hint\">base_font_size</span>"
+  brandSizeSmall: "Piccola · 14px"
+  brandSizeRegular: "Normale · 16px"
+  brandSizeLarge: "Grande · 18px"
+  brandSizeXl: "Molto grande · 20px"
+  # [html] Do not translate base_space. Keep the rem values.
+  brandSpaceLabel: "Spaziatura <span class=\"fw-label-hint\">base_space</span>"
+  brandSpaceCompact: "Compatta · 0.75rem"
+  brandSpaceStandard: "Standard · 1rem"
+  brandSpaceRoomy: "Ampia · 1.25rem"
+  checkoutLanguage: "Lingua del checkout"
+
+  # Session choice. "Authenticated" means the hotel server creates the payment session.
+  sessionAuthenticated: "Autenticata"
+  sessionAnonymous: "Anonima"
+  sessionAuthenticatedNote: "Consigliata. Il Suo server crea la sessione e conferma l’esito."
+  sessionAnonymousNote: "Solo browser, per pagamenti singoli. Nessuna verifica dello stato lato server."
+
+  # Help under the credential summary.
+  credentialsHelp: "Inserite una sola volta per browser nel back office dell’hotel e usate per ogni checkout e azione di pagamento. Solo ambiente demo Flywire."
+  credentialsChange: "Modificare le credenziali nel back office"
+  # Labels in the credential summary. Values are what the user typed.
+  clientName: "Nome cliente"
+  clientId: "ID client"
+  recipientCode: "Codice destinatario"
+  apiKey: "Chiave API"
+
+  # Collapsed section that shows the code sent to checkout.
+  integrationCode: "Codice di integrazione"
+  # [html] Do not translate cpx_core.start().
+  integrationHelp: "Ciò che questa pagina invia a <code>cpx_core.start()</code>"
+  playgroundIntro: "Esempi playground corrispondenti:"
+
+  reset: "Reimpostare"
+  done: "Fine"
+
+  # Why a control is disabled. Presenter voice.
+  unavailable:
+    needsAmount: "Richiede un importo; non disponibile quando si salva soltanto una carta."
+    noForcePage: "Il checkout non consente di forzare questa pagina quando si salva soltanto una carta."
+    cardOnFileNeedsSession: "I flussi con carta archiviata richiedono sempre una sessione autenticata."
+    needsApiKey: "Aggiunga prima la Sua chiave API demo nel back office dell’hotel."
+
+  # Partner split editor.
+  split:
+    # Column headers.
+    portalCode: "Codice portale"
+    # {currency} is an ISO code such as USD.
+    amount: "Importo ({currency})"
+    description: "Descrizione"
+    # Placeholders inside the row. {n} is 1, 2, 3…
+    codePlaceholder: "Codice"
+    codeLabel: "Codice portale del partner {n}"
+    # Placeholder when the currency has no cents.
+    amountPlaceholderWhole: "0"
+    amountPlaceholderCents: "0,00"
+    amountLabel: "Importo del partner {n} in {currency}"
+    whatFor: "Causale"
+    descriptionLabel: "Descrizione del partner {n}"
+    # Screen-reader name for the remove button. {n} is the row number.
+    remove: "Rimuovere il partner {n}"
+    add: "+ Aggiungere partner"
+    useDefaults: "Usare i partner predefiniti"
+    # {partners} and {hotel} and {total} are money amounts.
+    # The example note is added only before a room has been chosen.
+    summary: "Partner {partners} · l’hotel trattiene {hotel} su {total}"
+    summaryExample: "Partner {partners} · l’hotel trattiene {hotel} su {total} (totale di esempio)"
+    # Validation. {row} is "Partner 1". {code} is a portal code such as ABC.
+    needCode: "{row}: aggiungere un codice portale."
+    badCode: "{row}: i codici portale sono di 3 lettere (ABC) o di 5 caratteri che iniziano con una lettera (ABC1D)."
+    ownPortal: "{row}: non può essere il portale dell’hotel ({code})."
+    duplicate: "{row}: {code} è presente due volte."
+    needAmount: "{row}: inserire un importo."
+    # {partners} and {total} are money amounts.
+    overTotal: "I partner ricevono {partners}, più del totale della prenotazione di {total}."
+    rowLabel: "Partner {n}"
+
+  # Default descriptions for the two sample partners. Guest may see these in the payment note.
+  partners:
+    excursion: "Escursione in catamarano al tramonto"
+    spa: "Rituale spa per coppie"
+
+  # Checkout language menu.
+  # Names match the checkout language list. Endonyms stay untranslated.
+  locales:
+    en: "English"
+    en-GB: "English (UK)"
+    es-ES: "Español"
+    es-419: "Español (Latin America)"
+    fr-FR: "Français"
+    fr-CA: "Français (CA)"
+    pt-PT: "Português"
+    pt-BR: "Português (BR)"
+    pl: "Polski"
+    it: "Italiano"
+    ko: "한국어"
+    zh: "中文"
+    ja: "日本語"
+    de: "Deutsch"
+    id: "Bahasa Indonesia"
+    vi: "Tiếng Việt"
+
+# -----------------------------------------------------------------------------
+# Checkout activity drawer (heartbeat icon). Presenter voice.
+# Status codes such as FULLY_PAID stay in English in the UI; only the explanations are here.
+# -----------------------------------------------------------------------------
+activity:
+  title: "Attività del checkout"
+  subtitle: "Ciò che il checkout restituisce, in tempo reale: la sessione, ogni callback e l’esito finale letto dal Suo server. Salvato in questo browser finché non lo cancella."
+  close: "Chiudere l’attività del checkout"
+  clear: "Cancellare"
+  # Copies the whole log. Restored after "Copied".
+  copyLog: "Copiare il log"
+  done: "Fine"
+  emptyTitle: "Nessuna attività del checkout"
+  emptyBody: "Apra il checkout dalla fase di pagamento. Tutto ciò che restituisce comparirà qui in tempo reale."
+  earlierRuns: "Esecuzioni precedenti"
+  # {n} is the run number. {time} is a clock time.
+  runMeta: "Esecuzione #{n} · {time}"
+  # Collapsed row. {n} is the run number. {flow} is the flow name.
+  runSummary: "Esecuzione #{n} · {flow}"
+  # {status} is a translated status. {time} is a clock time.
+  runSummaryStatus: "{status} · {time}"
+  # {count} is how many events were recorded.
+  events_one: "{count} evento"
+  events_other: "{count} eventi"
+  timeline: "Cronologia"
+  outcome: "Esito"
+  # Fact labels in the latest-run summary. Values next to them come from the checkout that just ran.
+  flow: "Flusso"
+  transaction: "Transazione"
+  amount: "Importo"
+  session: "Sessione"
+  display: "Visualizzazione"
+  # While the server is still creating the session.
+  authenticatedCreating: "Autenticata (creazione in corso…)"
+  anonymous: "Anonima"
+  timeInCheckout: "Tempo nel checkout"
+  # "on_error" is the name of a callback. Do not translate on_error.
+  onErrorCalls: "Chiamate on_error"
+  # Do not translate on_end.
+  onEndReason: "Motivo on_end"
+  sessionStatus: "Stato della sessione"
+  paymentStatus: "Stato del pagamento"
+  reportedAmount: "Importo segnalato"
+  report: "Report"
+  reportPending: "Non ancora disponibile."
+  # {amount} is the minor-unit number. {currency} is an ISO code. "subunits" means cents or the local equivalent.
+  subunits: "{amount} {currency} in sottounità"
+  paymentId: "ID pagamento"
+  method: "Metodo"
+  card: "Carta"
+  expires: "Scadenza"
+  canceledHelp: "Il pagatore ha chiuso il checkout. Per le esecuzioni annullate non viene segnalato nulla."
+  # Do not translate config.timeout.
+  timeoutHelp: "config.timeout è scaduto e il checkout si è chiuso da solo."
+  refresh: "Aggiornare lo stato"
+  # Shown on the refresh button while the request is in flight.
+  refreshing: "Aggiornamento in corso…"
+  refreshHelp: "Rilegge la sessione dal Suo server, ad esempio mentre un bonifico bancario è in sospeso."
+  # Do not translate on_end.
+  anonymousReport: "Sessione anonima: questo report è arrivato nel browser come payload on_end."
+  showData: "Mostrare i dati"
+  # {elapsed} is a duration such as "1.2s" already formatted by the app.
+  elapsed: "+{elapsed}"
+
+  # Status pill on a run.
+  status:
+    # Shown for the moment between clicking pay and checkout actually opening.
+    starting: "Avvio in corso"
+    open: "Checkout aperto"
+    completed: "Completato"
+    declined: "Rifiutato"
+    canceled: "Annullato dal pagatore"
+    timeout: "Scaduto"
+    failed: "Avvio non riuscito"
+    interrupted: "Interrotto da un ricaricamento"
+
+  # Plain-language meaning of Flywire session status codes. The code itself stays in English next to this sentence.
+  sessionStatusText:
+    ACTIVE: "La sessione è aperta; il pagatore può ancora intervenire."
+    PARTIALLY_COMPLETED: "Alcune delle operazioni richieste sono state completate."
+    COMPLETED: "Tutto ciò che era stato richiesto nella sessione è stato completato."
+    ARCHIVED: "La sessione è chiusa e in sola lettura."
+
+  # Plain-language meaning of Flywire payment status codes.
+  paymentStatusText:
+    NO_PAYMENTS: "Non è stato effettuato alcun pagamento (ad esempio, è stata solo salvata una carta)."
+    SOME_IN_PROGRESS: "Un pagamento è ancora in elaborazione (ad esempio, un bonifico bancario in sospeso)."
+    # Used instead of the generic line when the payment is a card hold waiting for the hotel to capture it.
+    SOME_IN_PROGRESS_HOLD: "Autorizzato: l’importo è bloccato sulla carta, in attesa dell’incasso (back office dell’hotel)."
+    ALL_UNSUCCESSFUL: "Ogni tentativo di pagamento non è riuscito."
+    FULLY_PAID: "È stato pagato l’intero importo."
+    PARTIALLY_PAID: "È stata pagata solo una parte dell’importo."
+    OVERPAID: "È stato pagato più dell’importo richiesto."
+
+  # Timeline event titles. Callback names (on_error, on_end, cpx_core.start) stay in English.
+  events:
+    requested: "Checkout richiesto"
+    sessionCreated: "Sessione creata dal Suo server"
+    sessionCreatedText: "POST /commercial_payex/v2/session ha restituito le credenziali passate a initFields.session."
+    sessionResumed: "Sessione ripresa dal Suo server"
+    sessionResumedText: "POST /commercial_payex/v2/session/{id} ha restituito nuove credenziali di esecuzione per la sessione esistente."
+    # [do not translate] This is the function the page calls. Shown as a timeline title.
+    startTitle: "cpx_core.start(initFields)"
+    startText: "Il checkout è stato aperto con questo payload."
+    # {type} is an error code such as init_fields. The on_error('…') wrapper stays.
+    onErrorTitle: "on_error('{type}')"
+    onErrorRetry: "Il checkout resta aperto, così il pagatore può riprovare."
+    # {reason} is completed, canceled or timeout.
+    onEndTitle: "on_end('{reason}')"
+    onEndPayload: "Payload restituito nel browser (sessione anonima)."
+    onEndNoPayload: "Nessun payload per le sessioni autenticate; chieda l’esito al Suo server."
+    refreshed: "Stato aggiornato dal Suo server"
+    outcomeFromServer: "Esito della sessione dal Suo server"
+    lookupFailed: "Verifica della sessione non riuscita"
+    launchFailed: "Impossibile avviare il checkout"
+
+# -----------------------------------------------------------------------------
+# Hotel back office (/dashboard). Presenter / staff voice.
+# -----------------------------------------------------------------------------
+dashboard:
+  # Header tag next to the hotel name.
+  backOffice: "Back office"
+  # [html] Keep <strong> around the words that should stay bold. "Flywire" is the company name.
+  demoTag: "Flywire <strong>solo ambiente demo</strong> · dati salvati in questo browser"
+  backToBooking: "← Sito di prenotazione"
+  # Card heading. [html] "DEMO only" is a warning badge; keep the <span>.
+  connectionTitle: "Connessione Flywire <span class=\"db-env-badge\">solo DEMO</span>"
+  # [html] The <code> wraps the API host, which is filled in by the app. Do not translate the host.
+  connectionIntro: "Le credenziali del Suo account <strong>demo</strong> Flywire, utilizzate dal sito di prenotazione e da ogni azione di questa pagina. Le richieste vanno sempre all’API demo di Flywire (<code>{host}</code>); le credenziali di produzione vengono rifiutate."
+  # Screen-reader name for the book icon. {count} is added when clients exist.
+  savedClients: "Client salvati"
+  savedClientsCount: "Client salvati, {count} salvati"
+  connectionNotChecked: "Non verificato"
+  # Form labels.
+  clientName: "Nome cliente"
+  clientNamePlaceholder: "ad es. Mykonos Hotel"
+  clientId: "ID client"
+  clientIdPlaceholder: "UUID del Suo account demo Flywire"
+  recipientCode: "Codice destinatario"
+  recipientCodePlaceholder: "ad es. ABC"
+  savedCodesLabel: "Codici salvati per questo ID client"
+  savedCodes: "Codici salvati"
+  noSavedCodes: "Nessun codice salvato"
+  # Short label used when a pasted API key is cleaned. "API key" only; the header name stays in apiKeyLabel.
+  apiKey: "Chiave API"
+  # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
+  apiKeyLabel: "Chiave API <span class=\"db-hint\">X-Authentication-Key</span>"
+  apiKeyPlaceholder: "Incolli la Sua chiave API demo"
+  # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
+  saveAndTest: "Salvare e testare la connessione"
+  clearCredentials: "Cancellare le credenziali"
+  recipientCurrency: "Valuta del destinatario"
+  # Fine print at the bottom of the credentials card.
+  credentialsFootnote: "Solo demo: le credenziali sono salvate in questo browser e la chiave API viene inviata al server di questa demo a ogni richiesta, che la inoltra all’API demo di Flywire. In un’integrazione reale la chiave API resta sul Suo server."
+  bookings: "Prenotazioni"
+  clearAll: "Cancellare tutto"
+  # Confirm dialog before deleting every booking in this browser.
+  confirmClearBookings: "Eliminare da questo browser tutte le prenotazioni demo?"
+  # Confirm dialog before forgetting the credentials currently in use.
+  confirmClearCredentials: "Smettere di usare queste credenziali? I client salvati restano in questo browser e possono essere ricaricati."
+  # {id} is the booking reference, such as a short id.
+  confirmDeleteBooking: "Eliminare la prenotazione {id}?"
+
+  saved:
+    title: "Client salvati"
+    intro: "Una chiave API per ID client. I codici destinatario salvati con quel client sono elencati nella sua scheda."
+    close: "Chiudere i client salvati"
+    empty: "Nessun client salvato. Salvi e testi una connessione per conservarla qui."
+    load: "Caricare"
+    noneYet: "Nessuno finora"
+    unnamed: "Client senza nome"
+    inUse: "In uso"
+    clientId: "ID client"
+    apiKey: "Chiave API"
+    recipientCodes: "Codici destinatario"
+
+  # Connection status pill. Keep these short.
+  status:
+    notSet: "Non impostato"
+    checking: "Verifica in corso…"
+    keyRejected: "Chiave rifiutata"
+    incomplete: "Incompleto"
+    checkFields: "Connesso · verificare i campi"
+    connected: "Connesso · API demo"
+    unreachable: "Server non raggiungibile"
+  # {detail} is the reason from the server.
+  keyRejectedDetail: "{detail} Controlli che non manchi un carattere oppure incolli di nuovo la chiave."
+  # {missing} is the list of fields still empty.
+  keyWorksMissing: "La chiave API funziona con l’API demo. Mancano ancora: {missing}."
+  # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
+  savedInBrowser: " Salvato in questo browser: {name}{id}{code}."
+  demoKeyAccepted: "L’API demo ha accettato questa chiave."
+  # Format warnings, shown before the API is called.
+  clientIdFormat: "L’ID client non sembra un UUID (8-4-4-4-12 caratteri)."
+  recipientFormat: "I codici destinatario sono di 3 lettere (ABC) o di 5 caratteri che iniziano con una lettera (ABC1D)."
+  # {label} is Client ID, Recipient code or API key. {fixes} is a list of what was removed.
+  cleanedPaste: "Il contenuto incollato è stato ripulito. {fixes}"
+  cleanedField: "{label}: rimosso quanto segue: {fixes}."
+  # What paste-cleanup removed. Used inside {fixes}. Lowercase, mid-sentence.
+  fix:
+    invisible: "caratteri invisibili"
+    nbsp: "spazi non separabili"
+    quotes: "virgolette ai lati"
+    fieldName: "il nome del campo in testa"
+    bearer: "un prefisso «Bearer»"
+    punctuation: "punteggiatura finale"
+    spacesInKey: "interruzioni di riga o spazi all’interno della chiave"
+    spaces: "spazi"
+    lowercase: "lettere minuscole"
+
+  # Empty bookings table.
+  emptyTitle: "Nessuna prenotazione"
+  emptyBody: "Effettui una prenotazione sul sito di prenotazione. Ogni checkout avviato compare qui."
+  emptyAction: "Andare al sito di prenotazione"
+  # Table headers.
+  colBooking: "Prenotazione"
+  colGuest: "Ospite"
+  colStay: "Soggiorno"
+  colAmount: "Importo"
+  colStatus: "Stato"
+  # Shown in the detail pane before a row is chosen.
+  selectBooking: "Selezioni una prenotazione per vedere pagamenti e azioni."
+  deleteBooking: "Eliminare la prenotazione"
+  # Fact labels in the detail pane.
+  factGuest: "Ospite"
+  factStay: "Soggiorno"
+  factCheckout: "Checkout"
+  factTotal: "Totale prenotazione"
+  factAuthorized: "Autorizzato"
+  factCaptured: "Incassato"
+  factCharged: "Addebitato sulla carta salvata"
+  factSession: "Sessione"
+  anonymousSession: "Anonima (solo browser)"
+  factSessionStatus: "Stato della sessione"
+  factPaymentStatus: "Stato del pagamento"
+  factTokenization: "Tokenizzazione"
+  factLastChecked: "Ultima verifica"
+  payments: "Pagamenti"
+  colPaymentId: "ID pagamento"
+  colMethod: "Metodo"
+  colCaptured: "Incassato"
+  chargesTitle: "Addebiti sulla carta salvata"
+  colWhatFor: "Causale"
+  colFlywirePayment: "Pagamento Flywire"
+  colResult: "Risultato"
+  # “guest paid” is the label Flywire uses for the amount in the guest’s currency. You may keep the quotes.
+  chargesNote: "L’importo è quello addebitato dall’hotel; «pagato dall’ospite» è quanto Flywire ha addebitato all’ospite nella sua valuta (charge_info)."
+  # Secondary line under a charge amount. {amount} is money in the guest’s currency. Lowercase, mid-sentence.
+  guestPaid: "pagato dall’ospite {amount}"
+  savedCard: "Carta salvata"
+  factCard: "Carta"
+  factMethod: "Metodo"
+  # Card line. {brand} is Visa, Mastercard, etc. {last4} is four digits. {exp} is MM/YY.
+  cardLine: "{brand} •••• {last4}"
+  cardExpiry: "· scad. {exp}"
+
+  # Booking status pills. Short.
+  bookingStatus:
+    failed: "Avvio non riuscito"
+    abandoned: "Abbandonata"
+    timedOut: "Scaduta"
+    inCheckout: "In checkout"
+    declined: "Rifiutata"
+    captured: "Incassata"
+    partlyCaptured: "Incassata in parte"
+    authorized: "Autorizzata"
+    processing: "In elaborazione"
+    paid: "Pagata"
+    cardSaved: "Carta salvata"
+    completed: "Checkout completato"
+
+  # Hold explanation under the status, when money is authorized but not captured yet.
+  holdPending: "Autorizzato: l’importo è bloccato sulla carta, in attesa dell’incasso."
+  holdCaptureSent: "Incasso inviato; Flywire lo elabora in modo asincrono. Aggiorni lo stato per vederlo concludersi."
+
+  # Same payment-status explanations as the activity drawer, shorter, for the back office.
+  paymentStatusText:
+    NO_PAYMENTS: "Non è stato effettuato alcun pagamento."
+    SOME_IN_PROGRESS: "Un pagamento è ancora in elaborazione."
+    ALL_UNSUCCESSFUL: "Ogni tentativo di pagamento non è riuscito."
+    FULLY_PAID: "L’intero importo è stato pagato o autorizzato."
+    PARTIALLY_PAID: "È stata pagata solo una parte dell’importo."
+    OVERPAID: "È stato pagato più dell’importo richiesto."
+
+  actionsTitle: "Azioni"
+  actionsSubtitle: "Chiamate API Flywire, effettuate tramite il server di questa demo"
+  # Shown on an action button while its request is in flight.
+  working: "In corso…"
+  # {label} is the action name, e.g. "Capture payment".
+  unavailableTitle: "{label} non è disponibile per questa prenotazione. "
+  # Link to the Flywire sample page. The arrow means "opens in a new tab".
+  openPlayground: "Aprire nel playground ↗"
+  sendRequest: "Inviare richiesta {method}"
+  sending: "Invio in corso…"
+  requestFormat: "Formato della richiesta"
+  # Tab label. "curl" is a command-line tool. [do not translate]
+  curl: "curl"
+  nodeFetch: "Node fetch"
+  requestTitle: "Richiesta a Flywire"
+  fillFields: "Compili i campi qui sopra."
+  requestFootnote: "Il server di questa demo la invia con la Sua chiave API demo come X-Authentication-Key. La chiave non viene mai mostrata qui."
+  # {when} is the booking’s creation date and time.
+  created: "Creata il {when}"
+  activity: "Attività"
+  request: "Richiesta"
+  requestBody: "Corpo della richiesta"
+  response: "Risposta"
+  showData: "Mostrare i dati"
+  payment: "Pagamento"
+  # {currency} is an ISO code.
+  amountLabel: "Importo ({currency})"
+  amountPositive: "Inserisca un importo maggiore di zero."
+  amountMinimum: "L’importo deve essere di almeno {amount}."
+  whatForOffice: "Causale (conservata nel back office)"
+  # Do not translate external_reference. It is a field name.
+  externalReference: "external_reference"
+  needReference: "Aggiunga un external_reference per questo addebito, ad esempio il numero di prenotazione."
+  tokenFromReport: "Dal tokenization_report della sessione. Modifichi se necessario."
+  tokenMissing: "Il token della carta non era nel report della sessione. Aggiorni prima lo stato oppure incolli i dettagli del token dal portale Flywire."
+  # Do not translate these three field names.
+  paymentMethodToken: "payment_method_token"
+  mandateId: "mandate_id"
+  payorId: "payor_id"
+  resumeNote: "Dopo la risposta di Flywire, il checkout si apre su questa pagina con i nuovi run_id e run_token."
+  # {amount} is the current hold. Holds can be raised, never lowered.
+  extendMinimum: "Minimo {amount}: le preautorizzazioni possono solo aumentare."
+  currencyUnavailable: "Valuta non disponibile"
+  # {code} is USD. {name} is "US Dollar". {symbol} is " ($)" or empty.
+  currencyValue: "{code} · {name}{symbol}"
+  currencyUsd: "Questo destinatario fattura in USD, quindi i prezzi delle camere restano in dollari."
+  # {rate} is a number. {code} is the currency. {date} is " · 2026-10-06" or empty.
+  currencyRate: "1 USD = {rate} {code}{date}. I prezzi delle camere e gli importi del checkout usano questo tasso."
+  # {who} is the recipient name and id. {detail} is the rest of the sentence.
+  currencyLine: "{who}. {detail}"
+
+  # Preset reasons when charging a saved card. Staff pick one from a menu.
+  charges:
+    minibar: "Minibar"
+    spa: "Trattamento spa"
+    lateCheckout: "Check-out tardivo"
+    transfer: "Trasferimento aeroportuale"
+    dive: "Noleggio di attrezzatura subacquea"
+    noShow: "Penale per mancata presentazione"
+
+  # The five staff actions. "help" is the paragraph. "reason" / "fix" show when the action cannot run.
+  action:
+    refresh: "Aggiornare lo stato"
+    refreshHelp: "Legge la sessione da Flywire: report di sessione, pagamento e tokenizzazione."
+    resume: "Riprendere la sessione"
+    resumeHelp: "Ottiene nuove credenziali di esecuzione per questa sessione, poi riapre il checkout con esse dal punto in cui l’ospite si era fermato, ad esempio per inviare un link di pagamento."
+    resumeOldReason: "Questa prenotazione è stata effettuata prima del supporto alla ripresa."
+    resumeOldFix: "Effettui una nuova prenotazione."
+    capture: "Incassare il pagamento"
+    captureHelp: "Incassa i fondi trattenuti, in tutto o in parte (ad esempio all’arrivo). Qualsiasi importo non incassato viene rilasciato all’ospite."
+    extend: "Prorogare la preautorizzazione"
+    extendHelp: "Reimposta la preautorizzazione a 7 giorni da oggi e può aumentare l’importo autorizzato (solo aumento)."
+    charge: "Addebitare la carta salvata"
+    chargeHelp: "Addebita la carta salvata al checkout senza la presenza dell’ospite, ad esempio minibar o una penale per mancata presentazione."
+    noSessionReason: "Questa prenotazione ha usato una sessione anonima, quindi sul server non c’è alcuna sessione da consultare o riprendere."
+    noSessionFix: "Per le nuove prenotazioni usi una sessione autenticata (impostazioni, Sessione)."
+    # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
+    notHoldReason: "Flywire può incassare o prorogare solo un pagamento preautorizzato. Questa prenotazione ha usato «{flow}», {how}."
+    chargedImmediately: "che ha addebitato subito l’ospite"
+    savedOnly: "che salva la carta senza addebitare né bloccare nulla"
+    notHoldFix: "Per mostrarlo, effettui una prenotazione con un flusso con preautorizzazione: «Prenotazione con preautorizzazione», «Preautorizzare e salvare la carta», «Preautorizzare, l’ospite può salvare la carta» o «Preautorizzare e conservare la carta»."
+    noPaymentReason: "Questa prenotazione non ha ancora un ID pagamento."
+    noPaymentFixRefresh: "Faccia clic su «Aggiornare lo stato» dopo che l’ospite ha completato il checkout."
+    noPaymentFixGuest: "L’ospite non ha completato il checkout."
+    # {amount} is money. {when} is a date and time.
+    holdEndedReason: "L’incasso di {amount} è avvenuto il {when} e chiude la preautorizzazione: tutto ciò che non è stato incassato è stato rilasciato all’ospite."
+    holdEndedFixCard: "Per gli extra usi «Addebitare la carta salvata»: questa prenotazione ha la carta archiviata."
+    holdEndedFixNew: "Per mostrarlo di nuovo, effettui una nuova prenotazione con un flusso con preautorizzazione."
+    noCardReason: "Su questa prenotazione non è stata salvata alcuna carta."
+    noCardFix: "Effettui una prenotazione con un flusso con carta archiviata, ad esempio «Salvare la carta, addebitare in seguito» o «Pagare ora e salvare la carta»."
+    fallbackFlow: "un flusso"
+
+  # History lines written after an action. {status} is a Flywire status code (do not translate the code).
+  history:
+    statusRefreshed: "Stato aggiornato"
+    statusRefreshedWith: "Stato aggiornato · {status}"
+    statusFailed: "Aggiornamento dello stato non riuscito"
+    resumed: "Sessione ripresa · checkout riaperto"
+    resumeFailed: "Ripresa non riuscita"
+    # {amount} is money. {status} is " · received" or empty.
+    captured: "Incasso di {amount}{status}"
+    holdRaised: "Preautorizzazione aumentata a {amount} e prorogata di 7 giorni"
+    holdExtended: "Preautorizzazione prorogata di 7 giorni"
+    # {amount} {what} {reference} are filled by the form. {status} is empty or " · " plus a Flywire status code.
+    charged: "Addebito di {amount} · {what} · {reference}{status}"
+    # When an action fails, the history line is rewritten. {what} is the text before the first " · ". {error} is the API message.
+    failedLine: "{what} non riuscito · {error}"
+    failedSuffix: "non riuscito"
+    checkoutAfterResume: "Checkout completato dopo la ripresa"
+    checkoutAfterResumeStatus: "Checkout completato dopo la ripresa · {status}"
+    guestClosedAgain: "L’ospite ha chiuso di nuovo il checkout"
+    checkoutTimedOut: "Checkout scaduto"
+    # {type} is an error code. Keep on_error.
+    onError: "on_error('{type}')"
+    couldNotStart: "Impossibile avviare il checkout: {detail}"
+
+# -----------------------------------------------------------------------------
+# Card brands and payment methods, shown next to a payment result.
+# Brand names are trademarks. [do not translate] the brand names.
+# "Card" / "Direct debit" / "Bank transfer" / "Online payment" are generic and should be translated.
+# -----------------------------------------------------------------------------
+cards:
+  card: "Carta"
+  directDebit: "Addebito diretto"
+  bankTransfer: "Bonifico bancario"
+  online: "Pagamento online"
+  visa: "Visa"
+  mastercard: "Mastercard"
+  amex: "American Express"
+  discover: "Discover"
+  jcb: "JCB"
+  diners: "Diners Club"
+  unionpay: "UnionPay"
+  maestro: "Maestro"
+
+# -----------------------------------------------------------------------------
+# Errors thrown in the browser before checkout opens. Shown in a notice or the activity log.
+# -----------------------------------------------------------------------------
+sdk:
+  # Shown if the Flywire script never arrives. "connect.js" is a file name. [do not translate] the file name.
+  sdkMissing: "L’SDK Flywire Checkout V2 non è stato caricato. connect.js è incluso nella pagina?"
+  sessionCreateFailed: "Creazione della sessione non riuscita"
+  sessionLookupFailed: "Verifica della sessione non riuscita"
+  # {message} is one of the two lines above. {status} is an HTTP status number.
+  requestFailed: "{message} ({status})"
+  # Recipient currency could not be read. Shown on the back office.
+  currencyUnreadable: "Impossibile leggere la valuta del destinatario."
+  currencyUnreachable: "Impossibile raggiungere questo server demo per leggere la valuta del destinatario."
+
+# -----------------------------------------------------------------------------
+# Sentences the demo server returns and the back office displays.
+# They are listed so translators can prepare them. The page language is saved
+# in this browser, but the server still sends the English text. Do not translate
+# URLs, header names, or field names inside these
+# sentences when they are written as code.
+# -----------------------------------------------------------------------------
+server:
+  # Returned with HTTP 401 when an action is attempted before an API key is saved.
+  # "/dashboard" is the back-office path. You may keep the path in parentheses.
+  missingCredentials: "Aggiunga prima le Sue credenziali demo Flywire nel back office dell’hotel (/dashboard)."
+  invalidSession: "ID sessione non valido."
+  invalidPayment: "ID pagamento non valido."
+  amountMinor: "amount deve essere un intero positivo in unità minime (centesimi)."
+  chargeFields: "payment_method_token, mandate_id, payor_id, recipient_code ed external_reference sono obbligatori."
+  noApiKey: "Nessuna chiave API ancora inserita."
+  # {detail} is Flywire’s own rejection text, already ending with a period.
+  keyRejected: "{detail} Qui funzionano solo le chiavi demo Flywire; le chiavi di produzione vengono rifiutate."
+  keyRejectedFallback: "La chiave API è stata rifiutata."
+  keyAccepted: "L’API demo ha accettato questa chiave."
+  # {status} is an HTTP status number.
+  apiAnswered: "L’API demo ha risposto {status}."
+  apiUnreachable: "Impossibile raggiungere l’API demo di Flywire."
+  needClientId: "Inserisca un ID client prima di poter cercare la valuta."
+  needRecipient: "Inserisca un codice destinatario prima di poter cercare la valuta."
+  currencyFailed: "Impossibile leggere la valuta del destinatario."
+  flywireUnreachable: "Impossibile raggiungere l’API Flywire"

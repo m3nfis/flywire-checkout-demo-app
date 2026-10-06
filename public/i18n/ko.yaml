@@ -1,0 +1,1288 @@
+# =============================================================================
+# The Caldera House — English source strings
+# Locale: ko
+#
+# This file is the source the translation team edits. The page reads it at
+# runtime (see public/i18n.js). Comments are for translators and are not shown.
+#
+# How to read a key
+# - The comment directly above a key says where it appears and any constraint.
+# - Nested keys become dotted names in the app, e.g. rooms.hero.title.
+#
+# Rules
+# - Keep every {placeholder} exactly, including the braces. The app fills them
+#   in. Example: "{amount} paid in full." — translate the words, leave {amount}.
+# - Keys that end in _one, _other, _two, _few, _many or _zero are plural forms.
+#   {count} is the number. English only needs _one (exactly 1) and _other
+#   (everything else). Add the other suffixes if your language needs them
+#   (Polish, Arabic, Russian, and others). If a form is missing, the app uses
+#   _other.
+# - [html] means the value contains tags such as <br>, <strong>, <em>, <a> or
+#   <code>. Translate the words. Leave tags, hrefs and class names unchanged.
+# - [do not translate] means the value is a proper noun, brand, code or
+#   endonym and must stay as written.
+# - Tone: sections under "guest" voice speak to the hotel guest (warm, luxury,
+#   second person). Sections marked "presenter" speak to the person running
+#   the demo or the hotel back office (plain instructions).
+# - Keep button and stepper labels short. Where length matters, the comment says so.
+# - Do not translate API field names, URLs, currency codes, portal codes, or
+#   the sample code in the integration preview. Those are not in this file.
+#
+# Not in this file
+# - Developer documentation under public/full-docs and public/minimal-docs.
+# - Code comments, console messages, and the generated checkout payload.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Shared words used on more than one screen
+# -----------------------------------------------------------------------------
+common:
+  # Booking total row. Short label, paired with a money amount.
+  total: "합계"
+  # Date the guest arrives. Short label in a summary list.
+  checkIn: "체크인"
+  # Date the guest leaves. Short label in a summary list.
+  checkOut: "체크아웃"
+  # How many people are staying. Short label in a summary list.
+  guests: "투숙 인원"
+  # The room that was booked. Short label.
+  suite: "스위트"
+  # Closes a popover or drawer. Button.
+  done: "완료"
+  # Restores the previous dates and guest counts. Text button in the date popover.
+  reset: "초기화"
+  # Copies text to the clipboard. Small button. Restored after "Copied".
+  copy: "복사"
+  # Shown for about a second after a copy succeeds. Same button as "Copy".
+  copied: "복사 완료"
+  # Shown for about a second when the browser blocks clipboard access.
+  copyFailed: "복사 실패"
+  # Reveals a secret field (the API key). Small button. Opposite of "Hide".
+  show: "표시"
+  # Masks a secret field. Small button. Opposite of "Show".
+  hide: "숨김"
+  # Fallback when the guest has not given a name yet. Used in greetings.
+  guest: "투숙객"
+  # Empty value in a definition list, e.g. a credential that has not been entered.
+  notSet: "미설정"
+  # Word before the last item of a list: "Client ID, recipient code and API key".
+  and: "및"
+  # Placeholder when a value is unknown. A single em dash. [do not translate]
+  dash: "—"
+
+# -----------------------------------------------------------------------------
+# Browser tab titles
+# -----------------------------------------------------------------------------
+meta:
+  # Browser tab title for the public booking site.
+  # "The Caldera House" is the hotel name. "Oia" and "Santorini" are place names.
+  # [do not translate] the hotel name and the place names. The em dash can stay.
+  bookingTitle: "The Caldera House — Oia, Santorini"
+  # Browser tab title for the hotel back office (staff page, not the guest page).
+  # [do not translate] "The Caldera House".
+  backOfficeTitle: "백오피스 — The Caldera House"
+
+# -----------------------------------------------------------------------------
+# Top bar of the booking site
+# -----------------------------------------------------------------------------
+nav:
+  # Logo text. Hotel name. [do not translate]
+  logo: "The Caldera House"
+  # Small location label next to the logo. Place names. [do not translate]
+  location: "Oia, Santorini"
+  # Tooltip and screen-reader name for the heartbeat icon. Opens a presenter drawer
+  # that lists what the payment checkout returned. Not part of the guest story.
+  checkoutActivity: "Checkout 활동 내역"
+  # Tooltip and screen-reader name for the grid icon. Opens the staff back office.
+  backOffice: "호텔 백오피스"
+  # Tooltip and screen-reader name for the gear icon. Opens presenter checkout settings.
+  # {flow} is the name of the selected payment flow, e.g. "Pay in full".
+  checkoutSettings: "Checkout 설정"
+  checkoutSettingsWithFlow: "Checkout 설정 · {flow}"
+
+# -----------------------------------------------------------------------------
+# Three-step progress bar under the header. Keep each label short.
+# -----------------------------------------------------------------------------
+stepper:
+  # Step 1. Guest is choosing a room.
+  selectRoom: "객실 선택"
+  # Step 2. Guest is entering name, email and address.
+  guestDetails: "고객 정보"
+  # Step 3. Guest is about to pay.
+  payment: "결제"
+
+# -----------------------------------------------------------------------------
+# Page 1 — room selection. Guest voice.
+# -----------------------------------------------------------------------------
+rooms:
+  # Decorative photo behind the headline. Describe the picture, not the hotel brand.
+  heroAlt: "Aegean 바다를 내려다보는 Santorini의 푸른 돔 지붕"
+  # Small line above the headline. Hotel name and place. [do not translate]
+  eyebrow: "The Caldera House · Oia, Santorini"
+  # Main headline on the room list.
+  title: "스위트를 선택해 주십시오"
+  # Tooltip, screen-reader text, and the date popover name. Opens the date and guest picker.
+  changeDates: "날짜 및 인원 변경"
+  # Price suffix when the hotel bills in US dollars. Keep the leading slash.
+  perNight: "/박"
+  # Price suffix when the hotel bills in another currency.
+  # {currency} is an ISO code such as EUR or GBP. Do not translate the code.
+  perNightWithCurrency: "/박 · {currency}"
+  # Button on every room card. Keep it short enough for a card footer.
+  selectSuite: "이 스위트 선택"
+
+  # Hero line under the headline, built in script.
+  # {range} is the dates, e.g. "June 12 – 15, 2026".
+  # {nights} and {guests} are already-translated phrases such as "3 Nights" and "2 Guests".
+  staySummary: "{range} · {nights} · {guests}"
+
+  cards:
+    royal-caldera:
+      # Marketing name of the featured suite. "Caldera" is the volcanic bay at Santorini;
+      # keep it. "Royal" and "Suite" may be translated.
+      name: "Caldera 로열 스위트"
+      # Alt text for the suite photo. Same name guests see on the card.
+      alt: "Caldera 로열 스위트"
+      # Ribbon on the photo. One word if possible.
+      badge: "추천"
+      # Facts line under the name. Middle dots separate three facts. "m²" is square metres.
+      specs: "120 m² · Caldera 뷰 · 프라이빗 인피니티 풀"
+      # Size only, reused in the booking summary. Keep "m²".
+      size: "120 m²"
+      # View only, reused in the booking summary.
+      view: "Caldera 뷰"
+      # Paragraph on the card. Warm, descriptive.
+      description: "The Caldera House를 대표하는 최고의 스위트입니다. 바닥부터 천장까지 이어진 창이 caldera의 풍경을 담아내는 넓은 공간에 프라이빗 인피니티 풀, 그리고 세계에서 가장 유명한 일몰을 감상하실 수 있도록 설계된 테라스를 갖추고 있습니다."
+      # Short amenity chips. Keep each to one or two words.
+      tagPool: "프라이빗 풀"
+      tagButler: "버틀러 서비스"
+      tagTerrace: "테라스"
+      tagKitchen: "셰프 키친"
+
+    sunset-villa:
+      # Marketing name. "Sunset" and "Honeymoon" may be translated. "Villa" may be translated.
+      name: "선셋 허니문 빌라"
+      alt: "선셋 허니문 빌라"
+      specs: "95 m² · 선셋 뷰 · 야외 욕조"
+      size: "95 m²"
+      view: "선셋 뷰"
+      description: "부겐빌레아로 둘러싸인 아늑한 빌라입니다. 프라이빗 안뜰과 야외 구리 욕조를 갖추고 있으며, Oia의 전설적인 일몰을 막힘없이 감상하실 수 있습니다."
+      tagBath: "야외 욕조"
+      tagCourtyard: "안뜰"
+      tagSunset: "선셋 뷰"
+
+    captains-quarters:
+      # Marketing name. Nautical theme. The apostrophe is the hotel’s name for the room.
+      name: "캡틴스 쿼터스"
+      alt: "캡틴스 쿼터스"
+      specs: "65 m² · 하버 뷰 · 플런지 풀"
+      size: "65 m²"
+      view: "하버 뷰"
+      description: "Santorini의 해양 유산에서 영감을 받은 객실로, 하얗게 칠한 볼트 천장과 엄선된 앤티크 가구, 플런지 풀이 있는 프라이빗 안뜰을 갖추고 있습니다."
+      tagPlunge: "플런지 풀"
+      tagVaulted: "볼트 천장"
+      tagCourtyard: "안뜰"
+
+    aegean-studio:
+      # Marketing name. "Aegean" is the sea; keep it. "Cliff" and "Studio" may be translated.
+      name: "Aegean 클리프 스튜디오"
+      alt: "Aegean 클리프 스튜디오"
+      specs: "45 m² · 오션 뷰 · 프라이빗 발코니"
+      size: "45 m²"
+      view: "오션 뷰"
+      description: "화산 절벽에 자리한 세련된 휴식 공간으로, Aegean 바다 위로 펼쳐진 프라이빗 발코니를 갖추고 있습니다. 건축가가 설계한 이 스튜디오에서는 간결한 선과 자연석이 조화를 이룹니다."
+      tagSea: "오션 뷰"
+      tagBalcony: "발코니"
+      tagShower: "레인 샤워"
+
+# -----------------------------------------------------------------------------
+# Date and guest popover. Guest voice. Opened from "Change dates and guests".
+# -----------------------------------------------------------------------------
+stay:
+  # Plural of nights, lowercase, used inside sentences and the price breakdown.
+  # {count} is a number. See the plural rules at the top of this file.
+  night_one: "{count}박"
+  night_other: "{count}박"
+  # Same idea, title case, used in the hero summary ("3 Nights").
+  nightTitle_one: "{count}박"
+  nightTitle_other: "{count}박"
+  # Title case, hero summary ("2 Guests").
+  guestTitle_one: "{count}명"
+  guestTitle_other: "{count}명"
+  # Guest count in the summary panel ("2 Adults").
+  adult_one: "성인 {count}명"
+  adult_other: "성인 {count}명"
+  # Guest count when there are children. English "Child" / "Children" is irregular.
+  child_one: "어린이 {count}명"
+  child_other: "어린이 {count}명"
+  # Extra people beyond the two guests included in the rate. Lowercase, mid-sentence.
+  extraGuest_one: "추가 인원 {count}명"
+  extraGuest_other: "추가 인원 {count}명"
+  # Bookings count on the back office list.
+  booking_one: "예약 사이트에서 생성된 예약 {count}건"
+  booking_other: "예약 사이트에서 생성된 예약 {count}건"
+  # Nights column in the back office table.
+  nightShort_one: "{count}박"
+  nightShort_other: "{count}박"
+  # Relative time in the back office. {count} is minutes or hours.
+  minutesAgo_one: "{count}분 전"
+  minutesAgo_other: "{count}분 전"
+  hoursAgo_one: "{count}시간 전"
+  hoursAgo_other: "{count}시간 전"
+  # Less than a minute ago.
+  justNow: "방금 전"
+
+  # Popover heading while the guest still needs to pick the departure date.
+  selectCheckout: "체크아웃 날짜를 선택해 주십시오"
+  # Subtitle before a departure date is chosen.
+  # {checkIn} is a short date such as "Fri, Jun 12, 2026". {max} is a number (30).
+  checkoutHint: "체크인 {checkIn} · 최대 {max}박"
+  # Screen-reader name for the previous-month arrow.
+  previousMonth: "이전 달"
+  # Screen-reader name for the next-month arrow.
+  nextMonth: "다음 달"
+  # Stepper label. Adults are ages 13+.
+  adults: "성인"
+  # Hint under "Adults".
+  adultsHint: "13세 이상"
+  # Stepper label.
+  children: "어린이"
+  # Hint under "Children". An en dash between the ages.
+  childrenHint: "2~12세"
+  # Note under the steppers. {guests} is a number (2). {amount} is a money amount.
+  extraGuestFee: "요금에는 {guests}명의 투숙 인원이 포함되어 있습니다. 추가 인원 1명당 1박에 {amount}의 요금이 부과됩니다."
+  # Screen-reader name for the minus button. {who} is "adults" or "children", lowercase.
+  removeGuests: "{who} 인원 줄이기"
+  # Screen-reader name for the plus button. {who} is "adults" or "children", lowercase.
+  addGuests: "{who} 인원 늘리기"
+  # Lowercase plural used only inside the screen-reader phrases above.
+  adultsLower: "성인"
+  childrenLower: "어린이"
+
+  # Column headers of the month grid, Sunday through Saturday, in that order.
+  # The grid starts on Sunday. Do not reorder these seven keys.
+  # Keep them very short (about 2 letters in English).
+  weekdaySu: "일"
+  weekdayMo: "월"
+  weekdayTu: "화"
+  weekdayWe: "수"
+  weekdayTh: "목"
+  weekdayFr: "금"
+  weekdaySa: "토"
+
+# -----------------------------------------------------------------------------
+# Page 2 — guest details form. Guest voice.
+# -----------------------------------------------------------------------------
+guest:
+  # Form heading.
+  title: "고객 정보"
+  # Line under the heading.
+  subtitle: "예약을 위해 고객님의 정보를 확인해 주시기 바랍니다"
+  # Form labels. Each sits above an empty text field.
+  firstName: "이름"
+  lastName: "성"
+  email: "이메일 주소"
+  phone: "전화번호"
+  address: "주소"
+  city: "도시"
+  # Postal code. "ZIP" is the US term; "Postal" covers other countries. Keep both ideas.
+  zip: "우편번호"
+  country: "국가"
+  # First option in the country menu, shown before a country is chosen.
+  countryPlaceholder: "선택해 주십시오…"
+  # Returns to the room list. The arrow is part of the label; you may use your language’s back arrow.
+  backToRooms: "← 객실 선택으로 돌아가기"
+  # Submits the form and opens the payment step. Button.
+  continueToPayment: "결제 진행"
+  # Heading of the side panel that repeats the chosen room.
+  yourSelection: "선택하신 객실"
+
+  # Country menu. The stored value is the two-letter code; only the name is translated.
+  # Use the country’s usual name in your language.
+  countries:
+    ES: "스페인"
+    GR: "그리스"
+    IT: "이탈리아"
+    FR: "프랑스"
+    DE: "독일"
+    GB: "영국"
+    US: "미국"
+    PT: "포르투갈"
+    NL: "네덜란드"
+    CH: "스위스"
+    AT: "오스트리아"
+    BE: "벨기에"
+    SE: "스웨덴"
+    NO: "노르웨이"
+    DK: "덴마크"
+    AU: "호주"
+    CA: "캐나다"
+    JP: "일본"
+
+# -----------------------------------------------------------------------------
+# Page 3 — payment. Guest voice, plus a few presenter warnings.
+# -----------------------------------------------------------------------------
+booking:
+  # Large photo on the payment page.
+  heroAlt: "일몰 무렵 Santorini에서 바라본 caldera 풍경"
+  # Three gallery captions under the payment-page photos.
+  gallerySuiteAlt: "로열 스위트 내부"
+  gallerySuite: "로열 스위트"
+  galleryPoolAlt: "인피니티 풀"
+  galleryPool: "인피니티 풀"
+  galleryDiningAlt: "파인 다이닝"
+  galleryDining: "프라이빗 다이닝"
+  # Property story heading.
+  sanctuaryTitle: "바다 위의 안식처"
+  # First paragraph of the property story. Place names stay.
+  sanctuaryBody1: "Oia의 화산 절벽 위에 자리한 The Caldera House는 Aegean 바다와 하늘이 만나는 곳입니다. 모든 스위트에서 caldera를 막힘없이 조망하실 수 있으며, 손으로 다듬은 석조 인테리어와 프라이빗 플런지 풀, 그리고 세계에서 가장 유명한 일몰을 감상하실 수 있도록 설계된 테라스를 갖추고 있습니다."
+  # Second paragraph.
+  sanctuaryBody2: "상주 셰프가 준비하는 캔들라이트 디너부터 절벽 위에서 즐기는 새벽 요가까지, 고객님께서 온전히 이 순간에 머무르실 수 있도록 모든 세부 사항을 세심하게 준비했습니다."
+  # Amenity list. Short phrases.
+  amenityPool: "프라이빗 인피니티 풀"
+  amenityChef: "인스위트 셰프 서비스"
+  amenityTerrace: "Caldera 뷰 테라스"
+  amenitySpa: "스파 & 웰니스"
+  amenitySailing: "선셋 세일링 투어"
+  amenityAirport: "공항 컨시어지"
+  # Returns to the guest form. Arrow may be mirrored in RTL languages.
+  backToGuest: "← 고객 정보로 돌아가기"
+  # Side panel heading on the payment step.
+  yourStay: "투숙 정보"
+  # Heading above the payment choice.
+  payment: "결제"
+  # Security reassurance under the pay button.
+  secured: "모든 거래는 암호화되어 안전하게 보호됩니다."
+  # Line under that reassurance. {name} is the guest’s full name.
+  guestLine: "투숙객: {name} 고객님"
+  # Tooltip on the pay button while Flywire demo credentials are missing.
+  # Presenter voice — the person clicking has to open the back office first.
+  credentialsFirst: "먼저 호텔 백오피스에서 Flywire 데모 인증 정보를 추가하십시오"
+  # Notice when checkout rejects the configuration. {detail} is a technical field list from Flywire.
+  # Presenter voice.
+  configRejected: "Checkout에서 이 구성을 거부했습니다: {detail}"
+  # Notice when checkout fails to open. {detail} is the error text.
+  couldNotStart: "Checkout을 시작할 수 없습니다: {detail}"
+  # Shown in the activity log when a card is saved and no money is taken.
+  noAmount: "금액 없음(카드 저장만)"
+  # Activity log value. Presenter voice. Checkout drawn on top of the page.
+  displayOverlay: "전체 화면 오버레이"
+  # Activity log value. Checkout placed inside the booking panel.
+  displayEmbedded: "페이지에 삽입"
+
+  # Price breakdown lines. {nights} is "3 nights". {amount} is the nightly rate.
+  nightlyCalc: "{nights} × {amount}"
+  # {extras} is "1 extra guest" or "2 extra guests". {amount} is the fee. {nights} is "3 nights".
+  extraCalc: "{extras} × {amount} × {nights}"
+
+# -----------------------------------------------------------------------------
+# Guest-facing names for the payment flow the presenter picked.
+# These replace the "Payment" card title, description and the pay button.
+# {amount} is a money amount such as "$7,350" or "€6.800".
+# -----------------------------------------------------------------------------
+flows:
+  pay_full:
+    # Guest sees this as the payment option title.
+    guestTitle: "전액 결제"
+    guestDesc: "{amount} 일시불 결제"
+    # Pay button. {amount} is included.
+    cta: "{amount} 결제"
+    # Presenter sees this in the settings drawer, as the flow name.
+    title: "전액 결제"
+    # Presenter. One sentence under the flow name.
+    pitch: "선불 요금, 막바지 투어 및 체험 상품에 적합합니다."
+    # Link to a matching sample. Presenter.
+    playground: "공통 필드를 사용한 결제"
+
+  reserve_hold:
+    guestTitle: "예약 및 가승인"
+    guestDesc: "오늘 {amount} 가승인 후 체크인 시 청구됩니다"
+    cta: "가승인으로 예약"
+    title: "예약 및 가승인"
+    # "Pre-authorize" means a card hold, not a charge. "API" is the Flywire programming interface; you may keep "API".
+    pitch: "예약 시 가승인하고 체크인 시 매입합니다. 가승인은 API로 연장하거나 증액할 수 있습니다."
+    playground: "가승인 결제"
+
+  moto:
+    # MOTO means Mail Order / Telephone Order: staff take the card, the guest is not on the website.
+    # You may spell that out if the abbreviation is unknown, but keep it short (it is a menu title).
+    guestTitle: "예약 데스크 결제"
+    guestDesc: "직원이 진행하는 {amount} 결제"
+    cta: "{amount} 결제 접수"
+    title: "전화 및 이메일 예약(MOTO)"
+    pitch: "전화나 이메일로 예약하는 고객의 결제를 예약 담당 직원이 대신 진행합니다."
+    playground: "MOTO 결제"
+
+  save_card:
+    guestTitle: "카드로 예약 보증"
+    guestDesc: "고객님의 카드로 예약이 보증됩니다. 오늘은 청구되는 금액이 없습니다."
+    cta: "카드 저장 및 예약"
+    title: "카드 저장, 추후 청구"
+    pitch: "카드 정보를 보관하여 예약을 보증합니다. 보증금, 잔금, 노쇼 요금을 토큰으로 추후 청구할 수 있습니다."
+    playground: "금액 없는 토큰화"
+
+  pay_save:
+    guestTitle: "결제 및 카드 저장"
+    guestDesc: "지금 {amount} 결제, 추가 요금을 위해 카드 정보 보관"
+    cta: "{amount} 결제 및 카드 저장"
+    title: "즉시 결제 및 카드 저장"
+    pitch: "지금 청구하고 다이빙 장비, 스파, 투어, 잔금 등 추가 요금을 위해 카드를 보관합니다."
+    playground: "금액 있는 토큰화"
+
+  hold_save:
+    guestTitle: "가승인 및 카드 저장"
+    guestDesc: "{amount} 가승인, 최종 정산을 위해 카드 정보 보관"
+    cta: "가승인으로 예약"
+    title: "가승인 및 카드 저장"
+    pitch: "숙박 요금을 가승인하고 최종 정산 및 부대 비용을 위해 카드를 보관합니다."
+    playground: "가승인 토큰화"
+
+  optional:
+    guestTitle: "전액 결제"
+    guestDesc: "{amount} 일시불 결제(카드 저장 선택 가능)"
+    cta: "{amount} 결제"
+    title: "결제, 고객이 카드 저장 선택"
+    pitch: "다음 여행을 위해 카드를 저장할지 고객이 직접 선택합니다. 재방문 고객에게 적합합니다."
+    playground: "선택적 토큰화"
+
+  optional_hold:
+    guestTitle: "예약 및 가승인"
+    guestDesc: "{amount} 가승인(카드 저장 선택 가능)"
+    cta: "가승인으로 예약"
+    title: "가승인, 고객이 카드 저장 선택"
+    pitch: "숙박 요금을 가승인하며, 고객이 카드 정보 보관 여부를 선택할 수 있습니다."
+    playground: "가승인 선택적 토큰화"
+
+  implicit:
+    guestTitle: "전액 결제"
+    guestDesc: "{amount} 일시불 결제, 투숙 기간 동안 카드 정보 보관"
+    cta: "{amount} 결제"
+    title: "결제 및 카드 자동 보관"
+    pitch: "결제 수단이 지원하는 경우 카드가 자동으로 보관됩니다. 잔금 결제 및 할부 플랜에 적합합니다."
+    playground: "암묵적 토큰화"
+
+  implicit_hold:
+    guestTitle: "예약 및 가승인"
+    guestDesc: "{amount} 가승인, 투숙 기간 동안 카드 정보 보관"
+    cta: "가승인으로 예약"
+    title: "가승인 및 카드 자동 보관"
+    pitch: "숙박 요금을 가승인하고 추후 청구를 위해 카드를 자동으로 보관합니다."
+    playground: "가승인 암묵적 토큰화"
+
+  # Extra sentence under the payment option when part of the money goes to partners.
+  # {parts} is a list such as "sunset catamaran excursion ($350) and couples spa ritual ($250)".
+  splitNote: "{parts} 요금이 포함되어 있으며, 제휴사와 직접 정산됩니다."
+  # Joiner used inside {parts} before the last partner. Same role as common.and, kept here
+  # because it sits inside a guest sentence.
+  splitAnd: "및"
+  # Extra sentence when the hotel absorbs the card fee.
+  noSurcharge: "카드 수수료가 부과되지 않습니다."
+
+  # Presenter. Group headings in the flow list.
+  groups:
+    payment: "결제"
+    tokenization: "카드 정보 보관"
+    # Grey hint after the group name. Technical term for saving a card.
+    tokenizationHint: "토큰화"
+    optional: "고객이 카드 저장 선택"
+    optionalHint: "선택적 토큰화"
+    implicit: "카드 자동 저장"
+    implicitHint: "암묵적 토큰화"
+  # Presenter. Badge when a flow cannot be selected until an API key is saved.
+  needsApiKey: "API 키 필요"
+  # Presenter. Appended to the technical summary when the flow does not charge now.
+  noAmountTech: "금액 없음"
+
+  # Presenter. Extra sample links that appear when the matching setting is on.
+  playground:
+    authenticated: "인증 세션 결제"
+    embedded: "삽입형 결제"
+    split: "파트너 분할 결제"
+    waive: "수수료 면제 결제"
+    offerRules: "오퍼 규칙 적용 결제"
+    styles: "사용자 지정 스타일 결제"
+    timeout: "시간 제한 결제"
+    docs: "Checkout V2 구성 가이드"
+
+# -----------------------------------------------------------------------------
+# Confirmation page after a successful checkout. Guest voice.
+# -----------------------------------------------------------------------------
+success:
+  # Photo behind the confirmation.
+  backgroundAlt: "Santorini의 일몰"
+  # Small line above the confirmation headline. Changes with the kind of payment.
+  eyebrowPaid: "예약 확정"
+  eyebrowHold: "예약 확보 완료"
+  eyebrowCard: "예약 보증 완료"
+  # Headline. The <br> is a deliberate line break. [html]
+  title: "Santorini에서의 특별한 휴식이<br>고객님을 기다리고 있습니다"
+  # {name} is the guest’s first and last name.
+  welcome: "{name} 고객님, 환영합니다"
+  # {amount} is the money amount.
+  notePaid: "{amount} 전액이 결제되었습니다."
+  noteHold: "고객님의 카드에 {amount} 가승인이 설정되었습니다. 체크인 시 청구됩니다."
+  noteCard: "고객님의 카드가 안전하게 저장되었습니다. 오늘은 청구된 금액이 없습니다."
+  noteMoto: "예약팀에서 {amount} 결제를 처리했습니다."
+  # Appended after the note when the card was also stored. Leading space is intentional.
+  cardSaved: " 투숙 기간 중 추가 요금을 위해 고객님의 카드가 저장되었습니다."
+  cardSavedIfChosen: " 저장을 선택하신 경우 고객님의 카드가 저장되었습니다."
+  cardKeptWhereSupported: " 지원되는 결제 수단의 경우 카드 정보가 보관됩니다."
+  # Heading above a short list of stay highlights.
+  awaits: "고객님을 기다리는 경험"
+  highlightPool: "caldera 위에 자리한 프라이빗 인피니티 풀"
+  highlightDinner: "셰프가 준비하는 테라스 선셋 디너"
+  highlightSailing: "골든 아워의 프라이빗 카타마란 세일링"
+  highlightSpa: "무료 커플 스파 리추얼"
+  # Presenter-only box under the confirmation. Not guest marketing.
+  returnedBy: "Flywire 반환 결과 · 데모"
+  viewActivity: "Checkout 활동 내역 보기 →"
+  openDashboard: "호텔 대시보드에서 열기 →"
+  # Reloads the site so the presenter can run the booking again.
+  bookAnother: "새 예약"
+  # Labels in the presenter result list. The values next to them are ids and status codes.
+  resultBooking: "예약"
+  resultFlow: "플로우"
+  resultSession: "세션"
+  resultSessionStatus: "세션 상태"
+  resultPaymentStatus: "결제 상태"
+  resultMethod: "결제 수단"
+
+# -----------------------------------------------------------------------------
+# Failure page. Guest voice, slightly playful on the card decline.
+# -----------------------------------------------------------------------------
+error:
+  # Decline headline. Playful, not a formal banking error. Short.
+  declinedTitle: "죄송합니다"
+  declinedSubtitle: "결제가 승인되지 않았습니다"
+  # [html] <br> is a line break.
+  declinedMessage: "결제를 처리할 수 없었습니다.<br>번거로우시겠지만 다른 카드로 다시 시도해 주시기 바랍니다."
+  # Checkout timer ran out. The presenter enabled a countdown.
+  timeoutTitle: "시간이 초과되었습니다"
+  timeoutSubtitle: "결제 진행 시간이 만료되었습니다"
+  # [html]
+  timeoutMessage: "가능한 한 오래 스위트를 확보해 두었으나 시간이 만료되었습니다.<br>예약을 완료하시려면 처음부터 다시 진행해 주시기 바랍니다."
+  # Returns the guest to the payment step.
+  tryAgain: "다시 시도"
+  viewActivity: "Checkout 활동 내역 보기 →"
+
+# -----------------------------------------------------------------------------
+# Warnings shown when Flywire demo credentials have not been entered.
+# Presenter voice. {missing} is a list such as "API key" or "Client ID and recipient code".
+# -----------------------------------------------------------------------------
+credentials:
+  # Field names used inside {missing}. "Client ID" and "API key" are product terms;
+  # translate them consistently everywhere in this file.
+  fields:
+    client_id: "클라이언트 ID"
+    code: "수취인 코드"
+    api_key: "API 키"
+  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "클라이언트 ID, 수취인 코드 및 API 키"
+  # Payment step. Bold first line.
+  paymentTitle: "Checkout을 사용하려면 Flywire 데모 인증 정보가 필요합니다."
+  # [html] Payment step, the sentence after the title. Keep the <a> and its href.
+  paymentBody: "<a href=\"/dashboard/#credentials\">호텔 백오피스</a>에서 {missing} 정보를 추가한 후 돌아와 결제하십시오."
+  # Settings drawer and activity drawer. Bold first line.
+  drawerTitle: "시작하려면 Flywire 데모 인증 정보를 추가하십시오"
+  # Drawer paragraph. {missing} is the same list as above.
+  drawerBody: "이 데모에는 인증 정보가 포함되어 있지 않습니다. 호텔 백오피스에서 {missing} 정보를 입력하십시오. 입력한 정보는 이 브라우저에 저장되며 Flywire 데모 환경에서만 사용할 수 있습니다."
+  # Button in the drawer.
+  add: "인증 정보 추가"
+  # Back office banner. Bold first line, includes the period.
+  officeTitle: "시작하려면 Flywire 데모 인증 정보를 추가하십시오."
+  # Back office banner body. {missing} is the list. "Save & test connection" is the submit button; use the same translation as dashboard.saveAndTest.
+  officeBody: "이 데모에는 인증 정보가 포함되어 있지 않습니다. Flywire 데모 계정의 {missing} 정보를 입력한 후 '저장 및 연결 테스트'를 누르십시오. 그 전까지는 예약 사이트의 Checkout이 비활성화된 상태로 유지됩니다."
+
+# -----------------------------------------------------------------------------
+# Checkout settings drawer (gear icon). Presenter voice throughout.
+# Technical tokens in <code> or in the "hint" strings are API names. Do not translate those tokens.
+# -----------------------------------------------------------------------------
+demo:
+  # Small label above the drawer title. Product name. [do not translate] "Flywire". "Checkout V2" is the product version.
+  overline: "Flywire Checkout V2"
+  title: "Checkout 설정"
+  # Subtitle under the title.
+  subtitle: "표시할 항목을 선택하십시오. 설정은 다음에 Checkout을 열 때 적용되며 이 브라우저에 저장됩니다."
+  # Screen-reader name for the language icon in this header. The names in the menu (English, Español, …) are each language’s own name and are not in this file.
+  pageLanguage: "페이지 언어"
+  # Screen-reader name for the X button.
+  close: "Checkout 설정 닫기"
+  # Numbered section titles. The number is drawn separately; translate only the word.
+  sectionFlow: "플로우"
+  sectionDisplay: "표시 방식"
+  sectionPages: "페이지 및 고객 경험"
+  sectionOptions: "결제 옵션"
+  sectionMethods: "결제 수단 및 통화"
+  sectionBrand: "브랜딩 및 언어"
+  sectionSession: "세션"
+  sectionCredentials: "Flywire 데모 인증 정보"
+
+  # Display choices.
+  displayOverlay: "전체 화면 오버레이"
+  displayEmbedded: "페이지에 Checkout 삽입"
+  # [html] Keep <code>config.embed_to</code> unchanged.
+  displayHelp: "삽입 방식은 <code>config.embed_to</code>를 사용하여 예약 패널 안에 Checkout을 표시합니다. 패널에 이미 호텔과 합계 금액이 표시되므로, 삽입할 때는 아래에서 Checkout의 헤더와 금액을 숨기십시오."
+
+  # [html] The hint in the label is the API field. Do not translate show_payer_form.
+  payerFormLabel: "결제자 정보 페이지 <span class=\"fw-label-hint\">show_payer_form</span>"
+  # [html] Do not translate show_recipient_form.
+  recipientFormLabel: "사용자 지정 필드 페이지 <span class=\"fw-label-hint\">show_recipient_form</span>"
+  # Three-way choice used for both pages above.
+  pageAuto: "자동"
+  pageAlways: "항상 표시"
+  pageHide: "숨김"
+  # Help under those choices. Changes with the selection.
+  pagesNoteAuto: "'자동'은 페이지의 모든 항목이 이미 입력된 경우 해당 페이지를 건너뜁니다. 미리 입력된 고객 정보가 이에 해당합니다."
+  pagesNoteHidePayer: "결제자 페이지 숨기기는 Checkout에 필요한 결제자 정보가 모두 있을 때만 작동합니다. 고객 정보 양식이 이 정보를 미리 입력합니다."
+  # [html] Do not translate disabled_fields.
+  readOnlyLabel: "읽기 전용 결제자 필드 <span class=\"fw-label-hint\">disabled_fields</span>"
+  readOnlyNote: "고객은 이 필드를 볼 수 있지만 변경할 수는 없습니다(예: 예약에 사용한 이메일)."
+  readOnlyNoteHidden: "이 필드는 결제자 페이지에만 표시되며, 정보가 미리 입력된 경우 '자동'에서는 이 페이지를 건너뜁니다. 데모로 보여 주려면 결제자 페이지를 '항상 표시'로 설정하십시오."
+  # Payer field chips. Short. These match the guest form, but they are presenter labels.
+  fieldFirstName: "이름"
+  fieldLastName: "성"
+  fieldEmail: "이메일"
+  fieldPhone: "전화"
+  fieldAddress: "주소"
+  fieldCity: "도시"
+  fieldZip: "우편번호"
+  fieldCountry: "국가"
+
+  # Toggle titles are the bold line. Hints in <span class="fw-label-hint"> are code. Descriptions are the second line.
+  # [html] on every *Label key. Do not translate the code inside the hint span.
+  hideCloseLabel: "<strong>닫기 버튼 숨기기</strong> <span class=\"fw-label-hint\">close_button: 'hidden'</span>"
+  hideCloseHelp: "고객이 Checkout을 닫을 수 없으므로 결제를 완료하거나 시간 제한으로 종료됩니다. 삽입 방식과 함께 사용하는 것이 가장 좋습니다."
+  hideHeaderLabel: "<strong>Checkout 헤더 숨기기</strong> <span class=\"fw-label-hint\">header: 'hidden'</span>"
+  hideHeaderHelp: "예약 페이지에 이미 호텔 이름이 표시됩니다. 오버레이와 삽입 방식 모두에서 Checkout 자체 헤더를 생략합니다."
+  hideAmountLabel: "<strong>금액 숨기기</strong> <span class=\"fw-label-hint\">show_amount_info: false</span>"
+  hideAmountHelp: "예약 패널에 이미 합계 금액이 표시됩니다. Checkout의 금액 요약을 생략합니다. 기본적으로 표시됩니다."
+  disableEmailsLabel: "<strong>결제자에게 이메일 보내지 않기</strong> <span class=\"fw-label-hint\">disable_payer_emails</span>"
+  disableEmailsHelp: "Flywire가 결제 상태 이메일을 보내지 않으므로, 호텔이 자체 브랜드의 확인 이메일을 보낼 수 있습니다."
+
+  # [html]
+  splitLabel: "<strong>파트너와 분할</strong> <span class=\"fw-label-hint\">transaction.details.split</span>"
+  splitHelp: "결제 금액의 일부를 파트너 포털(투어, 스파, 다이빙 보트)로 직접 보냅니다. 나머지는 호텔로 입금됩니다."
+  waiveLabel: "<strong>카드 수수료 면제</strong>"
+  waiveHelp: "포털 설정을 변경하지 않고 이 예약에 한해 수수료를 호텔이 부담합니다."
+  # [html]
+  timeoutLabel: "<strong>Checkout 시간 제한</strong> <span class=\"fw-label-hint\">config.timeout</span>"
+  timeoutHelp: "카운트다운을 표시하고 시간이 만료되면 Checkout을 닫습니다(예: 확보한 객실을 해제하는 경우)."
+  timeoutCountdown: "카운트다운"
+  timeoutWhole: "Checkout 전체"
+  timeoutEachAttempt: "결제 시도별"
+  timeoutDuration: "시간"
+  # {count} is 3, 5, 10 or 15. Keep short; it is a menu item.
+  minutes_one: "{count}분"
+  minutes_other: "{count}분"
+
+  # [html] Do not translate config.offer_rules.
+  methodsHelp: "<code>config.offer_rules</code>를 사용하여 고객에게 표시할 오퍼와 순서를 제어합니다."
+  # Screen-reader name for the method chips.
+  methodsGroup: "표시할 결제 수단"
+  methodCards: "카드"
+  methodDebit: "계좌 자동이체"
+  methodOnline: "현지 온라인 결제"
+  methodTransfer: "계좌 이체"
+  hideAmex: "American Express 숨기기"
+  # [html] Do not translate filters.currency.
+  currenciesLabel: "제공 통화 <span class=\"fw-label-hint\">filters.currency</span>"
+  currencyAll: "사용 가능한 모든 통화"
+  currencyPayer: "고객의 자국 통화만"
+  currencyOtherThanPayer: "고객 통화 이외"
+  currencyHotel: "호텔 통화만"
+  currencyOtherThanHotel: "호텔 통화 이외"
+  currencyBoth: "고객 및 호텔 통화"
+  # [html] "sort · currency" is an API hint. Do not translate "sort" or "currency" inside the hint.
+  currencySortLabel: "통화별 오퍼 순서 <span class=\"fw-label-hint\">sort · currency</span>"
+  sortDefault: "Checkout 기본값"
+  sortPayerFirst: "고객 통화 우선"
+  sortHotelFirst: "호텔 통화 우선"
+  sortOtherFirst: "기타 통화 우선"
+  # [html]
+  methodSortLabel: "결제 수단별 오퍼 순서 <span class=\"fw-label-hint\">sort · method</span>"
+  sortCardsFirst: "카드 우선"
+  sortOnlineFirst: "현지 온라인 결제 우선"
+  sortDebitFirst: "계좌 자동이체 우선"
+  sortTransferFirst: "계좌 이체 우선"
+
+  # [html] Do not translate styles.
+  brandLabel: "<strong>클라이언트 브랜드에 맞추기</strong>"
+  brandHelp: "<code>styles</code>로 Checkout의 색상, 글꼴, 글자 크기, 간격을 설정합니다."
+  brandColor: "기본 색상"
+  brandFont: "글꼴"
+  # Menu item that reveals a free-text font field. "Google Font" is a product name; you may keep it.
+  brandFontCustom: "사용자 지정 Google Font"
+  # [html] Do not translate fonts.googleapis.com.
+  brandFontCustomLabel: "Google Font <span class=\"fw-label-hint\">fonts.googleapis.com</span>"
+  # Example text inside the empty font field.
+  brandFontPlaceholder: "Libre Baskerville 또는 CSS 링크 붙여넣기"
+  # Shown when the font name is accepted. {family} is the font name the user typed.
+  brandFontOk: "Checkout이 fonts.googleapis.com에서 '{family}' 글꼴을 불러옵니다."
+  brandFontEmpty: "Libre Baskerville 등의 글꼴 이름을 입력하거나 fonts.googleapis.com CSS 링크를 붙여넣으십시오."
+  brandFontBadUrl: "유효한 URL이 아닙니다."
+  brandFontOrigin: "Checkout은 https://fonts.googleapis.com에서만 글꼴을 불러옵니다."
+  brandFontFamily: "링크에는 영문자, 숫자, 공백으로 이루어진 글꼴 이름이 있어야 합니다."
+  brandFontChars: "영문자, 숫자, 공백만 사용하십시오. Checkout은 글꼴 이름에 포함된 다른 문자를 거부합니다."
+  # [html] Do not translate base_font_size. The sizes below keep the pixel value.
+  brandSizeLabel: "글자 크기 <span class=\"fw-label-hint\">base_font_size</span>"
+  brandSizeSmall: "작게 · 14px"
+  brandSizeRegular: "보통 · 16px"
+  brandSizeLarge: "크게 · 18px"
+  brandSizeXl: "아주 크게 · 20px"
+  # [html] Do not translate base_space. Keep the rem values.
+  brandSpaceLabel: "간격 <span class=\"fw-label-hint\">base_space</span>"
+  brandSpaceCompact: "좁게 · 0.75rem"
+  brandSpaceStandard: "표준 · 1rem"
+  brandSpaceRoomy: "넓게 · 1.25rem"
+  checkoutLanguage: "Checkout 언어"
+
+  # Session choice. "Authenticated" means the hotel server creates the payment session.
+  sessionAuthenticated: "인증"
+  sessionAnonymous: "익명"
+  sessionAuthenticatedNote: "권장. 귀사 서버가 세션을 생성하고 결과를 확인합니다."
+  sessionAnonymousNote: "브라우저 전용이며 일회성 결제에 사용합니다. 서버 측 상태 조회는 지원되지 않습니다."
+
+  # Help under the credential summary.
+  credentialsHelp: "호텔 백오피스에서 브라우저당 한 번 입력하면 모든 Checkout 및 결제 작업에 사용됩니다. Flywire 데모 환경 전용입니다."
+  credentialsChange: "백오피스에서 인증 정보 변경"
+  # Labels in the credential summary. Values are what the user typed.
+  clientName: "클라이언트 이름"
+  clientId: "클라이언트 ID"
+  recipientCode: "수취인 코드"
+  apiKey: "API 키"
+
+  # Collapsed section that shows the code sent to checkout.
+  integrationCode: "연동 코드"
+  # [html] Do not translate cpx_core.start().
+  integrationHelp: "이 페이지가 <code>cpx_core.start()</code>에 전송하는 내용"
+  playgroundIntro: "관련 플레이그라운드 샘플:"
+
+  reset: "초기화"
+  done: "완료"
+
+  # Why a control is disabled. Presenter voice.
+  unavailable:
+    needsAmount: "금액이 필요합니다. 카드만 저장하는 경우에는 사용할 수 없습니다."
+    noForcePage: "카드만 저장하는 경우 Checkout에서 이 페이지를 강제로 표시할 수 없습니다."
+    cardOnFileNeedsSession: "카드 정보 보관 플로우에는 항상 인증 세션이 필요합니다."
+    needsApiKey: "먼저 호텔 백오피스에서 데모 API 키를 추가하십시오."
+
+  # Partner split editor.
+  split:
+    # Column headers.
+    portalCode: "포털 코드"
+    # {currency} is an ISO code such as USD.
+    amount: "금액({currency})"
+    description: "설명"
+    # Placeholders inside the row. {n} is 1, 2, 3…
+    codePlaceholder: "코드"
+    codeLabel: "파트너 {n} 포털 코드"
+    # Placeholder when the currency has no cents.
+    amountPlaceholderWhole: "0"
+    amountPlaceholderCents: "0.00"
+    amountLabel: "파트너 {n} 금액({currency})"
+    whatFor: "용도"
+    descriptionLabel: "파트너 {n} 설명"
+    # Screen-reader name for the remove button. {n} is the row number.
+    remove: "파트너 {n} 삭제"
+    add: "+ 파트너 추가"
+    useDefaults: "기본 파트너 사용"
+    # {partners} and {hotel} and {total} are money amounts.
+    # The example note is added only before a room has been chosen.
+    summary: "파트너 {partners} · 호텔 몫 {hotel}(합계 {total})"
+    summaryExample: "파트너 {partners} · 호텔 몫 {hotel}(합계 {total}, 예시)"
+    # Validation. {row} is "Partner 1". {code} is a portal code such as ABC.
+    needCode: "{row}: 포털 코드를 입력하십시오."
+    badCode: "{row}: 포털 코드는 영문자 3자(ABC) 또는 영문자로 시작하는 5자(ABC1D)입니다."
+    ownPortal: "{row}: 호텔 자체 포털({code})은 사용할 수 없습니다."
+    duplicate: "{row}: {code} 코드가 중복되었습니다."
+    needAmount: "{row}: 금액을 입력하십시오."
+    # {partners} and {total} are money amounts.
+    overTotal: "파트너 지급액({partners})이 예약 합계 금액({total})을 초과합니다."
+    rowLabel: "파트너 {n}"
+
+  # Default descriptions for the two sample partners. Guest may see these in the payment note.
+  partners:
+    excursion: "선셋 카타마란 투어"
+    spa: "커플 스파 리추얼"
+
+  # Checkout language menu.
+  # Names match the checkout language list. Endonyms stay untranslated.
+  locales:
+    en: "English"
+    en-GB: "English (UK)"
+    es-ES: "Español"
+    es-419: "Español (Latin America)"
+    fr-FR: "Français"
+    fr-CA: "Français (CA)"
+    pt-PT: "Português"
+    pt-BR: "Português (BR)"
+    pl: "Polski"
+    it: "Italiano"
+    ko: "한국어"
+    zh: "中文"
+    ja: "日本語"
+    de: "Deutsch"
+    id: "Bahasa Indonesia"
+    vi: "Tiếng Việt"
+
+# -----------------------------------------------------------------------------
+# Checkout activity drawer (heartbeat icon). Presenter voice.
+# Status codes such as FULLY_PAID stay in English in the UI; only the explanations are here.
+# -----------------------------------------------------------------------------
+activity:
+  title: "Checkout 활동 내역"
+  subtitle: "Checkout이 반환하는 내용을 실시간으로 보여 줍니다. 세션, 모든 콜백, 귀사 서버에서 조회한 최종 결과가 포함됩니다. 삭제하기 전까지 이 브라우저에 저장됩니다."
+  close: "Checkout 활동 내역 닫기"
+  clear: "지우기"
+  # Copies the whole log. Restored after "Copied".
+  copyLog: "로그 복사"
+  done: "완료"
+  emptyTitle: "아직 Checkout 활동 내역이 없습니다"
+  emptyBody: "결제 단계에서 Checkout을 여십시오. 반환되는 모든 내용이 실시간으로 여기에 표시됩니다."
+  earlierRuns: "이전 실행"
+  # {n} is the run number. {time} is a clock time.
+  runMeta: "실행 #{n} · {time}"
+  # Collapsed row. {n} is the run number. {flow} is the flow name.
+  runSummary: "실행 #{n} · {flow}"
+  # {status} is a translated status. {time} is a clock time.
+  runSummaryStatus: "{status} · {time}"
+  # {count} is how many events were recorded.
+  events_one: "이벤트 {count}건"
+  events_other: "이벤트 {count}건"
+  timeline: "타임라인"
+  outcome: "결과"
+  # Fact labels in the latest-run summary. Values next to them come from the checkout that just ran.
+  flow: "플로우"
+  transaction: "거래"
+  amount: "금액"
+  session: "세션"
+  display: "표시 방식"
+  # While the server is still creating the session.
+  authenticatedCreating: "인증(생성 중…)"
+  anonymous: "익명"
+  timeInCheckout: "Checkout 소요 시간"
+  # "on_error" is the name of a callback. Do not translate on_error.
+  onErrorCalls: "on_error 호출"
+  # Do not translate on_end.
+  onEndReason: "on_end 사유"
+  sessionStatus: "세션 상태"
+  paymentStatus: "결제 상태"
+  reportedAmount: "보고된 금액"
+  report: "보고서"
+  reportPending: "아직 확인할 수 없습니다."
+  # {amount} is the minor-unit number. {currency} is an ISO code. "subunits" means cents or the local equivalent.
+  subunits: "{amount} {currency}(최소 화폐 단위)"
+  paymentId: "결제 ID"
+  method: "결제 수단"
+  card: "카드"
+  expires: "만료"
+  canceledHelp: "결제자가 Checkout을 닫았습니다. 취소된 실행에 대해서는 보고되는 내용이 없습니다."
+  # Do not translate config.timeout.
+  timeoutHelp: "config.timeout이 만료되어 Checkout이 자동으로 닫혔습니다."
+  refresh: "상태 새로 고침"
+  # Shown on the refresh button while the request is in flight.
+  refreshing: "새로 고치는 중…"
+  refreshHelp: "귀사 서버에서 세션을 다시 조회합니다(예: 계좌 이체가 대기 중인 경우)."
+  # Do not translate on_end.
+  anonymousReport: "익명 세션: 이 보고서는 on_end 페이로드로 브라우저에 전달되었습니다."
+  showData: "데이터 보기"
+  # {elapsed} is a duration such as "1.2s" already formatted by the app.
+  elapsed: "+{elapsed}"
+
+  # Status pill on a run.
+  status:
+    # Shown for the moment between clicking pay and checkout actually opening.
+    starting: "시작 중"
+    open: "Checkout 열림"
+    completed: "완료"
+    declined: "거절됨"
+    canceled: "결제자가 취소"
+    timeout: "시간 초과"
+    failed: "시작 실패"
+    interrupted: "새로 고침으로 중단"
+
+  # Plain-language meaning of Flywire session status codes. The code itself stays in English next to this sentence.
+  sessionStatusText:
+    ACTIVE: "세션이 열려 있으며 결제자가 계속 진행할 수 있습니다."
+    PARTIALLY_COMPLETED: "요청된 작업 중 일부가 완료되었습니다."
+    COMPLETED: "세션에서 요청된 모든 작업이 완료되었습니다."
+    ARCHIVED: "세션이 종료되었으며 읽기 전용입니다."
+
+  # Plain-language meaning of Flywire payment status codes.
+  paymentStatusText:
+    NO_PAYMENTS: "결제가 이루어지지 않았습니다(예: 카드만 저장한 경우)."
+    SOME_IN_PROGRESS: "결제가 아직 처리 중입니다(예: 대기 중인 계좌 이체)."
+    # Used instead of the generic line when the payment is a card hold waiting for the hotel to capture it.
+    SOME_IN_PROGRESS_HOLD: "가승인됨: 금액이 카드에 보류되어 매입을 기다리고 있습니다(호텔 백오피스)."
+    ALL_UNSUCCESSFUL: "모든 결제 시도가 실패했습니다."
+    FULLY_PAID: "전액이 결제되었습니다."
+    PARTIALLY_PAID: "금액의 일부만 결제되었습니다."
+    OVERPAID: "요청 금액보다 많은 금액이 결제되었습니다."
+
+  # Timeline event titles. Callback names (on_error, on_end, cpx_core.start) stay in English.
+  events:
+    requested: "Checkout 요청됨"
+    sessionCreated: "귀사 서버에서 세션 생성"
+    sessionCreatedText: "POST /commercial_payex/v2/session 요청이 initFields.session에 전달할 인증 정보를 반환했습니다."
+    sessionResumed: "귀사 서버에서 세션 재개"
+    sessionResumedText: "POST /commercial_payex/v2/session/{id} 요청이 기존 세션에 대한 새 실행 인증 정보를 반환했습니다."
+    # [do not translate] This is the function the page calls. Shown as a timeline title.
+    startTitle: "cpx_core.start(initFields)"
+    startText: "이 페이로드로 Checkout이 열렸습니다."
+    # {type} is an error code such as init_fields. The on_error('…') wrapper stays.
+    onErrorTitle: "on_error('{type}')"
+    onErrorRetry: "결제자가 다시 시도할 수 있도록 Checkout이 열린 상태로 유지됩니다."
+    # {reason} is completed, canceled or timeout.
+    onEndTitle: "on_end('{reason}')"
+    onEndPayload: "브라우저로 반환된 페이로드(익명 세션)."
+    onEndNoPayload: "인증 세션에는 페이로드가 없습니다. 결과는 귀사 서버에 조회하십시오."
+    refreshed: "귀사 서버에서 상태 새로 고침"
+    outcomeFromServer: "귀사 서버에서 조회한 세션 결과"
+    lookupFailed: "세션 조회 실패"
+    launchFailed: "Checkout을 시작할 수 없습니다"
+
+# -----------------------------------------------------------------------------
+# Hotel back office (/dashboard). Presenter / staff voice.
+# -----------------------------------------------------------------------------
+dashboard:
+  # Header tag next to the hotel name.
+  backOffice: "백오피스"
+  # [html] Keep <strong> around the words that should stay bold. "Flywire" is the company name.
+  demoTag: "Flywire <strong>데모 환경 전용</strong> · 데이터는 이 브라우저에 저장됩니다"
+  backToBooking: "← 예약 사이트"
+  # Card heading. [html] "DEMO only" is a warning badge; keep the <span>.
+  connectionTitle: "Flywire 연결 <span class=\"db-env-badge\">DEMO 전용</span>"
+  # [html] The <code> wraps the API host, which is filled in by the app. Do not translate the host.
+  connectionIntro: "예약 사이트와 이 페이지의 모든 작업에 사용되는 Flywire <strong>데모</strong> 계정 인증 정보입니다. 요청은 항상 Flywire 데모 API(<code>{host}</code>)로 전송되며, 운영 환경 인증 정보는 거부됩니다."
+  # Screen-reader name for the book icon. {count} is added when clients exist.
+  savedClients: "저장된 클라이언트"
+  savedClientsCount: "저장된 클라이언트, {count}개 저장됨"
+  connectionNotChecked: "확인 안 됨"
+  # Form labels.
+  clientName: "클라이언트 이름"
+  clientNamePlaceholder: "예: Mykonos Hotel"
+  clientId: "클라이언트 ID"
+  clientIdPlaceholder: "Flywire 데모 계정의 UUID"
+  recipientCode: "수취인 코드"
+  recipientCodePlaceholder: "예: ABC"
+  savedCodesLabel: "이 클라이언트 ID에 저장된 코드"
+  savedCodes: "저장된 코드"
+  noSavedCodes: "저장된 코드 없음"
+  # Short label used when a pasted API key is cleaned. "API key" only; the header name stays in apiKeyLabel.
+  apiKey: "API 키"
+  # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
+  apiKeyLabel: "API 키 <span class=\"db-hint\">X-Authentication-Key</span>"
+  apiKeyPlaceholder: "데모 API 키를 붙여넣으십시오"
+  # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
+  saveAndTest: "저장 및 연결 테스트"
+  clearCredentials: "인증 정보 지우기"
+  recipientCurrency: "수취인 통화"
+  # Fine print at the bottom of the credentials card.
+  credentialsFootnote: "데모 전용: 인증 정보는 이 브라우저에 저장되며, API 키는 요청할 때마다 이 데모의 서버로 전송된 후 Flywire 데모 API로 전달됩니다. 실제 연동에서는 API 키가 귀사 서버에만 보관됩니다."
+  bookings: "예약"
+  clearAll: "모두 지우기"
+  # Confirm dialog before deleting every booking in this browser.
+  confirmClearBookings: "이 브라우저에서 모든 데모 예약을 삭제하시겠습니까?"
+  # Confirm dialog before forgetting the credentials currently in use.
+  confirmClearCredentials: "이 인증 정보의 사용을 중지하시겠습니까? 저장된 클라이언트는 이 브라우저에 남아 있으며 다시 불러올 수 있습니다."
+  # {id} is the booking reference, such as a short id.
+  confirmDeleteBooking: "{id} 예약을 삭제하시겠습니까?"
+
+  saved:
+    title: "저장된 클라이언트"
+    intro: "클라이언트 ID당 API 키는 하나입니다. 해당 클라이언트로 저장한 수취인 코드는 각 카드에 표시됩니다."
+    close: "저장된 클라이언트 닫기"
+    empty: "아직 저장된 클라이언트가 없습니다. '저장 및 연결 테스트'를 실행하면 여기에 보관됩니다."
+    load: "불러오기"
+    noneYet: "아직 없음"
+    unnamed: "이름 없는 클라이언트"
+    inUse: "사용 중"
+    clientId: "클라이언트 ID"
+    apiKey: "API 키"
+    recipientCodes: "수취인 코드"
+
+  # Connection status pill. Keep these short.
+  status:
+    notSet: "미설정"
+    checking: "확인 중…"
+    keyRejected: "키 거부됨"
+    incomplete: "정보 부족"
+    checkFields: "연결됨 · 필드 확인"
+    connected: "연결됨 · 데모 API"
+    unreachable: "서버 연결 불가"
+  # {detail} is the reason from the server.
+  keyRejectedDetail: "{detail} 누락된 문자가 없는지 확인하거나 키를 다시 붙여넣으십시오."
+  # {missing} is the list of fields still empty.
+  keyWorksMissing: "API 키가 데모 API에서 유효합니다. 아직 입력되지 않은 항목: {missing}."
+  # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
+  savedInBrowser: " {name}{id}{code} 정보를 이 브라우저에 저장했습니다."
+  demoKeyAccepted: "데모 API가 이 키를 승인했습니다."
+  # Format warnings, shown before the API is called.
+  clientIdFormat: "클라이언트 ID가 UUID 형식(8-4-4-4-12자)이 아닌 것 같습니다."
+  recipientFormat: "수취인 코드는 영문자 3자(ABC) 또는 영문자로 시작하는 5자(ABC1D)입니다."
+  # {label} is Client ID, Recipient code or API key. {fixes} is a list of what was removed.
+  cleanedPaste: "붙여넣은 내용을 정리했습니다. {fixes}"
+  cleanedField: "{label}: {fixes} 항목을 제거했습니다."
+  # What paste-cleanup removed. Used inside {fixes}. Lowercase, mid-sentence.
+  fix:
+    invisible: "보이지 않는 문자"
+    nbsp: "줄 바꿈 없는 공백"
+    quotes: "앞뒤 따옴표"
+    fieldName: "앞에 붙은 필드 이름"
+    bearer: "'Bearer' 접두사"
+    punctuation: "끝 문장 부호"
+    spacesInKey: "키 내부의 줄 바꿈 또는 공백"
+    spaces: "공백"
+    lowercase: "소문자"
+
+  # Empty bookings table.
+  emptyTitle: "아직 예약이 없습니다"
+  emptyBody: "예약 사이트에서 예약하십시오. 시작한 모든 Checkout이 여기에 표시됩니다."
+  emptyAction: "예약 사이트로 이동"
+  # Table headers.
+  colBooking: "예약"
+  colGuest: "투숙객"
+  colStay: "숙박"
+  colAmount: "금액"
+  colStatus: "상태"
+  # Shown in the detail pane before a row is chosen.
+  selectBooking: "예약을 선택하면 결제 내역과 작업을 확인할 수 있습니다."
+  deleteBooking: "예약 삭제"
+  # Fact labels in the detail pane.
+  factGuest: "투숙객"
+  factStay: "숙박"
+  factCheckout: "Checkout"
+  factTotal: "예약 합계"
+  factAuthorized: "가승인 금액"
+  factCaptured: "매입 금액"
+  factCharged: "저장된 카드 청구액"
+  factSession: "세션"
+  anonymousSession: "익명(브라우저 전용)"
+  factSessionStatus: "세션 상태"
+  factPaymentStatus: "결제 상태"
+  factTokenization: "토큰화"
+  factLastChecked: "마지막 확인"
+  payments: "결제"
+  colPaymentId: "결제 ID"
+  colMethod: "결제 수단"
+  colCaptured: "매입"
+  chargesTitle: "저장된 카드 청구 내역"
+  colWhatFor: "용도"
+  colFlywirePayment: "Flywire 결제"
+  colResult: "결과"
+  # “guest paid” is the label Flywire uses for the amount in the guest’s currency. You may keep the quotes.
+  chargesNote: "'금액'은 호텔이 청구한 금액이며, '고객 결제액'은 Flywire가 고객의 통화로 고객에게 청구한 금액입니다(charge_info)."
+  # Secondary line under a charge amount. {amount} is money in the guest’s currency. Lowercase, mid-sentence.
+  guestPaid: "고객 결제액 {amount}"
+  savedCard: "저장된 카드"
+  factCard: "카드"
+  factMethod: "결제 수단"
+  # Card line. {brand} is Visa, Mastercard, etc. {last4} is four digits. {exp} is MM/YY.
+  cardLine: "{brand} •••• {last4}"
+  cardExpiry: "· 만료 {exp}"
+
+  # Booking status pills. Short.
+  bookingStatus:
+    failed: "시작 실패"
+    abandoned: "중단됨"
+    timedOut: "시간 초과"
+    inCheckout: "Checkout 진행 중"
+    declined: "거절됨"
+    captured: "매입 완료"
+    partlyCaptured: "부분 매입"
+    authorized: "가승인"
+    processing: "처리 중"
+    paid: "결제 완료"
+    cardSaved: "카드 저장됨"
+    completed: "Checkout 완료"
+
+  # Hold explanation under the status, when money is authorized but not captured yet.
+  holdPending: "가승인됨: 금액이 카드에 보류되어 매입을 기다리고 있습니다."
+  holdCaptureSent: "매입 요청을 보냈습니다. Flywire가 비동기로 처리합니다. 상태를 새로 고쳐 처리 결과를 확인하십시오."
+
+  # Same payment-status explanations as the activity drawer, shorter, for the back office.
+  paymentStatusText:
+    NO_PAYMENTS: "결제가 이루어지지 않았습니다."
+    SOME_IN_PROGRESS: "결제가 아직 처리 중입니다."
+    ALL_UNSUCCESSFUL: "모든 결제 시도가 실패했습니다."
+    FULLY_PAID: "전액이 결제되었거나 가승인되었습니다."
+    PARTIALLY_PAID: "금액의 일부만 결제되었습니다."
+    OVERPAID: "요청 금액보다 많은 금액이 결제되었습니다."
+
+  actionsTitle: "작업"
+  actionsSubtitle: "이 데모의 서버를 통한 Flywire API 호출"
+  # Shown on an action button while its request is in flight.
+  working: "처리 중…"
+  # {label} is the action name, e.g. "Capture payment".
+  unavailableTitle: "이 예약에서는 {label} 작업을 사용할 수 없습니다. "
+  # Link to the Flywire sample page. The arrow means "opens in a new tab".
+  openPlayground: "플레이그라운드에서 열기 ↗"
+  sendRequest: "{method} 요청 보내기"
+  sending: "보내는 중…"
+  requestFormat: "요청 형식"
+  # Tab label. "curl" is a command-line tool. [do not translate]
+  curl: "curl"
+  nodeFetch: "Node fetch"
+  requestTitle: "Flywire 요청"
+  fillFields: "위 필드를 입력하십시오."
+  requestFootnote: "이 데모의 서버가 데모 API 키를 X-Authentication-Key로 포함하여 전송합니다. 키는 여기에 표시되지 않습니다."
+  # {when} is the booking’s creation date and time.
+  created: "생성: {when}"
+  activity: "활동"
+  request: "요청"
+  requestBody: "요청 본문"
+  response: "응답"
+  showData: "데이터 보기"
+  payment: "결제"
+  # {currency} is an ISO code.
+  amountLabel: "금액({currency})"
+  amountPositive: "0보다 큰 금액을 입력하십시오."
+  amountMinimum: "금액은 {amount} 이상이어야 합니다."
+  whatForOffice: "용도(백오피스에 보관)"
+  # Do not translate external_reference. It is a field name.
+  externalReference: "external_reference"
+  needReference: "이 청구에 대한 external_reference(예: 예약 번호)를 추가하십시오."
+  tokenFromReport: "세션의 tokenization_report에서 가져왔습니다. 필요한 경우 수정하십시오."
+  tokenMissing: "세션 보고서에 카드 토큰이 없습니다. 먼저 상태를 새로 고치거나 Flywire 포털에서 토큰 정보를 붙여넣으십시오."
+  # Do not translate these three field names.
+  paymentMethodToken: "payment_method_token"
+  mandateId: "mandate_id"
+  payorId: "payor_id"
+  resumeNote: "Flywire가 응답하면 새 run_id와 run_token으로 이 페이지에서 Checkout이 열립니다."
+  # {amount} is the current hold. Holds can be raised, never lowered.
+  extendMinimum: "최소 {amount}: 가승인 금액은 증액만 가능합니다."
+  currencyUnavailable: "통화 정보 없음"
+  # {code} is USD. {name} is "US Dollar". {symbol} is " ($)" or empty.
+  currencyValue: "{code} · {name}{symbol}"
+  currencyUsd: "이 수취인은 USD로 청구하므로 객실 요금은 달러로 유지됩니다."
+  # {rate} is a number. {code} is the currency. {date} is " · 2026-10-06" or empty.
+  currencyRate: "1 USD = {rate} {code}{date}. 객실 요금과 Checkout 금액에 이 환율이 적용됩니다."
+  # {who} is the recipient name and id. {detail} is the rest of the sentence.
+  currencyLine: "{who}. {detail}"
+
+  # Preset reasons when charging a saved card. Staff pick one from a menu.
+  charges:
+    minibar: "미니바"
+    spa: "스파 트리트먼트"
+    lateCheckout: "레이트 체크아웃"
+    transfer: "공항 이동 서비스"
+    dive: "다이빙 장비 대여"
+    noShow: "노쇼 요금"
+
+  # The five staff actions. "help" is the paragraph. "reason" / "fix" show when the action cannot run.
+  action:
+    refresh: "상태 새로 고침"
+    refreshHelp: "Flywire에서 세션, 결제, 토큰화 보고서를 조회합니다."
+    resume: "세션 재개"
+    resumeHelp: "이 세션의 새 실행 인증 정보를 받은 후, 고객이 중단한 지점부터 Checkout을 다시 엽니다(예: 결제 링크를 보내는 경우)."
+    resumeOldReason: "이 예약은 재개 기능이 지원되기 전에 생성되었습니다."
+    resumeOldFix: "새 예약을 생성하십시오."
+    capture: "결제 매입"
+    captureHelp: "보류된 금액을 전액 또는 일부 회수합니다(예: 체크인 시). 매입되지 않은 금액은 고객에게 해제됩니다."
+    extend: "가승인 연장"
+    extendHelp: "가승인 기간을 오늘부터 7일로 재설정하며, 승인 금액을 늘릴 수 있습니다(증액만 가능)."
+    charge: "저장된 카드로 청구"
+    chargeHelp: "Checkout에서 저장한 카드로 고객 없이 청구합니다(예: 미니바, 노쇼 요금)."
+    noSessionReason: "이 예약은 익명 세션을 사용했으므로 서버에서 조회하거나 재개할 세션이 없습니다."
+    noSessionFix: "새 예약에는 인증 세션(설정 창의 '세션')을 사용하십시오."
+    # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
+    notHoldReason: "Flywire는 가승인된 결제(보류)만 매입하거나 연장할 수 있습니다. 이 예약의 플로우는 '{flow}'이며, {how}."
+    chargedImmediately: "고객에게 즉시 청구하는 방식입니다"
+    savedOnly: "청구나 가승인 없이 카드만 저장하는 방식입니다"
+    notHoldFix: "데모로 확인하려면 가승인 플로우로 예약하십시오: '예약 및 가승인', '가승인 및 카드 저장', '가승인, 고객이 카드 저장 선택', '가승인 및 카드 자동 보관'."
+    noPaymentReason: "이 예약에는 아직 결제 ID가 없습니다."
+    noPaymentFixRefresh: "고객이 Checkout을 완료한 후 '상태 새로 고침'을 클릭하십시오."
+    noPaymentFixGuest: "고객이 아직 Checkout을 완료하지 않았습니다."
+    # {amount} is money. {when} is a date and time.
+    holdEndedReason: "{when}에 {amount} 매입이 완료되어 가승인이 종료되었습니다. 매입되지 않은 금액은 고객에게 해제되었습니다."
+    holdEndedFixCard: "추가 요금은 '저장된 카드로 청구'를 사용하십시오. 이 예약에는 카드 정보가 보관되어 있습니다."
+    holdEndedFixNew: "다시 데모로 확인하려면 가승인 플로우로 새 예약을 생성하십시오."
+    noCardReason: "이 예약에는 저장된 카드가 없습니다."
+    noCardFix: "카드 정보 보관 플로우로 예약하십시오(예: '카드 저장, 추후 청구' 또는 '즉시 결제 및 카드 저장')."
+    fallbackFlow: "알 수 없는 플로우"
+
+  # History lines written after an action. {status} is a Flywire status code (do not translate the code).
+  history:
+    statusRefreshed: "상태 새로 고침 완료"
+    statusRefreshedWith: "상태 새로 고침 완료 · {status}"
+    statusFailed: "상태 새로 고침 실패"
+    resumed: "세션 재개 · Checkout 다시 열림"
+    resumeFailed: "재개 실패"
+    # {amount} is money. {status} is " · received" or empty.
+    captured: "매입 {amount}{status}"
+    holdRaised: "가승인 금액 증액({amount}) 및 7일 연장"
+    holdExtended: "가승인 7일 연장"
+    # {amount} {what} {reference} are filled by the form. {status} is empty or " · " plus a Flywire status code.
+    charged: "청구 {amount} · {what} · {reference}{status}"
+    # When an action fails, the history line is rewritten. {what} is the text before the first " · ". {error} is the API message.
+    failedLine: "{what} 실패 · {error}"
+    failedSuffix: "실패"
+    checkoutAfterResume: "재개 후 Checkout 완료"
+    checkoutAfterResumeStatus: "재개 후 Checkout 완료 · {status}"
+    guestClosedAgain: "고객이 Checkout을 다시 닫음"
+    checkoutTimedOut: "Checkout 시간 초과"
+    # {type} is an error code. Keep on_error.
+    onError: "on_error('{type}')"
+    couldNotStart: "Checkout을 시작할 수 없습니다: {detail}"
+
+# -----------------------------------------------------------------------------
+# Card brands and payment methods, shown next to a payment result.
+# Brand names are trademarks. [do not translate] the brand names.
+# "Card" / "Direct debit" / "Bank transfer" / "Online payment" are generic and should be translated.
+# -----------------------------------------------------------------------------
+cards:
+  card: "카드"
+  directDebit: "계좌 자동이체"
+  bankTransfer: "계좌 이체"
+  online: "온라인 결제"
+  visa: "Visa"
+  mastercard: "Mastercard"
+  amex: "American Express"
+  discover: "Discover"
+  jcb: "JCB"
+  diners: "Diners Club"
+  unionpay: "UnionPay"
+  maestro: "Maestro"
+
+# -----------------------------------------------------------------------------
+# Errors thrown in the browser before checkout opens. Shown in a notice or the activity log.
+# -----------------------------------------------------------------------------
+sdk:
+  # Shown if the Flywire script never arrives. "connect.js" is a file name. [do not translate] the file name.
+  sdkMissing: "Flywire Checkout V2 SDK를 불러오지 못했습니다. 페이지에 connect.js가 포함되어 있는지 확인하십시오."
+  sessionCreateFailed: "세션 생성 실패"
+  sessionLookupFailed: "세션 조회 실패"
+  # {message} is one of the two lines above. {status} is an HTTP status number.
+  requestFailed: "{message} ({status})"
+  # Recipient currency could not be read. Shown on the back office.
+  currencyUnreadable: "수취인 통화를 읽을 수 없습니다."
+  currencyUnreachable: "이 데모 서버에 연결할 수 없어 수취인 통화를 읽지 못했습니다."
+
+# -----------------------------------------------------------------------------
+# Sentences the demo server returns and the back office displays.
+# They are listed so translators can prepare them. The page language is saved
+# in this browser, but the server still sends the English text. Do not translate
+# URLs, header names, or field names inside these
+# sentences when they are written as code.
+# -----------------------------------------------------------------------------
+server:
+  # Returned with HTTP 401 when an action is attempted before an API key is saved.
+  # "/dashboard" is the back-office path. You may keep the path in parentheses.
+  missingCredentials: "먼저 호텔 백오피스(/dashboard)에서 Flywire 데모 인증 정보를 추가하십시오."
+  invalidSession: "세션 ID가 올바르지 않습니다."
+  invalidPayment: "결제 ID가 올바르지 않습니다."
+  amountMinor: "amount는 최소 화폐 단위(센트)의 양의 정수여야 합니다."
+  chargeFields: "payment_method_token, mandate_id, payor_id, recipient_code, external_reference는 필수 항목입니다."
+  noApiKey: "아직 API 키가 입력되지 않았습니다."
+  # {detail} is Flywire’s own rejection text, already ending with a period.
+  keyRejected: "{detail} 여기에서는 Flywire 데모 키만 사용할 수 있으며, 운영 키는 거부됩니다."
+  keyRejectedFallback: "API 키가 거부되었습니다."
+  keyAccepted: "데모 API가 이 키를 승인했습니다."
+  # {status} is an HTTP status number.
+  apiAnswered: "데모 API 응답: {status}."
+  apiUnreachable: "Flywire 데모 API에 연결할 수 없습니다."
+  needClientId: "통화를 조회하려면 먼저 클라이언트 ID를 입력하십시오."
+  needRecipient: "통화를 조회하려면 먼저 수취인 코드를 입력하십시오."
+  currencyFailed: "수취인 통화를 읽을 수 없습니다."
+  flywireUnreachable: "Flywire API에 연결할 수 없습니다"

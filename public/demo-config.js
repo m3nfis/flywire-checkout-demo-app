@@ -9,6 +9,8 @@
 (function (global) {
     'use strict';
 
+    const t = (key, vars) => global.I18n.t(key, vars);
+
     const STORAGE_KEY = 'caldera.checkoutDemo.v1';
     const PLAYGROUND = 'https://checkout.demo.flywire.com/playground/';
 
@@ -43,7 +45,7 @@
             playground: [['Payment with preauth', 'payment/with_preauth']],
         },
         {
-            id: 'moto', group: 'payment', type: 'payment', channel: 'moto', preview: 'moto',
+            id: 'moto', group: 'payment', type: 'payment', channel: 'moto',
             title: 'Phone & email bookings (MOTO)',
             pitch: 'Reservations staff take the payment for guests booking by phone or email.',
             guestTitle: 'Reservations Desk Payment',
@@ -117,8 +119,8 @@
     ];
 
     const SPLIT_ITEMS = [
-        { amount: 35000, description: 'Sunset catamaran excursion' },
-        { amount: 25000, description: 'Couples spa ritual' },
+        { amount: 35000, descriptionKey: 'demo.partners.excursion' },
+        { amount: 25000, descriptionKey: 'demo.partners.spa' },
     ];
 
     const PAYER_FIELDS = [
@@ -143,12 +145,42 @@
         { id: 'bank_transfer', label: 'Bank transfer' },
     ];
 
+    const CURRENCIES = [
+        'all',
+        'payer_currency',
+        'other_than_payer_currency',
+        'recipient_currency',
+        'other_than_recipient_currency',
+        'payer_and_recipient',
+    ];
+
+    /** Full method order for `offer_rules.sort`. Unlisted methods would sink to the end. */
+    const METHOD_SORTS = {
+        '': null,
+        cards_first: ['credit_card', 'online', 'direct_debit', 'bank_transfer'],
+        online_first: ['online', 'credit_card', 'direct_debit', 'bank_transfer'],
+        debit_first: ['direct_debit', 'credit_card', 'online', 'bank_transfer'],
+        transfer_first: ['bank_transfer', 'online', 'credit_card', 'direct_debit'],
+    };
+
+    /** Currency relationship order for `offer_rules.sort`. First match wins. */
+    const CURRENCY_SORTS = {
+        '': null,
+        payer_first: ['payer_currency', 'other_than_payer_currency'],
+        hotel_first: ['recipient_currency', 'other_than_recipient_currency'],
+        other_first: ['other_than_payer_currency', 'payer_currency'],
+    };
+
     const FONTS = {
         'Cormorant Garamond': 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap',
         'Playfair Display': 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap',
         'Lora': 'https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap',
         'DM Sans': 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap',
     };
+
+    const GOOGLE_FONTS_ORIGIN = 'https://fonts.googleapis.com';
+    /** Same rule checkout uses for `styles.primary_font.family`. */
+    const FONT_FAMILY = /^[A-Za-z0-9 ]+$/;
 
     const DEFAULT_STATE = {
         flow: 'pay_full',
@@ -161,18 +193,23 @@
         pages: { payer: 'auto', recipient: 'auto' },
         disabledFields: [],
         hideClose: false,
+        hideHeader: false,
+        hideAmount: false,
         disablePayerEmails: false,
         timeout: { enabled: false, type: 'checkout', minutes: 5 },
         methods: PAYMENT_METHODS.map((m) => m.id),
         hideAmex: false,
         currency: 'all',
-        branding: { enabled: false, color: '#7F6E4B', font: 'Cormorant Garamond', fontSize: '18px', space: '' },
+        methodSort: '',
+        currencySort: '',
+        branding: { enabled: false, color: '#7F6E4B', font: 'Cormorant Garamond', customFont: '', fontSize: '18px', space: '' },
         locale: 'en',
     };
 
     let state = loadState();
-    let serverConfig = { split_recipients: [], preview_features: [] };
+    let serverConfig = { split_recipients: [] };
     let bookingAmountCents = 0;
+    let bookingChargeMinor = 0;
     const listeners = new Set();
     let lastFocused = null;
 
@@ -182,13 +219,27 @@
         try {
             const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
             if (!saved || !FLOWS.some((f) => f.id === saved.flow)) return structuredClone(DEFAULT_STATE);
-            return {
+            const next = {
                 ...structuredClone(DEFAULT_STATE),
                 ...saved,
                 timeout: { ...DEFAULT_STATE.timeout, ...saved.timeout },
                 pages: { ...DEFAULT_STATE.pages, ...saved.pages },
                 branding: { ...DEFAULT_STATE.branding, ...saved.branding },
             };
+            if (next.branding.font !== 'custom' && !(next.branding.font in FONTS)) {
+                next.branding.customFont = next.branding.font;
+                next.branding.font = 'custom';
+            }
+            if (typeof next.branding.customFont !== 'string') next.branding.customFont = '';
+            if (!CURRENCIES.includes(next.currency)) next.currency = DEFAULT_STATE.currency;
+            if (!(next.methodSort in METHOD_SORTS)) next.methodSort = '';
+            if (!(next.currencySort in CURRENCY_SORTS)) next.currencySort = '';
+            next.hideHeader = next.hideHeader === true;
+            next.hideAmount = next.hideAmount === true;
+            next.locale = global.I18n?.canonicalLocale
+                ? global.I18n.canonicalLocale(next.locale)
+                : DEFAULT_STATE.locale;
+            return next;
         } catch {
             return structuredClone(DEFAULT_STATE);
         }
@@ -215,12 +266,7 @@
         return FLOWS.find((f) => f.id === state.flow);
     }
 
-    function isPreviewEnabled(feature) {
-        return serverConfig.preview_features.includes(feature);
-    }
-
     function isFlowAvailable(flow) {
-        if (flow.preview && !isPreviewEnabled(flow.preview)) return false;
         if (flow.type !== 'payment' && !hasApiKey()) return false;
         return true;
     }
@@ -229,16 +275,16 @@
     function unavailableReason(option, flow = currentFlow()) {
         switch (option) {
             case 'split':
-                return flow.noAmount ? 'Needs an amount; not available when only saving a card.' : null;
+                return flow.noAmount ? t('demo.unavailable.needsAmount') : null;
             case 'recipientFormAlways':
-                return flow.noAmount ? 'Checkout doesn’t allow forcing this page when only saving a card.' : null;
+                return flow.noAmount ? t('demo.unavailable.noForcePage') : null;
             case 'waiveSurcharge':
-                return flow.noAmount ? 'Needs an amount; not available when only saving a card.' : null;
+                return flow.noAmount ? t('demo.unavailable.needsAmount') : null;
             case 'anonymous':
-                if (flow.type !== 'payment') return 'Card-on-file flows always need an authenticated session.';
+                if (flow.type !== 'payment') return t('demo.unavailable.cardOnFileNeedsSession');
                 return null;
             case 'authenticated':
-                return hasApiKey() ? null : 'Add your demo API key in the hotel back office first.';
+                return hasApiKey() ? null : t('demo.unavailable.needsApiKey');
             default:
                 return null;
         }
@@ -262,10 +308,19 @@
     }
 
     /** Split entries that will be sent (rows with a code and an amount). */
+    /** Stored split amounts are USD cents. Checkout receives recipient minor units. */
+    function checkoutAmount(usdCents) {
+        return global.DemoMoney ? global.DemoMoney.usdCentsToMinor(usdCents) : usdCents;
+    }
+
     function splitPayload() {
         const items = splitItems()
             .filter((item) => item.recipient && item.amount > 0)
-            .map(({ recipient, amount, description }) => ({ recipient, amount, description: description || undefined }));
+            .map(({ recipient, amount, description, descriptionKey }) => ({
+                recipient,
+                amount: checkoutAmount(amount),
+                description: description || (descriptionKey ? t(descriptionKey) : undefined),
+            }));
         return items.length ? items : undefined;
     }
 
@@ -276,30 +331,32 @@
         const seen = new Set();
         const base = (recipient().code || '').toUpperCase();
         items.forEach((item, i) => {
-            const row = `Partner ${i + 1}`;
-            if (!item.recipient) problems.push(`${row}: add a portal code.`);
-            else if (!PORTAL_CODE.test(item.recipient)) problems.push(`${row}: portal codes are 3 letters (ABC) or 5 characters starting with a letter (ABC1D).`);
-            else if (item.recipient === base) problems.push(`${row}: can’t be the hotel’s own portal (${base}).`);
-            else if (seen.has(item.recipient)) problems.push(`${row}: ${item.recipient} is listed twice.`);
+            const row = t('demo.split.rowLabel', { n: i + 1 });
+            if (!item.recipient) problems.push(t('demo.split.needCode', { row }));
+            else if (!PORTAL_CODE.test(item.recipient)) problems.push(t('demo.split.badCode', { row }));
+            else if (item.recipient === base) problems.push(t('demo.split.ownPortal', { row, code: base }));
+            else if (seen.has(item.recipient)) problems.push(t('demo.split.duplicate', { row, code: item.recipient }));
             seen.add(item.recipient);
-            if (!(item.amount > 0)) problems.push(`${row}: enter an amount.`);
+            if (!(item.amount > 0)) problems.push(t('demo.split.needAmount', { row }));
         });
         const total = items.reduce((sum, item) => sum + (item.amount || 0), 0);
-        if (totalCents && total > totalCents) problems.push(`Partners get ${money(total)}, more than the booking total of ${money(totalCents)}.`);
+        if (totalCents && total > totalCents) problems.push(t('demo.split.overTotal', { partners: money(total), total: money(totalCents) }));
         return problems;
     }
 
+    /** `cents` are catalog USD cents. Displayed in the recipient currency. */
     function money(cents) {
+        if (global.DemoMoney) return global.DemoMoney.formatUsdCents(cents);
         return `$${(cents / 100).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
     }
 
     // ── Checkout options (consumed by app.js) ──
 
-    function buildCheckoutOptions({ amountCents, embedTo }) {
+    function buildCheckoutOptions({ amountCents, amountMinor, embedTo }) {
         const flow = currentFlow();
 
         const details = flow.noAmount ? undefined : {
-            amount: amountCents,
+            amount: amountMinor != null ? amountMinor : checkoutAmount(amountCents),
             authorization: flow.preauth ? 'preauth' : undefined,
             channel: flow.channel,
             split: state.split && !unavailableReason('split') ? splitPayload() : undefined,
@@ -320,18 +377,69 @@
                     ? undefined
                     : pageSetting(state.pages.recipient),
                 disabled_fields: state.disabledFields.length ? state.disabledFields : undefined,
+                header: state.hideHeader ? 'hidden' : undefined,
+                show_amount_info: state.hideAmount ? false : undefined,
                 close_button: state.hideClose ? 'hidden' : undefined,
                 disable_payer_emails: state.disablePayerEmails || undefined,
             },
-            styles: state.branding.enabled
-                ? {
-                    primary_color: state.branding.color,
-                    primary_font: { url: FONTS[state.branding.font], family: state.branding.font },
-                    base_font_size: state.branding.fontSize || undefined,
-                    base_space: state.branding.space || undefined,
-                }
-                : undefined,
+            styles: state.branding.enabled ? brandStyles() : undefined,
             authenticated: effectiveSession(flow) === 'authenticated',
+        };
+    }
+
+    /**
+     * Checkout loads `styles.primary_font` only from fonts.googleapis.com, and the
+     * family may contain letters, numbers and spaces.
+     */
+    function parseGoogleFont(input) {
+        const raw = (input || '').trim();
+        if (!raw) {
+            return { ok: false, message: t('demo.brandFontEmpty') };
+        }
+        if (/^https?:\/\//i.test(raw)) {
+            let url;
+            try {
+                url = new URL(raw);
+            } catch {
+                return { ok: false, message: t('demo.brandFontBadUrl') };
+            }
+            if (url.origin !== GOOGLE_FONTS_ORIGIN) {
+                return { ok: false, message: t('demo.brandFontOrigin') };
+            }
+            const familyParam = url.searchParams.get('family');
+            const family = familyParam
+                ? familyParam.split(':')[0].replace(/\+/g, ' ').replace(/\s+/g, ' ').trim()
+                : '';
+            if (!FONT_FAMILY.test(family)) {
+                return { ok: false, message: t('demo.brandFontFamily') };
+            }
+            return { ok: true, family, url: url.href };
+        }
+        const family = raw.replace(/\s+/g, ' ');
+        if (!FONT_FAMILY.test(family)) {
+            return { ok: false, message: t('demo.brandFontChars') };
+        }
+        return {
+            ok: true,
+            family,
+            url: `${GOOGLE_FONTS_ORIGIN}/css2?family=${family.replace(/ /g, '+')}:wght@400;500;600&display=swap`,
+        };
+    }
+
+    function resolveBrandFont() {
+        if (state.branding.font !== 'custom') {
+            return { url: FONTS[state.branding.font], family: state.branding.font };
+        }
+        const parsed = parseGoogleFont(state.branding.customFont);
+        return parsed.ok ? { url: parsed.url, family: parsed.family } : null;
+    }
+
+    function brandStyles() {
+        return {
+            primary_color: state.branding.color,
+            primary_font: resolveBrandFont() || undefined,
+            base_font_size: state.branding.fontSize || undefined,
+            base_space: state.branding.space || undefined,
         };
     }
 
@@ -343,9 +451,20 @@
     function buildOfferRules() {
         const filters = {};
         if (state.methods.length && state.methods.length < PAYMENT_METHODS.length) filters.method = state.methods;
-        if (state.currency !== 'all') filters.currency = [state.currency];
+        if (state.currency === 'payer_and_recipient') filters.currency = ['payer_currency', 'recipient_currency'];
+        else if (state.currency !== 'all') filters.currency = [state.currency];
         if (state.hideAmex) filters.advanced = ['is_not_amex'];
-        return Object.keys(filters).length ? { filters } : undefined;
+
+        const sort = [];
+        const currencyOrder = CURRENCY_SORTS[state.currencySort];
+        const methodOrder = METHOD_SORTS[state.methodSort];
+        if (currencyOrder) sort.push({ field: 'currency', order: currencyOrder });
+        if (methodOrder) sort.push({ field: 'method', order: methodOrder });
+
+        const rules = {};
+        if (Object.keys(filters).length) rules.filters = filters;
+        if (sort.length) rules.sort = sort;
+        return Object.keys(rules).length ? rules : undefined;
     }
 
     /** Guest-facing copy for the booking panel. */
@@ -354,16 +473,19 @@
         const notes = [];
         const split = state.split && !unavailableReason('split') ? splitPayload() : undefined;
         if (split) {
-            const parts = split.map((s) => `${(s.description || s.recipient).toLowerCase()} (${money(s.amount)})`);
-            notes.push(`Includes ${parts.join(' and ')}, settled directly with our partners.`);
+            const parts = split.map((s) => `${s.description || s.recipient} (${global.DemoMoney ? global.DemoMoney.formatMinor(s.amount) : money(s.amount)})`);
+            const listed = parts.length < 2
+                ? (parts[0] || '')
+                : `${parts.slice(0, -1).join(', ')} ${t('flows.splitAnd')} ${parts[parts.length - 1]}`;
+            notes.push(t('flows.splitNote', { parts: listed }));
         }
-        if (state.waiveSurcharge && !unavailableReason('waiveSurcharge')) notes.push('No card surcharge.');
+        if (state.waiveSurcharge && !unavailableReason('waiveSurcharge')) notes.push(t('flows.noSurcharge'));
 
         return {
-            title: flow.guestTitle,
-            description: flow.guestDesc(formattedAmount),
+            title: t(`flows.${flow.id}.guestTitle`),
+            description: t(`flows.${flow.id}.guestDesc`, { amount: formattedAmount }),
             notes,
-            cta: flow.cta(formattedAmount),
+            cta: t(`flows.${flow.id}.cta`, { amount: formattedAmount }),
         };
     }
 
@@ -386,9 +508,58 @@
             listeners.forEach((fn) => fn());
         });
 
+        global.DemoMoney?.onChange(() => {
+            splitEditorKey = null;
+            render();
+        });
+
         $('demo-config-open').addEventListener('click', open);
         document.querySelectorAll('#demo-drawer [data-drawer-close]').forEach((el) => el.addEventListener('click', close));
         $('demo-drawer').addEventListener('keydown', onDrawerKeydown);
+        bindLangMenu();
+    }
+
+    function setLangMenuOpen(open) {
+        const menu = $('demo-lang-menu');
+        const button = $('demo-lang-btn');
+        if (!menu || !button) return;
+        menu.hidden = !open;
+        button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    function bindLangMenu() {
+        const button = $('demo-lang-btn');
+        const menu = $('demo-lang-menu');
+        if (!button || !menu || !global.I18n?.locales) return;
+        const current = global.I18n.storedLocale();
+        menu.replaceChildren(...global.I18n.locales.map((item) => {
+            const selected = item.id === current;
+            const option = el('button', 'fw-lang-option', item.label);
+            option.type = 'button';
+            option.setAttribute('role', 'menuitemradio');
+            option.setAttribute('aria-checked', selected ? 'true' : 'false');
+            option.lang = item.id;
+            if (selected) {
+                option.setAttribute('aria-current', 'true');
+                option.append(el('span', 'fw-lang-check', '✓'));
+                option.lastElementChild.setAttribute('aria-hidden', 'true');
+            }
+            option.addEventListener('click', () => {
+                if (selected) setLangMenuOpen(false);
+                else global.I18n.choose(item.id);
+            });
+            const itemRow = el('li');
+            itemRow.append(option);
+            return itemRow;
+        }));
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setLangMenuOpen(menu.hidden);
+        });
+        $('demo-drawer').addEventListener('click', (e) => {
+            if (menu.hidden || button.contains(e.target) || menu.contains(e.target)) return;
+            setLangMenuOpen(false);
+        });
     }
 
     function open() {
@@ -401,6 +572,7 @@
     }
 
     function close() {
+        setLangMenuOpen(false);
         const drawer = $('demo-drawer');
         drawer.classList.remove('open');
         $('demo-config-open').setAttribute('aria-expanded', 'false');
@@ -410,7 +582,14 @@
     }
 
     function onDrawerKeydown(e) {
-        if (e.key === 'Escape') return close();
+        if (e.key === 'Escape') {
+            if (!$('demo-lang-menu').hidden) {
+                setLangMenuOpen(false);
+                $('demo-lang-btn').focus();
+                return;
+            }
+            return close();
+        }
         if (e.key !== 'Tab') return;
 
         const focusable = [...$('demo-drawer').querySelectorAll(
@@ -426,8 +605,9 @@
         const list = $('demo-flow-list');
         list.replaceChildren(...FLOW_GROUPS.map((group) => {
             const fieldset = el('fieldset', 'fw-flow-group');
-            const legend = el('legend', 'fw-flow-group-label', group.label);
-            if (group.hint) legend.append(el('span', 'fw-flow-group-hint', group.hint));
+            const legend = el('legend', 'fw-flow-group-label', t(`flows.groups.${group.id}`));
+            const hintKey = `flows.groups.${group.id}Hint`;
+            if (global.I18n.has(hintKey)) legend.append(el('span', 'fw-flow-group-hint', t(hintKey)));
             fieldset.append(legend);
 
             FLOWS.filter((f) => f.group === group.id).forEach((flow) => {
@@ -443,10 +623,9 @@
                 input.addEventListener('change', () => setState({ flow: flow.id }));
 
                 const body = el('span', 'fw-flow-option-body');
-                const titleRow = el('span', 'fw-flow-option-title', flow.title);
-                if (flow.preview && !isPreviewEnabled(flow.preview)) titleRow.append(el('span', 'fw-badge fw-badge-soon', 'Coming soon'));
-                else if (flow.type !== 'payment' && !hasApiKey()) titleRow.append(el('span', 'fw-badge fw-badge-warn', 'Needs API key'));
-                body.append(titleRow, el('span', 'fw-flow-option-pitch', flow.pitch), el('code', 'fw-flow-option-tech', techSummary(flow)));
+                const titleRow = el('span', 'fw-flow-option-title', t(`flows.${flow.id}.title`));
+                if (flow.type !== 'payment' && !hasApiKey()) titleRow.append(el('span', 'fw-badge fw-badge-warn', t('flows.needsApiKey')));
+                body.append(titleRow, el('span', 'fw-flow-option-pitch', t(`flows.${flow.id}.pitch`)), el('code', 'fw-flow-option-tech', techSummary(flow)));
 
                 label.append(input, body);
                 fieldset.append(label);
@@ -459,7 +638,7 @@
         const parts = [`type: '${flow.type}'`];
         if (flow.preauth) parts.push(`authorization: 'preauth'`);
         if (flow.channel) parts.push(`channel: '${flow.channel}'`);
-        if (flow.noAmount) parts.push('no amount');
+        if (flow.noAmount) parts.push(t('flows.noAmountTech'));
         return parts.join(' · ');
     }
 
@@ -487,7 +666,7 @@
                     .filter((id) => methodList.querySelector(`input[value="${id}"]`).checked);
                 setState({ methods });
             });
-            label.append(input, el('span', null, method.label));
+            label.append(input, el('span', null, t(`demo.method${method.id === 'credit_card' ? 'Cards' : method.id === 'direct_debit' ? 'Debit' : method.id === 'online' ? 'Online' : 'Transfer'}`)));
             return label;
         }));
         document.querySelectorAll('input[name="demo-payer-form"]').forEach((input) =>
@@ -506,18 +685,33 @@
                     .filter((id) => fieldList.querySelector(`input[value="${id}"]`).checked);
                 setState({ disabledFields });
             });
-            label.append(input, el('span', null, field.label));
+            const fieldKey = {
+                first_name: 'demo.fieldFirstName',
+                last_name: 'demo.fieldLastName',
+                email: 'demo.fieldEmail',
+                phone: 'demo.fieldPhone',
+                address: 'demo.fieldAddress',
+                city: 'demo.fieldCity',
+                zip: 'demo.fieldZip',
+                country: 'demo.fieldCountry',
+            }[field.id];
+            label.append(input, el('span', null, t(fieldKey)));
             return label;
         }));
         $('demo-hide-close').addEventListener('change', (e) => setState({ hideClose: e.target.checked }));
+        $('demo-hide-header').addEventListener('change', (e) => setState({ hideHeader: e.target.checked }));
+        $('demo-hide-amount').addEventListener('change', (e) => setState({ hideAmount: e.target.checked }));
         $('demo-disable-emails').addEventListener('change', (e) => setState({ disablePayerEmails: e.target.checked }));
 
         $('demo-hide-amex').addEventListener('change', (e) => setState({ hideAmex: e.target.checked }));
         $('demo-currency').addEventListener('change', (e) => setState({ currency: e.target.value }));
+        $('demo-currency-sort').addEventListener('change', (e) => setState({ currencySort: e.target.value }));
+        $('demo-method-sort').addEventListener('change', (e) => setState({ methodSort: e.target.value }));
 
         $('demo-branding').addEventListener('change', (e) => setState({ branding: { ...state.branding, enabled: e.target.checked } }));
         $('demo-brand-color').addEventListener('input', (e) => setState({ branding: { ...state.branding, color: e.target.value } }));
         $('demo-brand-font').addEventListener('change', (e) => setState({ branding: { ...state.branding, font: e.target.value } }));
+        $('demo-brand-font-custom').addEventListener('input', (e) => setState({ branding: { ...state.branding, font: 'custom', customFont: e.target.value } }));
         $('demo-brand-font-size').addEventListener('change', (e) => setState({ branding: { ...state.branding, fontSize: e.target.value } }));
         $('demo-brand-space').addEventListener('change', (e) => setState({ branding: { ...state.branding, space: e.target.value } }));
         $('demo-locale').addEventListener('change', (e) => setState({ locale: e.target.value }));
@@ -546,8 +740,8 @@
         setDisabled('demo-session-authenticated', unavailableReason('authenticated'));
         $('demo-session-note').textContent = unavailableReason('anonymous') || unavailableReason('authenticated')
             || (session === 'authenticated'
-                ? 'Recommended. Your server creates the session and confirms the outcome.'
-                : 'Browser-only, for one-off payments. No server-side status lookup.');
+                ? t('demo.sessionAuthenticatedNote')
+                : t('demo.sessionAnonymousNote'));
 
         setToggle('demo-split', state.split, unavailableReason('split'));
         renderSplitEditor();
@@ -556,9 +750,6 @@
         $('demo-timeout-type').value = state.timeout.type;
         $('demo-timeout-minutes').value = String(state.timeout.minutes);
         $('demo-timeout-fields').hidden = !state.timeout.enabled;
-        $('demo-timeout-note').textContent = state.timeout.enabled && !isPreviewEnabled('timeout')
-            ? 'The demo environment’s checkout doesn’t support timeout yet, so it is ignored there until that release ships. Set CPX_PREVIEW_FEATURES=timeout once it has.'
-            : '';
 
         setRadio('demo-payer-form', state.pages.payer);
         const forcedRecipientForm = unavailableReason('recipientFormAlways');
@@ -567,15 +758,17 @@
         $('demo-pages-note').textContent = forcedRecipientForm && state.pages.recipient === 'true'
             ? forcedRecipientForm
             : state.pages.payer === 'false'
-                ? 'Hiding the payer page only works when checkout already has every required payer detail. The guest form prefills them.'
-                : 'Auto skips a page when everything on it is already filled in, which is the case for the prefilled guest details.';
+                ? t('demo.pagesNoteHidePayer')
+                : t('demo.pagesNoteAuto');
         $('demo-disabled-fields').querySelectorAll('input').forEach((input) => {
             input.checked = state.disabledFields.includes(input.value);
         });
         $('demo-disabled-fields-note').textContent = state.disabledFields.length && state.pages.payer !== 'true'
-            ? 'Guests only see these on the payer page, which Auto skips when the details are prefilled. Set the payer page to Always show to demo it.'
-            : 'The guest sees these fields but can’t change them, e.g. the email the booking was made with.';
+            ? t('demo.readOnlyNoteHidden')
+            : t('demo.readOnlyNote');
         $('demo-hide-close').checked = state.hideClose;
+        $('demo-hide-header').checked = state.hideHeader;
+        $('demo-hide-amount').checked = state.hideAmount;
         $('demo-disable-emails').checked = state.disablePayerEmails;
 
         $('demo-methods').querySelectorAll('input').forEach((input) => {
@@ -583,11 +776,29 @@
         });
         $('demo-hide-amex').checked = state.hideAmex;
         $('demo-currency').value = state.currency;
+        $('demo-currency-sort').value = state.currencySort;
+        $('demo-method-sort').value = state.methodSort;
 
         $('demo-branding').checked = state.branding.enabled;
         $('demo-brand-color').value = state.branding.color;
         $('demo-brand-color-value').textContent = state.branding.color.toUpperCase();
-        $('demo-brand-font').value = state.branding.font;
+        $('demo-brand-font').value = state.branding.font in FONTS ? state.branding.font : 'custom';
+        const customFont = $('demo-brand-font-custom');
+        const customWrap = $('demo-brand-font-custom-wrap');
+        const showCustomFont = state.branding.enabled && state.branding.font === 'custom';
+        customWrap.hidden = !showCustomFont;
+        if (customFont.value !== state.branding.customFont) customFont.value = state.branding.customFont;
+        const fontNote = $('demo-brand-font-note');
+        if (showCustomFont) {
+            const parsed = parseGoogleFont(state.branding.customFont);
+            fontNote.textContent = parsed.ok
+                ? t('demo.brandFontOk', { family: parsed.family })
+                : parsed.message;
+            fontNote.classList.toggle('fw-help-warn', !parsed.ok);
+        } else {
+            fontNote.textContent = '';
+            fontNote.classList.remove('fw-help-warn');
+        }
         $('demo-brand-font-size').value = state.branding.fontSize;
         $('demo-brand-space').value = state.branding.space;
         $('demo-branding-fields').hidden = !state.branding.enabled;
@@ -595,7 +806,7 @@
 
         renderCredentialsSummary();
 
-        $('demo-config-open').title = `Checkout settings · ${flow.title}`;
+        $('demo-config-open').title = t('nav.checkoutSettingsWithFlow', { flow: t(`flows.${flow.id}.title`) });
         renderCodePreview(flow);
     }
 
@@ -612,7 +823,8 @@
         }
 
         const items = splitItems();
-        const key = String(items.length);
+        const moneyProfile = global.DemoMoney;
+        const key = `${items.length}:${moneyProfile ? moneyProfile.code() : 'USD'}:${moneyProfile ? moneyProfile.fx()?.rate : 1}`;
         if (key !== splitEditorKey) {
             splitEditorKey = key;
             const updateItem = (index, patch) => {
@@ -622,38 +834,56 @@
 
             const rows = items.map((item, index) => {
                 const row = el('div', 'fw-split-row');
-                const codeInput = inputEl('text', item.recipient, 'Code', `Partner ${index + 1} portal code`);
+                const codeInput = inputEl('text', item.recipient, t('demo.split.codePlaceholder'), t('demo.split.codeLabel', { n: index + 1 }));
                 codeInput.maxLength = 5;
                 codeInput.addEventListener('input', () => {
                     codeInput.value = codeInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
                     updateItem(index, { recipient: codeInput.value });
                 });
-                const amountInput = inputEl('number', item.amount ? (item.amount / 100).toFixed(2) : '', '0.00', `Partner ${index + 1} amount in USD`);
-                amountInput.min = '0.01';
-                amountInput.step = '0.01';
-                amountInput.addEventListener('input', () => updateItem(index, { amount: Math.round(Number(amountInput.value) * 100) || 0 }));
-                const descInput = inputEl('text', item.description, 'What for', `Partner ${index + 1} description`);
+                const digits = moneyProfile ? moneyProfile.fractionDigits() : 2;
+                const major = item.amount && moneyProfile ? moneyProfile.usdCentsToMajor(item.amount) : (item.amount ? item.amount / 100 : '');
+                const amountInput = inputEl(
+                    'number',
+                    major === '' ? '' : Number(major).toFixed(digits),
+                    digits === 0 ? t('demo.split.amountPlaceholderWhole') : t('demo.split.amountPlaceholderCents'),
+                    t('demo.split.amountLabel', { n: index + 1, currency: moneyProfile ? moneyProfile.code() : 'USD' })
+                );
+                amountInput.min = digits === 0 ? '1' : '0.01';
+                amountInput.step = digits === 0 ? '1' : '0.01';
+                amountInput.addEventListener('input', () => {
+                    const typed = Number(amountInput.value);
+                    const usdCents = moneyProfile
+                        ? moneyProfile.majorToUsdCents(typed)
+                        : Math.round(typed * 100);
+                    updateItem(index, { amount: Number.isFinite(typed) ? usdCents : 0 });
+                });
+                const descInput = inputEl('text', splitDescription(item), t('demo.split.whatFor'), t('demo.split.descriptionLabel', { n: index + 1 }));
                 descInput.addEventListener('input', () => updateItem(index, { description: descInput.value }));
                 const remove = el('button', 'fw-icon-btn fw-split-remove', '×');
                 remove.type = 'button';
-                remove.setAttribute('aria-label', `Remove partner ${index + 1}`);
+                remove.setAttribute('aria-label', t('demo.split.remove', { n: index + 1 }));
                 remove.disabled = items.length === 1;
                 remove.addEventListener('click', () => setState({ splitItems: splitItems().filter((_, i) => i !== index) }));
                 const amountWrap = el('span', 'fw-split-amount');
-                amountWrap.append(el('span', null, '$'), amountInput);
+                amountWrap.append(el('span', null, moneyProfile ? moneyProfile.symbol() : '$'), amountInput);
                 row.append(codeInput, amountWrap, descInput, remove);
                 return row;
             });
 
             const head = el('div', 'fw-split-row fw-split-head');
-            ['Portal code', 'Amount', 'Description', ''].forEach((t) => head.append(el('span', null, t)));
+            [
+                t('demo.split.portalCode'),
+                t('demo.split.amount', { currency: moneyProfile ? moneyProfile.code() : 'USD' }),
+                t('demo.split.description'),
+                '',
+            ].forEach((label) => head.append(el('span', null, label)));
 
             const actions = el('div', 'fw-split-actions');
-            const add = el('button', 'fw-btn fw-btn-ghost', '+ Add partner');
+            const add = el('button', 'fw-btn fw-btn-ghost', t('demo.split.add'));
             add.type = 'button';
             add.disabled = items.length >= MAX_SPLIT_PARTNERS;
             add.addEventListener('click', () => setState({ splitItems: [...splitItems(), { recipient: '', amount: 0, description: '' }] }));
-            const reset = el('button', 'fw-btn fw-btn-ghost', 'Use default partners');
+            const reset = el('button', 'fw-btn fw-btn-ghost', t('demo.split.useDefaults'));
             reset.type = 'button';
             reset.className += ' fw-split-reset';
             reset.addEventListener('click', () => {
@@ -668,10 +898,19 @@
         editor.querySelector('.fw-split-reset').hidden = !state.splitItems;
         const total = bookingAmountCents || 735000;
         const partners = splitItems().reduce((sum, item) => sum + (item.amount || 0), 0);
-        editor.querySelector('.fw-split-summary').textContent =
-            `Partners ${money(partners)} · hotel keeps ${money(Math.max(0, total - partners))} of ${money(total)}${bookingAmountCents ? '' : ' (example total)'}`;
+        const summaryKey = bookingAmountCents ? 'demo.split.summary' : 'demo.split.summaryExample';
+        editor.querySelector('.fw-split-summary').textContent = t(summaryKey, {
+            partners: money(partners),
+            hotel: money(Math.max(0, total - partners)),
+            total: money(total),
+        });
         const problems = splitProblems(total);
         editor.querySelector('.fw-split-problems').replaceChildren(...problems.map((p) => el('li', null, p)));
+    }
+
+    function splitDescription(item) {
+        if (item.description) return item.description;
+        return item.descriptionKey ? t(item.descriptionKey) : '';
     }
 
     function inputEl(type, value, placeholder, label) {
@@ -688,18 +927,23 @@
     function renderCredentialsSummary() {
         const saved = global.DemoCredentials.get();
         const rows = [
-            ['Client ID', saved.client_id],
-            ['Recipient code', saved.code],
-            ['API key', saved.api_key && global.DemoCredentials.mask(saved.api_key)],
-        ];
+            saved.client_name && [t('demo.clientName'), saved.client_name],
+            [t('demo.clientId'), saved.client_id],
+            [t('demo.recipientCode'), saved.code],
+            [t('demo.apiKey'), saved.api_key && global.DemoCredentials.mask(saved.api_key)],
+        ].filter(Boolean);
         $('demo-credentials-summary').replaceChildren(...rows.flatMap(([term, value]) => {
-            const dd = el('dd', value ? null : 'fw-cred-missing', value || 'Not set');
+            const dd = el('dd', value ? null : 'fw-cred-missing', value || t('common.notSet'));
             return [el('dt', null, term), dd];
         }));
     }
 
     function renderCodePreview(flow) {
-        const options = buildCheckoutOptions({ amountCents: bookingAmountCents || 735000, embedTo: '#payment-embed-target' });
+        const options = buildCheckoutOptions({
+            amountCents: bookingAmountCents || 735000,
+            amountMinor: bookingChargeMinor || undefined,
+            embedTo: '#payment-embed-target',
+        });
         const initFields = global.FlywireCheckout.buildInitFields({
             ...options,
             recipient: { client_id: recipient().client_id || 'CLIENT_ID', code: recipient().code || 'RECIPIENT_CODE' },
@@ -714,17 +958,19 @@
         });
         $('demo-code').textContent = `window.cpx_core.start(${printJs(initFields, 0)});`;
 
-        const links = [...flow.playground];
-        if (options.authenticated) links.push(['Payment with authenticated session', 'payment/authenticated']);
-        if (state.display === 'embedded') links.push(['Payment embedded', 'payment/embedded']);
-        if (options.transaction.details?.split) links.push(['Payment with split', 'payment/split']);
-        if (options.transaction.details?.waive_adjustments) links.push(['Payment with waived surcharge', 'payment/waive_adjustments']);
-        if (options.config.offer_rules) links.push(['Payment with offer rules', 'payment/offer_rules']);
-        if (options.styles) links.push(['Payment with custom styles', 'payment/with_styles']);
-        if (options.config.timeout) links.push(['Payment with timeout', 'payment/timeout']);
-        const { show_payer_form, show_recipient_form, disabled_fields, close_button, disable_payer_emails } = options.config;
-        if ([show_payer_form, show_recipient_form, disabled_fields, close_button, disable_payer_emails].some((v) => v !== undefined)) {
-            links.push(['Checkout V2 configuration guide', DOCS_URL]);
+        const links = flow.playground.map(([, path]) => [t(`flows.${flow.id}.playground`), path]);
+        if (options.authenticated) links.push([t('flows.playground.authenticated'), 'payment/authenticated']);
+        if (state.display === 'embedded' || options.config.header || options.config.show_amount_info === false) {
+            links.push([t('flows.playground.embedded'), 'payment/embedded']);
+        }
+        if (options.transaction.details?.split) links.push([t('flows.playground.split'), 'payment/split']);
+        if (options.transaction.details?.waive_adjustments) links.push([t('flows.playground.waive'), 'payment/waive_adjustments']);
+        if (options.config.offer_rules) links.push([t('flows.playground.offerRules'), 'payment/offer_rules']);
+        if (options.styles) links.push([t('flows.playground.styles'), 'payment/with_styles']);
+        if (options.config.timeout) links.push([t('flows.playground.timeout'), 'payment/timeout']);
+        const { show_payer_form, show_recipient_form, disabled_fields, header, show_amount_info, close_button, disable_payer_emails } = options.config;
+        if ([show_payer_form, show_recipient_form, disabled_fields, header, show_amount_info, close_button, disable_payer_emails].some((v) => v !== undefined)) {
+            links.push([t('flows.playground.docs'), DOCS_URL]);
         }
 
         $('demo-playground-links').replaceChildren(...links.map(([label, path]) => {
@@ -742,11 +988,11 @@
         const btn = $('demo-copy-code');
         try {
             await navigator.clipboard.writeText($('demo-code').textContent);
-            btn.textContent = 'Copied';
+            btn.textContent = t('common.copied');
         } catch {
-            btn.textContent = 'Copy failed';
+            btn.textContent = t('common.copyFailed');
         }
-        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+        setTimeout(() => { btn.textContent = t('common.copy'); }, 1500);
     }
 
     // ── Helpers ──
@@ -807,6 +1053,10 @@
         recipient,
         buildCheckoutOptions,
         describeForGuest,
-        setBookingAmount: (cents) => { bookingAmountCents = cents; render(); },
+        setBookingAmount: (cents, chargeMinor) => {
+            bookingAmountCents = cents;
+            bookingChargeMinor = chargeMinor || 0;
+            render();
+        },
     };
 })(window);

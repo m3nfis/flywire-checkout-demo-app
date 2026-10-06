@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Caldera House &mdash; Oia, Santorini</title>
+    <title data-i18n="meta.bookingTitle">The Caldera House &mdash; Oia, Santorini</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -24,23 +24,25 @@
     <div id="nav-wrapper">
         <header>
             <div class="header-inner">
-                <a href="/" class="logo">The Caldera House</a>
+                <a href="/" class="logo" data-i18n="nav.logo">The Caldera House</a>
                 <div class="header-actions">
-                    <span class="header-tag">Oia, Santorini</span>
+                    <span class="header-tag" data-i18n="nav.location">Oia, Santorini</span>
                     <!-- Flywire demo tooling: live checkout events and results (public/checkout-activity.js). -->
                     <button type="button" class="demo-cog" data-activity-open
                             aria-haspopup="dialog" aria-controls="activity-drawer"
+                            data-i18n-attr="aria-label:nav.checkoutActivity,title:nav.checkoutActivity"
                             aria-label="Checkout activity" title="Checkout activity">
                         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                         <span class="demo-badge" data-activity-badge hidden></span>
                     </button>
                     <!-- Flywire demo tooling: hotel back office with post-checkout actions (public/dashboard/). -->
-                    <a class="demo-cog" href="/dashboard/" aria-label="Hotel back office" title="Hotel back office">
+                    <a class="demo-cog" href="/dashboard/" data-i18n-attr="aria-label:nav.backOffice,title:nav.backOffice" aria-label="Hotel back office" title="Hotel back office">
                         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
                     </a>
                     <!-- Flywire demo tooling: opens the checkout settings drawer (public/demo-config.js). -->
                     <button type="button" id="demo-config-open" class="demo-cog demo-cog-with-badge"
                             aria-haspopup="dialog" aria-controls="demo-drawer" aria-expanded="false"
+                            data-i18n-attr="aria-label:nav.checkoutSettings,title:nav.checkoutSettings"
                             aria-label="Checkout settings" title="Checkout settings">
                         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
                         <span class="demo-badge demo-badge-warn" data-credentials-banner hidden></span>
@@ -52,17 +54,17 @@
             <div class="stepper-inner">
                 <div class="stepper-step active" data-step="1">
                     <span class="stepper-dot"><span>1</span></span>
-                    <span class="stepper-label">Select Room</span>
+                    <span class="stepper-label" data-i18n="stepper.selectRoom">Select Room</span>
                 </div>
                 <div class="stepper-line"></div>
                 <div class="stepper-step" data-step="2">
                     <span class="stepper-dot"><span>2</span></span>
-                    <span class="stepper-label">Guest Details</span>
+                    <span class="stepper-label" data-i18n="stepper.guestDetails">Guest Details</span>
                 </div>
                 <div class="stepper-line"></div>
                 <div class="stepper-step" data-step="3">
                     <span class="stepper-dot"><span>3</span></span>
-                    <span class="stepper-label">Payment</span>
+                    <span class="stepper-label" data-i18n="stepper.payment">Payment</span>
                 </div>
             </div>
         </div>
@@ -73,18 +75,18 @@
         <div class="rooms-hero">
             <div class="rooms-hero-bg">
                 <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1920&q=80&auto=format&fit=crop"
-                     alt="Santorini blue domes overlooking the Aegean">
+                     data-i18n-attr="alt:rooms.heroAlt" alt="Santorini blue domes overlooking the Aegean">
                 <div class="rooms-hero-overlay"></div>
             </div>
             <div class="rooms-hero-content">
-                <p class="rooms-hero-eyebrow">The Caldera House &middot; Oia, Santorini</p>
-                <h1 class="rooms-hero-title">Choose Your Suite</h1>
+                <p class="rooms-hero-eyebrow" data-i18n="rooms.eyebrow">The Caldera House &middot; Oia, Santorini</p>
+                <h1 class="rooms-hero-title" data-i18n="rooms.title">Choose Your Suite</h1>
                 <button type="button" id="stay-trigger" class="rooms-hero-sub stay-trigger" data-stay-trigger
                         aria-haspopup="dialog" aria-controls="stay-popover" aria-expanded="false"
-                        title="Change dates and guests">
+                        data-i18n-attr="title:rooms.changeDates" title="Change dates and guests">
                     <span id="stay-summary"></span>
                     <svg class="stay-pencil" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
-                    <span class="visually-hidden">Change dates and guests</span>
+                    <span class="visually-hidden" data-i18n="rooms.changeDates">Change dates and guests</span>
                 </button>
             </div>
         </div>
@@ -100,26 +102,26 @@
                  data-image="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop">
                 <div class="room-card-image">
                     <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop"
-                         alt="Royal Caldera Suite" loading="lazy">
-                    <span class="room-badge">Recommended</span>
+                         data-i18n-attr="alt:rooms.cards.royal-caldera.alt" alt="Royal Caldera Suite" loading="lazy">
+                    <span class="room-badge" data-i18n="rooms.cards.royal-caldera.badge">Recommended</span>
                 </div>
                 <div class="room-card-body">
                     <div class="room-card-top">
-                        <h3>Royal Caldera Suite</h3>
+                        <h3 data-i18n="rooms.cards.royal-caldera.name">Royal Caldera Suite</h3>
                         <div class="room-price">
                             <span class="price-amount">$2,450</span>
-                            <span class="price-unit">/night</span>
+                            <span class="price-unit" data-i18n="rooms.perNight">/night</span>
                         </div>
                     </div>
-                    <p class="room-specs">120 m&sup2; &middot; Caldera View &middot; Private Infinity Pool</p>
-                    <p class="room-desc">The crown jewel of The Caldera House. A sprawling sanctuary with floor-to-ceiling windows framing the caldera, a private infinity pool, and a terrace designed for the world&rsquo;s most celebrated sunset.</p>
+                    <p class="room-specs" data-i18n="rooms.cards.royal-caldera.specs">120 m&sup2; &middot; Caldera View &middot; Private Infinity Pool</p>
+                    <p class="room-desc" data-i18n="rooms.cards.royal-caldera.description">The crown jewel of The Caldera House. A sprawling sanctuary with floor-to-ceiling windows framing the caldera, a private infinity pool, and a terrace designed for the world&rsquo;s most celebrated sunset.</p>
                     <div class="room-tags">
-                        <span>Private Pool</span>
-                        <span>Butler Service</span>
-                        <span>Terrace</span>
-                        <span>Chef&rsquo;s Kitchen</span>
+                        <span data-i18n="rooms.cards.royal-caldera.tagPool">Private Pool</span>
+                        <span data-i18n="rooms.cards.royal-caldera.tagButler">Butler Service</span>
+                        <span data-i18n="rooms.cards.royal-caldera.tagTerrace">Terrace</span>
+                        <span data-i18n="rooms.cards.royal-caldera.tagKitchen">Chef&rsquo;s Kitchen</span>
                     </div>
-                    <button class="btn-select-room">Select This Suite</button>
+                    <button class="btn-select-room" data-i18n="rooms.selectSuite">Select This Suite</button>
                 </div>
             </div>
 
@@ -134,24 +136,24 @@
                      data-image="https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?w=800&q=80&auto=format&fit=crop">
                     <div class="room-card-image">
                         <img src="https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?w=800&q=80&auto=format&fit=crop"
-                             alt="Sunset Honeymoon Villa" loading="lazy">
+                             data-i18n-attr="alt:rooms.cards.sunset-villa.alt" alt="Sunset Honeymoon Villa" loading="lazy">
                     </div>
                     <div class="room-card-body">
                         <div class="room-card-top">
-                            <h3>Sunset Honeymoon Villa</h3>
+                            <h3 data-i18n="rooms.cards.sunset-villa.name">Sunset Honeymoon Villa</h3>
                             <div class="room-price">
                                 <span class="price-amount">$1,950</span>
-                                <span class="price-unit">/night</span>
+                                <span class="price-unit" data-i18n="rooms.perNight">/night</span>
                             </div>
                         </div>
-                        <p class="room-specs">95 m&sup2; &middot; Sunset View &middot; Outdoor Bath</p>
-                        <p class="room-desc">A secluded villa wrapped in bougainvillea, with a private courtyard, outdoor copper bathtub, and uninterrupted views of Oia&rsquo;s legendary sunset.</p>
+                        <p class="room-specs" data-i18n="rooms.cards.sunset-villa.specs">95 m&sup2; &middot; Sunset View &middot; Outdoor Bath</p>
+                        <p class="room-desc" data-i18n="rooms.cards.sunset-villa.description">A secluded villa wrapped in bougainvillea, with a private courtyard, outdoor copper bathtub, and uninterrupted views of Oia&rsquo;s legendary sunset.</p>
                         <div class="room-tags">
-                            <span>Outdoor Bath</span>
-                            <span>Courtyard</span>
-                            <span>Sunset View</span>
+                            <span data-i18n="rooms.cards.sunset-villa.tagBath">Outdoor Bath</span>
+                            <span data-i18n="rooms.cards.sunset-villa.tagCourtyard">Courtyard</span>
+                            <span data-i18n="rooms.cards.sunset-villa.tagSunset">Sunset View</span>
                         </div>
-                        <button class="btn-select-room">Select This Suite</button>
+                        <button class="btn-select-room" data-i18n="rooms.selectSuite">Select This Suite</button>
                     </div>
                 </div>
 
@@ -164,24 +166,24 @@
                      data-image="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80&auto=format&fit=crop">
                     <div class="room-card-image">
                         <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80&auto=format&fit=crop"
-                             alt="Captain's Quarters" loading="lazy">
+                             data-i18n-attr="alt:rooms.cards.captains-quarters.alt" alt="Captain's Quarters" loading="lazy">
                     </div>
                     <div class="room-card-body">
                         <div class="room-card-top">
-                            <h3>Captain&rsquo;s Quarters</h3>
+                            <h3 data-i18n="rooms.cards.captains-quarters.name">Captain&rsquo;s Quarters</h3>
                             <div class="room-price">
                                 <span class="price-amount">$1,200</span>
-                                <span class="price-unit">/night</span>
+                                <span class="price-unit" data-i18n="rooms.perNight">/night</span>
                             </div>
                         </div>
-                        <p class="room-specs">65 m&sup2; &middot; Harbor View &middot; Plunge Pool</p>
-                        <p class="room-desc">Inspired by Santorini&rsquo;s seafaring heritage, featuring whitewashed vaulted ceilings, hand-selected antiques, and a private courtyard with plunge pool.</p>
+                        <p class="room-specs" data-i18n="rooms.cards.captains-quarters.specs">65 m&sup2; &middot; Harbor View &middot; Plunge Pool</p>
+                        <p class="room-desc" data-i18n="rooms.cards.captains-quarters.description">Inspired by Santorini&rsquo;s seafaring heritage, featuring whitewashed vaulted ceilings, hand-selected antiques, and a private courtyard with plunge pool.</p>
                         <div class="room-tags">
-                            <span>Plunge Pool</span>
-                            <span>Vaulted Ceiling</span>
-                            <span>Courtyard</span>
+                            <span data-i18n="rooms.cards.captains-quarters.tagPlunge">Plunge Pool</span>
+                            <span data-i18n="rooms.cards.captains-quarters.tagVaulted">Vaulted Ceiling</span>
+                            <span data-i18n="rooms.cards.captains-quarters.tagCourtyard">Courtyard</span>
                         </div>
-                        <button class="btn-select-room">Select This Suite</button>
+                        <button class="btn-select-room" data-i18n="rooms.selectSuite">Select This Suite</button>
                     </div>
                 </div>
 
@@ -194,24 +196,24 @@
                      data-image="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80&auto=format&fit=crop">
                     <div class="room-card-image">
                         <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80&auto=format&fit=crop"
-                             alt="Aegean Cliff Studio" loading="lazy">
+                             data-i18n-attr="alt:rooms.cards.aegean-studio.alt" alt="Aegean Cliff Studio" loading="lazy">
                     </div>
                     <div class="room-card-body">
                         <div class="room-card-top">
-                            <h3>Aegean Cliff Studio</h3>
+                            <h3 data-i18n="rooms.cards.aegean-studio.name">Aegean Cliff Studio</h3>
                             <div class="room-price">
                                 <span class="price-amount">$890</span>
-                                <span class="price-unit">/night</span>
+                                <span class="price-unit" data-i18n="rooms.perNight">/night</span>
                             </div>
                         </div>
-                        <p class="room-specs">45 m&sup2; &middot; Sea View &middot; Private Balcony</p>
-                        <p class="room-desc">A refined retreat carved into the volcanic cliff, with a private balcony suspended above the Aegean. Clean lines meet natural stone in this architect-designed studio.</p>
+                        <p class="room-specs" data-i18n="rooms.cards.aegean-studio.specs">45 m&sup2; &middot; Sea View &middot; Private Balcony</p>
+                        <p class="room-desc" data-i18n="rooms.cards.aegean-studio.description">A refined retreat carved into the volcanic cliff, with a private balcony suspended above the Aegean. Clean lines meet natural stone in this architect-designed studio.</p>
                         <div class="room-tags">
-                            <span>Sea View</span>
-                            <span>Balcony</span>
-                            <span>Rain Shower</span>
+                            <span data-i18n="rooms.cards.aegean-studio.tagSea">Sea View</span>
+                            <span data-i18n="rooms.cards.aegean-studio.tagBalcony">Balcony</span>
+                            <span data-i18n="rooms.cards.aegean-studio.tagShower">Rain Shower</span>
                         </div>
-                        <button class="btn-select-room">Select This Suite</button>
+                        <button class="btn-select-room" data-i18n="rooms.selectSuite">Select This Suite</button>
                     </div>
                 </div>
             </div>
@@ -223,74 +225,74 @@
         <div class="guest-container">
             <div class="guest-layout">
                 <section class="guest-form-section">
-                    <h2 class="guest-form-title">Guest Information</h2>
-                    <p class="guest-form-subtitle">Please confirm your details for the reservation</p>
+                    <h2 class="guest-form-title" data-i18n="guest.title">Guest Information</h2>
+                    <p class="guest-form-subtitle" data-i18n="guest.subtitle">Please confirm your details for the reservation</p>
 
                     <form id="guest-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="guest-first-name">First Name</label>
+                                <label for="guest-first-name" data-i18n="guest.firstName">First Name</label>
                                 <input type="text" id="guest-first-name" name="first_name" required>
                             </div>
                             <div class="form-group">
-                                <label for="guest-last-name">Last Name</label>
+                                <label for="guest-last-name" data-i18n="guest.lastName">Last Name</label>
                                 <input type="text" id="guest-last-name" name="last_name" required>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="guest-email">Email Address</label>
+                            <label for="guest-email" data-i18n="guest.email">Email Address</label>
                             <input type="email" id="guest-email" name="email" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="guest-phone">Phone Number</label>
+                            <label for="guest-phone" data-i18n="guest.phone">Phone Number</label>
                             <input type="tel" id="guest-phone" name="phone" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="guest-address">Street Address</label>
+                            <label for="guest-address" data-i18n="guest.address">Street Address</label>
                             <input type="text" id="guest-address" name="address" required>
                         </div>
 
                         <div class="form-row form-row-3">
                             <div class="form-group">
-                                <label for="guest-city">City</label>
+                                <label for="guest-city" data-i18n="guest.city">City</label>
                                 <input type="text" id="guest-city" name="city" required>
                             </div>
                             <div class="form-group">
-                                <label for="guest-zip">ZIP / Postal</label>
+                                <label for="guest-zip" data-i18n="guest.zip">ZIP / Postal</label>
                                 <input type="text" id="guest-zip" name="zip" required>
                             </div>
                             <div class="form-group">
-                                <label for="guest-country">Country</label>
+                                <label for="guest-country" data-i18n="guest.country">Country</label>
                                 <select id="guest-country" name="country" required>
-                                    <option value="">Select&hellip;</option>
-                                    <option value="ES">Spain</option>
-                                    <option value="GR">Greece</option>
-                                    <option value="IT">Italy</option>
-                                    <option value="FR">France</option>
-                                    <option value="DE">Germany</option>
-                                    <option value="GB">United Kingdom</option>
-                                    <option value="US">United States</option>
-                                    <option value="PT">Portugal</option>
-                                    <option value="NL">Netherlands</option>
-                                    <option value="CH">Switzerland</option>
-                                    <option value="AT">Austria</option>
-                                    <option value="BE">Belgium</option>
-                                    <option value="SE">Sweden</option>
-                                    <option value="NO">Norway</option>
-                                    <option value="DK">Denmark</option>
-                                    <option value="AU">Australia</option>
-                                    <option value="CA">Canada</option>
-                                    <option value="JP">Japan</option>
+                                    <option value="" data-i18n="guest.countryPlaceholder">Select&hellip;</option>
+                                    <option value="ES" data-i18n="guest.countries.ES">Spain</option>
+                                    <option value="GR" data-i18n="guest.countries.GR">Greece</option>
+                                    <option value="IT" data-i18n="guest.countries.IT">Italy</option>
+                                    <option value="FR" data-i18n="guest.countries.FR">France</option>
+                                    <option value="DE" data-i18n="guest.countries.DE">Germany</option>
+                                    <option value="GB" data-i18n="guest.countries.GB">United Kingdom</option>
+                                    <option value="US" data-i18n="guest.countries.US">United States</option>
+                                    <option value="PT" data-i18n="guest.countries.PT">Portugal</option>
+                                    <option value="NL" data-i18n="guest.countries.NL">Netherlands</option>
+                                    <option value="CH" data-i18n="guest.countries.CH">Switzerland</option>
+                                    <option value="AT" data-i18n="guest.countries.AT">Austria</option>
+                                    <option value="BE" data-i18n="guest.countries.BE">Belgium</option>
+                                    <option value="SE" data-i18n="guest.countries.SE">Sweden</option>
+                                    <option value="NO" data-i18n="guest.countries.NO">Norway</option>
+                                    <option value="DK" data-i18n="guest.countries.DK">Denmark</option>
+                                    <option value="AU" data-i18n="guest.countries.AU">Australia</option>
+                                    <option value="CA" data-i18n="guest.countries.CA">Canada</option>
+                                    <option value="JP" data-i18n="guest.countries.JP">Japan</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="guest-form-actions">
-                            <button type="button" id="back-to-rooms" class="btn-text-back">&larr; Back to rooms</button>
-                            <button type="submit" class="btn-primary">Continue to Payment</button>
+                            <button type="button" id="back-to-rooms" class="btn-text-back" data-i18n="guest.backToRooms">&larr; Back to rooms</button>
+                            <button type="submit" class="btn-primary" data-i18n="guest.continueToPayment">Continue to Payment</button>
                         </div>
                     </form>
                 </section>
@@ -298,9 +300,10 @@
                 <aside class="guest-summary-panel">
                     <div class="guest-summary-sticky">
                         <div class="panel-title-row">
-                            <h3 class="panel-title">Your Selection</h3>
+                            <h3 class="panel-title" data-i18n="guest.yourSelection">Your Selection</h3>
                             <button type="button" class="stay-edit" data-stay-trigger
                                     aria-haspopup="dialog" aria-controls="stay-popover" aria-expanded="false"
+                                    data-i18n-attr="aria-label:rooms.changeDates,title:rooms.changeDates"
                                     aria-label="Change dates and guests" title="Change dates and guests">
                                 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                             </button>
@@ -317,15 +320,15 @@
                         <div class="summary-divider"></div>
 
                         <div class="summary-row">
-                            <span class="summary-label">Check-in</span>
+                            <span class="summary-label" data-i18n="common.checkIn">Check-in</span>
                             <span class="summary-value" data-stay="check-in"></span>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label">Check-out</span>
+                            <span class="summary-label" data-i18n="common.checkOut">Check-out</span>
                             <span class="summary-value" data-stay="check-out"></span>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label">Guests</span>
+                            <span class="summary-label" data-i18n="common.guests">Guests</span>
                             <span class="summary-value" data-stay="guests"></span>
                         </div>
 
@@ -343,7 +346,7 @@
                         <div class="summary-divider"></div>
 
                         <div class="summary-row summary-total">
-                            <span>Total</span>
+                            <span data-i18n="common.total">Total</span>
                             <span data-stay="grand-total"></span>
                         </div>
                     </div>
@@ -359,35 +362,35 @@
             <section class="showcase">
                 <div class="hero-image">
                     <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1200&q=80&auto=format&fit=crop"
-                         alt="Santorini caldera view at sunset">
+                         data-i18n-attr="alt:booking.heroAlt" alt="Santorini caldera view at sunset">
                 </div>
 
                 <div class="gallery">
                     <div class="gallery-item">
                         <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80&auto=format&fit=crop"
-                             alt="Royal Suite interior" loading="lazy">
-                        <span class="gallery-label">The Royal Suite</span>
+                             data-i18n-attr="alt:booking.gallerySuiteAlt" alt="Royal Suite interior" loading="lazy">
+                        <span class="gallery-label" data-i18n="booking.gallerySuite">The Royal Suite</span>
                     </div>
                     <div class="gallery-item">
                         <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80&auto=format&fit=crop"
-                             alt="Infinity pool" loading="lazy">
-                        <span class="gallery-label">Infinity Pool</span>
+                             data-i18n-attr="alt:booking.galleryPoolAlt" alt="Infinity pool" loading="lazy">
+                        <span class="gallery-label" data-i18n="booking.galleryPool">Infinity Pool</span>
                     </div>
                     <div class="gallery-item">
                         <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&auto=format&fit=crop"
-                             alt="Fine dining" loading="lazy">
-                        <span class="gallery-label">Private Dining</span>
+                             data-i18n-attr="alt:booking.galleryDiningAlt" alt="Fine dining" loading="lazy">
+                        <span class="gallery-label" data-i18n="booking.galleryDining">Private Dining</span>
                     </div>
                 </div>
 
                 <div class="property-description">
-                    <h2>A Sanctuary Above the Sea</h2>
-                    <p>
+                    <h2 data-i18n="booking.sanctuaryTitle">A Sanctuary Above the Sea</h2>
+                    <p data-i18n="booking.sanctuaryBody1">
                         Perched on the volcanic cliffs of Oia, The Caldera House is where the Aegean meets the sky.
                         Each suite opens to unobstructed views of the caldera, with hand-carved stone interiors,
                         private plunge pools, and terraces designed for watching the most celebrated sunset in the world.
                     </p>
-                    <p>
+                    <p data-i18n="booking.sanctuaryBody2">
                         From candlelit dinners prepared by our resident chef to dawn yoga on the clifftop,
                         every detail has been considered so you can simply be present.
                     </p>
@@ -395,27 +398,27 @@
                     <div class="amenities">
                         <div class="amenity">
                             <span class="amenity-icon">&#9672;</span>
-                            <span>Private Infinity Pool</span>
+                            <span data-i18n="booking.amenityPool">Private Infinity Pool</span>
                         </div>
                         <div class="amenity">
                             <span class="amenity-icon">&#9672;</span>
-                            <span>In-Suite Chef Service</span>
+                            <span data-i18n="booking.amenityChef">In-Suite Chef Service</span>
                         </div>
                         <div class="amenity">
                             <span class="amenity-icon">&#9672;</span>
-                            <span>Caldera View Terrace</span>
+                            <span data-i18n="booking.amenityTerrace">Caldera View Terrace</span>
                         </div>
                         <div class="amenity">
                             <span class="amenity-icon">&#9672;</span>
-                            <span>Spa &amp; Wellness</span>
+                            <span data-i18n="booking.amenitySpa">Spa &amp; Wellness</span>
                         </div>
                         <div class="amenity">
                             <span class="amenity-icon">&#9672;</span>
-                            <span>Sunset Sailing Excursion</span>
+                            <span data-i18n="booking.amenitySailing">Sunset Sailing Excursion</span>
                         </div>
                         <div class="amenity">
                             <span class="amenity-icon">&#9672;</span>
-                            <span>Airport Concierge</span>
+                            <span data-i18n="booking.amenityAirport">Airport Concierge</span>
                         </div>
                     </div>
                 </div>
@@ -424,32 +427,33 @@
             <!-- RIGHT: Booking Panel -->
             <aside class="booking-panel">
                 <div class="panel-sticky">
-                    <button id="back-to-guest" class="btn-text-back">&larr; Back to guest details</button>
+                    <button id="back-to-guest" class="btn-text-back" data-i18n="booking.backToGuest">&larr; Back to guest details</button>
 
                     <div class="booking-summary">
                         <div class="panel-title-row">
-                            <h3 class="panel-title">Your Stay</h3>
+                            <h3 class="panel-title" data-i18n="booking.yourStay">Your Stay</h3>
                             <button type="button" class="stay-edit" data-stay-trigger
                                     aria-haspopup="dialog" aria-controls="stay-popover" aria-expanded="false"
+                                    data-i18n-attr="aria-label:rooms.changeDates,title:rooms.changeDates"
                                     aria-label="Change dates and guests" title="Change dates and guests">
                                 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                             </button>
                         </div>
 
                         <div class="summary-row">
-                            <span class="summary-label">Suite</span>
+                            <span class="summary-label" data-i18n="common.suite">Suite</span>
                             <span class="summary-value" id="booking-room-name">Royal Caldera Suite</span>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label">Check-in</span>
+                            <span class="summary-label" data-i18n="common.checkIn">Check-in</span>
                             <span class="summary-value" data-stay="check-in"></span>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label">Check-out</span>
+                            <span class="summary-label" data-i18n="common.checkOut">Check-out</span>
                             <span class="summary-value" data-stay="check-out"></span>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label">Guests</span>
+                            <span class="summary-label" data-i18n="common.guests">Guests</span>
                             <span class="summary-value" data-stay="guests"></span>
                         </div>
 
@@ -467,14 +471,14 @@
                         <div class="summary-divider"></div>
 
                         <div class="summary-row summary-total">
-                            <span>Total</span>
+                            <span data-i18n="common.total">Total</span>
                             <span data-stay="grand-total"></span>
                         </div>
                     </div>
 
                     <!-- Payment Options -->
                     <div id="payment-section">
-                        <h3 class="panel-title">Payment</h3>
+                        <h3 class="panel-title" data-i18n="booking.payment">Payment</h3>
 
                         <!-- Flow is chosen in the Flywire demo drawer (public/demo-config.js). -->
                         <div id="payment-options" class="payment-option selected">
@@ -490,8 +494,8 @@
 
                         <!-- Demo tooling: checkout stays disabled until the user has entered Flywire demo credentials. -->
                         <div class="payment-credentials" data-credentials-banner hidden role="status">
-                            <strong>Checkout needs Flywire demo credentials.</strong>
-                            Add your <span data-credentials-missing></span> in the <a href="/dashboard/#credentials">hotel back office</a>, then come back to pay.
+                            <strong data-i18n="credentials.paymentTitle">Checkout needs Flywire demo credentials.</strong>
+                            <span data-credentials-body="credentials.paymentBody"></span>
                         </div>
 
                         <button id="proceed-btn" class="btn-primary">Continue to Payment</button>
@@ -501,8 +505,8 @@
                     </div>
 
                     <p class="panel-footer">
-                        All transactions are secured and encrypted.
-                        <br>Guest: <span id="booking-guest-name">Alejandro Serrano</span>
+                        <span data-i18n="booking.secured">All transactions are secured and encrypted.</span>
+                        <br><span id="booking-guest-line"></span>
                     </p>
                 </div>
             </aside>
@@ -513,54 +517,54 @@
     <div id="success-view" class="view hidden">
         <div class="success-bg">
             <img src="https://images.unsplash.com/photo-1507501336603-6e31db2be093?w=1920&q=80&auto=format&fit=crop"
-                 alt="Santorini sunset" class="success-bg-img">
+                 data-i18n-attr="alt:success.backgroundAlt" alt="Santorini sunset" class="success-bg-img">
             <div class="success-overlay"></div>
         </div>
 
         <div class="success-content">
             <div class="success-inner">
-                <p class="success-eyebrow" id="success-eyebrow">Booking Confirmed</p>
-                <h1 class="success-title">Your Santorini<br>Escape Awaits</h1>
-                <p class="success-guest-greeting">Welcome, <span id="success-guest-name">Guest</span></p>
+                <p class="success-eyebrow" id="success-eyebrow" data-i18n="success.eyebrowPaid">Booking Confirmed</p>
+                <h1 class="success-title" data-i18n-html="success.title">Your Santorini<br>Escape Awaits</h1>
+                <p class="success-guest-greeting" id="success-guest-greeting"></p>
                 <p class="success-payment-note" id="success-payment-note"></p>
                 <div class="success-line"></div>
 
                 <div class="success-details">
                     <div class="success-detail">
-                        <span class="detail-label">Check-in</span>
+                        <span class="detail-label" data-i18n="common.checkIn">Check-in</span>
                         <span class="detail-value" data-stay="check-in-long"></span>
                     </div>
                     <div class="success-detail">
-                        <span class="detail-label">Check-out</span>
+                        <span class="detail-label" data-i18n="common.checkOut">Check-out</span>
                         <span class="detail-value" data-stay="check-out-long"></span>
                     </div>
                     <div class="success-detail">
-                        <span class="detail-label">Suite</span>
+                        <span class="detail-label" data-i18n="common.suite">Suite</span>
                         <span class="detail-value" id="success-suite-name">Royal Caldera</span>
                     </div>
                 </div>
 
                 <div class="success-highlights">
-                    <p class="highlights-label">What awaits you</p>
+                    <p class="highlights-label" data-i18n="success.awaits">What awaits you</p>
                     <ul>
-                        <li>Private infinity pool perched above the caldera</li>
-                        <li>Sunset dinner on your terrace, prepared by our chef</li>
-                        <li>Exclusive catamaran sailing at golden hour</li>
-                        <li>Complimentary couples spa ritual</li>
+                        <li data-i18n="success.highlightPool">Private infinity pool perched above the caldera</li>
+                        <li data-i18n="success.highlightDinner">Sunset dinner on your terrace, prepared by our chef</li>
+                        <li data-i18n="success.highlightSailing">Exclusive catamaran sailing at golden hour</li>
+                        <li data-i18n="success.highlightSpa">Complimentary couples spa ritual</li>
                     </ul>
                 </div>
 
                 <!-- Demo-only: what Flywire returned for this session. -->
                 <div class="fw-result" id="flywire-result" hidden>
-                    <p class="fw-result-label">Returned by Flywire &middot; demo</p>
+                    <p class="fw-result-label" data-i18n="success.returnedBy">Returned by Flywire &middot; demo</p>
                     <dl id="flywire-result-list"></dl>
                     <div class="fw-result-links">
-                        <button type="button" class="fw-result-link" data-activity-open>View checkout activity &rarr;</button>
-                        <a class="fw-result-link" id="flywire-dashboard-link" href="/dashboard/">Open in hotel dashboard &rarr;</a>
+                        <button type="button" class="fw-result-link" data-activity-open data-i18n="success.viewActivity">View checkout activity &rarr;</button>
+                        <a class="fw-result-link" id="flywire-dashboard-link" href="/dashboard/" data-i18n="success.openDashboard">Open in hotel dashboard &rarr;</a>
                     </div>
                 </div>
 
-                <button class="btn-light" onclick="window.location.reload()">Book Another Stay</button>
+                <button class="btn-light" onclick="window.location.reload()" data-i18n="success.bookAnother">Book Another Stay</button>
             </div>
         </div>
     </div>
@@ -569,15 +573,15 @@
     <div id="error-view" class="view hidden">
         <div class="error-content">
             <div class="error-x" id="error-icon">&#10005;</div>
-            <h1 class="error-title" id="error-title">Woopsie!</h1>
-            <p class="error-subtitle" id="error-subtitle">Denied!</p>
+            <h1 class="error-title" id="error-title" data-i18n="error.declinedTitle">Woopsie!</h1>
+            <p class="error-subtitle" id="error-subtitle" data-i18n="error.declinedSubtitle">Denied!</p>
             <div class="error-line"></div>
-            <p class="error-message" id="error-message">
+            <p class="error-message" id="error-message" data-i18n-html="error.declinedMessage">
                 Your payment could not be processed.<br>
                 Perhaps the universe is telling you to try a different card.
             </p>
-            <button id="retry-btn" class="btn-retry">Try Again</button>
-            <button type="button" class="fw-result-link fw-result-link-block" data-activity-open>View checkout activity &rarr;</button>
+            <button id="retry-btn" class="btn-retry" data-i18n="error.tryAgain">Try Again</button>
+            <button type="button" class="fw-result-link fw-result-link-block" data-activity-open data-i18n="error.viewActivity">View checkout activity &rarr;</button>
         </div>
     </div>
 
@@ -587,61 +591,87 @@
         <aside class="fw-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="demo-drawer-title">
             <header class="fw-drawer-header">
                 <div>
-                    <p class="fw-overline">Flywire Checkout V2</p>
-                    <h2 id="demo-drawer-title" tabindex="-1">Checkout settings</h2>
-                    <p class="fw-drawer-sub">Pick what to show. Settings apply the next time checkout opens and are saved in this browser.</p>
+                    <p class="fw-overline" data-i18n="demo.overline">Flywire Checkout V2</p>
+                    <h2 id="demo-drawer-title" tabindex="-1" data-i18n="demo.title">Checkout settings</h2>
+                    <p class="fw-drawer-sub" data-i18n="demo.subtitle">Pick what to show. Settings apply the next time checkout opens and are saved in this browser.</p>
                 </div>
-                <button type="button" class="fw-icon-btn" data-drawer-close aria-label="Close checkout settings">
-                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
-                </button>
+                <div class="fw-drawer-tools">
+                    <div class="fw-lang">
+                        <button type="button" class="fw-icon-btn" id="demo-lang-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="demo-lang-menu" data-i18n-attr="aria-label:demo.pageLanguage" aria-label="Page language">
+                            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.8 3.8 5.8 3.8 9s-1.3 6.2-3.8 9c-2.5-2.8-3.8-5.8-3.8-9s1.3-6.2 3.8-9z"/></svg>
+                        </button>
+                        <ul id="demo-lang-menu" class="fw-lang-menu" role="menu" hidden></ul>
+                    </div>
+                    <button type="button" class="fw-icon-btn" data-drawer-close data-i18n-attr="aria-label:demo.close" aria-label="Close checkout settings">
+                        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+                    </button>
+                </div>
             </header>
 
             <div class="fw-drawer-body">
                 <div class="fw-credentials-banner" data-credentials-banner hidden role="status">
-                    <strong>Add your Flywire demo credentials to start</strong>
-                    <p>This demo comes without credentials. Enter your <span data-credentials-missing></span> in the hotel back office. They're saved in this browser and only work with the Flywire demo environment.</p>
-                    <a class="fw-btn fw-btn-primary fw-btn-link" href="/dashboard/#credentials">Add credentials</a>
+                    <strong data-i18n="credentials.drawerTitle">Add your Flywire demo credentials to start</strong>
+                    <p data-credentials-body="credentials.drawerBody"></p>
+                    <a class="fw-btn fw-btn-primary fw-btn-link" href="/dashboard/#credentials" data-i18n="credentials.add">Add credentials</a>
                 </div>
                 <section class="fw-section" aria-labelledby="demo-sec-flow">
-                    <h3 id="demo-sec-flow" class="fw-section-title"><span class="fw-step">1</span>Flow</h3>
+                    <h3 id="demo-sec-flow" class="fw-section-title"><span class="fw-step">1</span><span data-i18n="demo.sectionFlow">Flow</span></h3>
                     <div id="demo-flow-list" class="fw-flow-list"></div>
                 </section>
 
                 <section class="fw-section" aria-labelledby="demo-sec-display">
-                    <h3 id="demo-sec-display" class="fw-section-title"><span class="fw-step">2</span>Display</h3>
+                    <h3 id="demo-sec-display" class="fw-section-title"><span class="fw-step">2</span><span data-i18n="demo.sectionDisplay">Display</span></h3>
                     <div class="fw-segmented" role="radiogroup" aria-labelledby="demo-sec-display">
-                        <label><input type="radio" name="demo-display" value="overlay"><span>Full-screen overlay</span></label>
-                        <label><input type="radio" name="demo-display" value="embedded"><span>Embed checkout in page</span></label>
+                        <label><input type="radio" name="demo-display" value="overlay"><span data-i18n="demo.displayOverlay">Full-screen overlay</span></label>
+                        <label><input type="radio" name="demo-display" value="embedded"><span data-i18n="demo.displayEmbedded">Embed checkout in page</span></label>
                     </div>
-                    <p class="fw-help">Embedded mounts checkout inside the booking panel with <code>config.embed_to</code>.</p>
+                    <p class="fw-help" data-i18n-html="demo.displayHelp">Embedded mounts checkout inside the booking panel with <code>config.embed_to</code>. The panel already shows the hotel and the total, so hide checkout's header and amount below when you embed it.</p>
                 </section>
 
                 <section class="fw-section" aria-labelledby="demo-sec-pages">
-                    <h3 id="demo-sec-pages" class="fw-section-title"><span class="fw-step">3</span>Pages &amp; guest experience</h3>
+                    <h3 id="demo-sec-pages" class="fw-section-title"><span class="fw-step">3</span><span data-i18n="demo.sectionPages">Pages &amp; guest experience</span></h3>
 
-                    <p class="fw-field-label" id="demo-payer-form-label">Payer details page <span class="fw-label-hint">show_payer_form</span></p>
+                    <p class="fw-field-label" id="demo-payer-form-label" data-i18n-html="demo.payerFormLabel">Payer details page <span class="fw-label-hint">show_payer_form</span></p>
                     <div class="fw-segmented fw-segmented-3" role="radiogroup" aria-labelledby="demo-payer-form-label">
-                        <label><input type="radio" name="demo-payer-form" value="auto"><span>Auto</span></label>
-                        <label><input type="radio" name="demo-payer-form" value="true"><span>Always show</span></label>
-                        <label><input type="radio" name="demo-payer-form" value="false"><span>Hide</span></label>
+                        <label><input type="radio" name="demo-payer-form" value="auto"><span data-i18n="demo.pageAuto">Auto</span></label>
+                        <label><input type="radio" name="demo-payer-form" value="true"><span data-i18n="demo.pageAlways">Always show</span></label>
+                        <label><input type="radio" name="demo-payer-form" value="false"><span data-i18n="demo.pageHide">Hide</span></label>
                     </div>
 
-                    <p class="fw-field-label" id="demo-recipient-form-label">Custom fields page <span class="fw-label-hint">show_recipient_form</span></p>
+                    <p class="fw-field-label" id="demo-recipient-form-label" data-i18n-html="demo.recipientFormLabel">Custom fields page <span class="fw-label-hint">show_recipient_form</span></p>
                     <div class="fw-segmented fw-segmented-3" role="radiogroup" aria-labelledby="demo-recipient-form-label">
-                        <label><input type="radio" name="demo-recipient-form" value="auto" id="demo-recipient-form-auto"><span>Auto</span></label>
-                        <label><input type="radio" name="demo-recipient-form" value="true" id="demo-recipient-form-true"><span>Always show</span></label>
-                        <label><input type="radio" name="demo-recipient-form" value="false" id="demo-recipient-form-false"><span>Hide</span></label>
+                        <label><input type="radio" name="demo-recipient-form" value="auto" id="demo-recipient-form-auto"><span data-i18n="demo.pageAuto">Auto</span></label>
+                        <label><input type="radio" name="demo-recipient-form" value="true" id="demo-recipient-form-true"><span data-i18n="demo.pageAlways">Always show</span></label>
+                        <label><input type="radio" name="demo-recipient-form" value="false" id="demo-recipient-form-false"><span data-i18n="demo.pageHide">Hide</span></label>
                     </div>
                     <p class="fw-help" id="demo-pages-note">Auto skips a page when everything on it is already filled in, which is the case for the prefilled guest details.</p>
 
-                    <p class="fw-field-label" id="demo-disabled-fields-label">Read-only payer fields <span class="fw-label-hint">disabled_fields</span></p>
+                    <p class="fw-field-label" id="demo-disabled-fields-label" data-i18n-html="demo.readOnlyLabel">Read-only payer fields <span class="fw-label-hint">disabled_fields</span></p>
                     <div id="demo-disabled-fields" class="fw-chips" role="group" aria-labelledby="demo-disabled-fields-label"></div>
                     <p class="fw-help" id="demo-disabled-fields-note"></p>
 
                     <div class="fw-toggle-row fw-toggle-row-spaced">
                         <label class="fw-switch"><input type="checkbox" id="demo-hide-close"><span class="fw-switch-track" aria-hidden="true"></span>
-                            <span class="fw-toggle-text"><strong>Hide the close button</strong> <span class="fw-label-hint">close_button: 'hidden'</span>
-                                <span>The guest can't dismiss checkout, so they finish or the timeout ends it. Best with the embedded display.</span>
+                            <span class="fw-toggle-text"><span data-i18n-html="demo.hideCloseLabel"><strong>Hide the close button</strong> <span class="fw-label-hint">close_button: 'hidden'</span></span>
+                                <span data-i18n="demo.hideCloseHelp">The guest can't dismiss checkout, so they finish or the timeout ends it. Best with the embedded display.</span>
+                            </span>
+                        </label>
+                        <p class="fw-toggle-reason"></p>
+                    </div>
+
+                    <div class="fw-toggle-row">
+                        <label class="fw-switch"><input type="checkbox" id="demo-hide-header"><span class="fw-switch-track" aria-hidden="true"></span>
+                            <span class="fw-toggle-text"><span data-i18n-html="demo.hideHeaderLabel"><strong>Hide the checkout header</strong> <span class="fw-label-hint">header: 'hidden'</span></span>
+                                <span data-i18n="demo.hideHeaderHelp">The booking page already names the hotel. Checkout omits its own header, in the overlay and when embedded.</span>
+                            </span>
+                        </label>
+                        <p class="fw-toggle-reason"></p>
+                    </div>
+
+                    <div class="fw-toggle-row">
+                        <label class="fw-switch"><input type="checkbox" id="demo-hide-amount"><span class="fw-switch-track" aria-hidden="true"></span>
+                            <span class="fw-toggle-text"><span data-i18n-html="demo.hideAmountLabel"><strong>Hide the amount</strong> <span class="fw-label-hint">show_amount_info: false</span></span>
+                                <span data-i18n="demo.hideAmountHelp">The booking panel already shows the total. Checkout skips its amount summary. Shown by default.</span>
                             </span>
                         </label>
                         <p class="fw-toggle-reason"></p>
@@ -649,8 +679,8 @@
 
                     <div class="fw-toggle-row">
                         <label class="fw-switch"><input type="checkbox" id="demo-disable-emails"><span class="fw-switch-track" aria-hidden="true"></span>
-                            <span class="fw-toggle-text"><strong>Don't email the payer</strong> <span class="fw-label-hint">disable_payer_emails</span>
-                                <span>Flywire won't send payment status emails, so the hotel can send its own branded confirmations.</span>
+                            <span class="fw-toggle-text"><span data-i18n-html="demo.disableEmailsLabel"><strong>Don't email the payer</strong> <span class="fw-label-hint">disable_payer_emails</span></span>
+                                <span data-i18n="demo.disableEmailsHelp">Flywire won't send payment status emails, so the hotel can send its own branded confirmations.</span>
                             </span>
                         </label>
                         <p class="fw-toggle-reason"></p>
@@ -658,12 +688,12 @@
                 </section>
 
                 <section class="fw-section" aria-labelledby="demo-sec-options">
-                    <h3 id="demo-sec-options" class="fw-section-title"><span class="fw-step">4</span>Payment options</h3>
+                    <h3 id="demo-sec-options" class="fw-section-title"><span class="fw-step">4</span><span data-i18n="demo.sectionOptions">Payment options</span></h3>
 
                     <div class="fw-toggle-row">
                         <label class="fw-switch"><input type="checkbox" id="demo-split"><span class="fw-switch-track" aria-hidden="true"></span>
-                            <span class="fw-toggle-text"><strong>Split with partners</strong> <span class="fw-label-hint">transaction.details.split</span>
-                                <span>Send part of the payment straight to partner portals (excursions, spa, dive boats). The rest goes to the hotel.</span>
+                            <span class="fw-toggle-text"><span data-i18n-html="demo.splitLabel"><strong>Split with partners</strong> <span class="fw-label-hint">transaction.details.split</span></span>
+                                <span data-i18n="demo.splitHelp">Send part of the payment straight to partner portals (excursions, spa, dive boats). The rest goes to the hotel.</span>
                             </span>
                         </label>
                         <p class="fw-toggle-reason"></p>
@@ -672,8 +702,8 @@
 
                     <div class="fw-toggle-row">
                         <label class="fw-switch"><input type="checkbox" id="demo-waive"><span class="fw-switch-track" aria-hidden="true"></span>
-                            <span class="fw-toggle-text"><strong>Waive card surcharge</strong>
-                                <span>Absorb the surcharge for this booking only, without changing portal settings.</span>
+                            <span class="fw-toggle-text"><span data-i18n-html="demo.waiveLabel"><strong>Waive card surcharge</strong></span>
+                                <span data-i18n="demo.waiveHelp">Absorb the surcharge for this booking only, without changing portal settings.</span>
                             </span>
                         </label>
                         <p class="fw-toggle-reason"></p>
@@ -681,25 +711,24 @@
 
                     <div class="fw-toggle-row">
                         <label class="fw-switch"><input type="checkbox" id="demo-timeout"><span class="fw-switch-track" aria-hidden="true"></span>
-                            <span class="fw-toggle-text"><strong>Checkout timeout</strong> <span class="fw-label-hint">config.timeout</span>
-                                <span>Show a countdown and close checkout when it expires, e.g. to release held rooms.</span>
+                            <span class="fw-toggle-text"><span data-i18n-html="demo.timeoutLabel"><strong>Checkout timeout</strong> <span class="fw-label-hint">config.timeout</span></span>
+                                <span data-i18n="demo.timeoutHelp">Show a countdown and close checkout when it expires, e.g. to release held rooms.</span>
                             </span>
                         </label>
                         <p class="fw-toggle-reason"></p>
-                        <p class="fw-toggle-note" id="demo-timeout-note"></p>
                         <div id="demo-timeout-fields" class="fw-inline-fields" hidden>
-                            <label>Countdown
+                            <label><span data-i18n="demo.timeoutCountdown">Countdown</span>
                                 <select id="demo-timeout-type">
-                                    <option value="checkout">Whole checkout</option>
-                                    <option value="operation">Each payment attempt</option>
+                                    <option value="checkout" data-i18n="demo.timeoutWhole">Whole checkout</option>
+                                    <option value="operation" data-i18n="demo.timeoutEachAttempt">Each payment attempt</option>
                                 </select>
                             </label>
-                            <label>Duration
+                            <label><span data-i18n="demo.timeoutDuration">Duration</span>
                                 <select id="demo-timeout-minutes">
-                                    <option value="3">3 minutes</option>
-                                    <option value="5">5 minutes</option>
-                                    <option value="10">10 minutes</option>
-                                    <option value="15">15 minutes</option>
+                                    <option value="3" data-i18n="demo.minutes" data-i18n-count="3">3 minutes</option>
+                                    <option value="5" data-i18n="demo.minutes" data-i18n-count="5">5 minutes</option>
+                                    <option value="10" data-i18n="demo.minutes" data-i18n-count="10">10 minutes</option>
+                                    <option value="15" data-i18n="demo.minutes" data-i18n-count="15">15 minutes</option>
                                 </select>
                             </label>
                         </div>
@@ -707,114 +736,140 @@
                 </section>
 
                 <section class="fw-section" aria-labelledby="demo-sec-methods">
-                    <h3 id="demo-sec-methods" class="fw-section-title"><span class="fw-step">5</span>Payment methods &amp; currency</h3>
-                    <p class="fw-help">Controls which offers the guest sees, using <code>config.offer_rules</code>.</p>
-                    <div id="demo-methods" class="fw-chips" role="group" aria-label="Payment methods to show"></div>
-                    <label class="fw-checkbox"><input type="checkbox" id="demo-hide-amex"><span>Hide American Express</span></label>
-                    <label class="fw-field">Currencies offered
+                    <h3 id="demo-sec-methods" class="fw-section-title"><span class="fw-step">5</span><span data-i18n="demo.sectionMethods">Payment methods &amp; currency</span></h3>
+                    <p class="fw-help" data-i18n-html="demo.methodsHelp">Controls which offers the guest sees, and in what order, using <code>config.offer_rules</code>.</p>
+                    <div id="demo-methods" class="fw-chips" role="group" data-i18n-attr="aria-label:demo.methodsGroup" aria-label="Payment methods to show"></div>
+                    <label class="fw-checkbox"><input type="checkbox" id="demo-hide-amex"><span data-i18n="demo.hideAmex">Hide American Express</span></label>
+                    <label class="fw-field"><span data-i18n-html="demo.currenciesLabel">Currencies offered <span class="fw-label-hint">filters.currency</span></span>
                         <select id="demo-currency">
-                            <option value="all">All available currencies</option>
-                            <option value="payer_currency">Guest's home currency only</option>
-                            <option value="recipient_currency">Hotel's currency only</option>
+                            <option value="all" data-i18n="demo.currencyAll">All available currencies</option>
+                            <option value="payer_currency" data-i18n="demo.currencyPayer">Guest's home currency only</option>
+                            <option value="other_than_payer_currency" data-i18n="demo.currencyOtherThanPayer">Other than the guest's currency</option>
+                            <option value="recipient_currency" data-i18n="demo.currencyHotel">Hotel's currency only</option>
+                            <option value="other_than_recipient_currency" data-i18n="demo.currencyOtherThanHotel">Other than the hotel's currency</option>
+                            <option value="payer_and_recipient" data-i18n="demo.currencyBoth">Guest's and hotel's currencies</option>
+                        </select>
+                    </label>
+                    <label class="fw-field"><span data-i18n-html="demo.currencySortLabel">Offer order by currency <span class="fw-label-hint">sort · currency</span></span>
+                        <select id="demo-currency-sort">
+                            <option value="" data-i18n="demo.sortDefault">Checkout default</option>
+                            <option value="payer_first" data-i18n="demo.sortPayerFirst">Guest's currency first</option>
+                            <option value="hotel_first" data-i18n="demo.sortHotelFirst">Hotel's currency first</option>
+                            <option value="other_first" data-i18n="demo.sortOtherFirst">Other currencies first</option>
+                        </select>
+                    </label>
+                    <label class="fw-field"><span data-i18n-html="demo.methodSortLabel">Offer order by method <span class="fw-label-hint">sort · method</span></span>
+                        <select id="demo-method-sort">
+                            <option value="" data-i18n="demo.sortDefault">Checkout default</option>
+                            <option value="cards_first" data-i18n="demo.sortCardsFirst">Cards first</option>
+                            <option value="online_first" data-i18n="demo.sortOnlineFirst">Local online methods first</option>
+                            <option value="debit_first" data-i18n="demo.sortDebitFirst">Direct debit first</option>
+                            <option value="transfer_first" data-i18n="demo.sortTransferFirst">Bank transfer first</option>
                         </select>
                     </label>
                 </section>
 
                 <section class="fw-section" aria-labelledby="demo-sec-brand">
-                    <h3 id="demo-sec-brand" class="fw-section-title"><span class="fw-step">6</span>Branding &amp; language</h3>
+                    <h3 id="demo-sec-brand" class="fw-section-title"><span class="fw-step">6</span><span data-i18n="demo.sectionBrand">Branding &amp; language</span></h3>
                     <div class="fw-toggle-row">
                         <label class="fw-switch"><input type="checkbox" id="demo-branding"><span class="fw-switch-track" aria-hidden="true"></span>
-                            <span class="fw-toggle-text"><strong>Match the client's brand</strong>
-                                <span>Set checkout colour, font, text size and spacing with <code>styles</code>.</span>
+                            <span class="fw-toggle-text"><span data-i18n-html="demo.brandLabel"><strong>Match the client's brand</strong></span>
+                                <span data-i18n-html="demo.brandHelp">Set checkout colour, font, text size and spacing with <code>styles</code>.</span>
                             </span>
                         </label>
                         <p class="fw-toggle-reason"></p>
                         <div id="demo-branding-fields" class="fw-inline-fields" hidden>
-                            <label>Primary colour
+                            <label><span data-i18n="demo.brandColor">Primary colour</span>
                                 <span class="fw-color">
                                     <input type="color" id="demo-brand-color">
                                     <span id="demo-brand-color-value"></span>
                                 </span>
                             </label>
-                            <label>Font
+                            <label><span data-i18n="demo.brandFont">Font</span>
                                 <select id="demo-brand-font">
                                     <option>Cormorant Garamond</option>
                                     <option>Playfair Display</option>
                                     <option>Lora</option>
                                     <option>DM Sans</option>
+                                    <option value="custom" data-i18n="demo.brandFontCustom">Custom Google Font</option>
                                 </select>
                             </label>
-                            <label>Text size <span class="fw-label-hint">base_font_size</span>
+                            <label id="demo-brand-font-custom-wrap" class="fw-span-2" hidden><span data-i18n-html="demo.brandFontCustomLabel">Google Font <span class="fw-label-hint">fonts.googleapis.com</span></span>
+                                <input type="text" id="demo-brand-font-custom" data-i18n-attr="placeholder:demo.brandFontPlaceholder" placeholder="Libre Baskerville, or paste a CSS link" autocomplete="off" spellcheck="false">
+                                <span class="fw-help" id="demo-brand-font-note"></span>
+                            </label>
+                            <label><span data-i18n-html="demo.brandSizeLabel">Text size <span class="fw-label-hint">base_font_size</span></span>
                                 <select id="demo-brand-font-size">
-                                    <option value="">Checkout default</option>
-                                    <option value="14px">Small · 14px</option>
-                                    <option value="16px">Regular · 16px</option>
-                                    <option value="18px">Large · 18px</option>
-                                    <option value="20px">Extra large · 20px</option>
+                                    <option value="" data-i18n="demo.sortDefault">Checkout default</option>
+                                    <option value="14px" data-i18n="demo.brandSizeSmall">Small · 14px</option>
+                                    <option value="16px" data-i18n="demo.brandSizeRegular">Regular · 16px</option>
+                                    <option value="18px" data-i18n="demo.brandSizeLarge">Large · 18px</option>
+                                    <option value="20px" data-i18n="demo.brandSizeXl">Extra large · 20px</option>
                                 </select>
                             </label>
-                            <label>Spacing <span class="fw-label-hint">base_space</span>
+                            <label><span data-i18n-html="demo.brandSpaceLabel">Spacing <span class="fw-label-hint">base_space</span></span>
                                 <select id="demo-brand-space">
-                                    <option value="">Checkout default</option>
-                                    <option value="0.75rem">Compact · 0.75rem</option>
-                                    <option value="1rem">Standard · 1rem</option>
-                                    <option value="1.25rem">Roomy · 1.25rem</option>
+                                    <option value="" data-i18n="demo.sortDefault">Checkout default</option>
+                                    <option value="0.75rem" data-i18n="demo.brandSpaceCompact">Compact · 0.75rem</option>
+                                    <option value="1rem" data-i18n="demo.brandSpaceStandard">Standard · 1rem</option>
+                                    <option value="1.25rem" data-i18n="demo.brandSpaceRoomy">Roomy · 1.25rem</option>
                                 </select>
                             </label>
                         </div>
                     </div>
-                    <label class="fw-field">Checkout language
+                    <label class="fw-field"><span data-i18n="demo.checkoutLanguage">Checkout language</span>
                         <select id="demo-locale">
-                            <option value="en">English</option>
-                            <option value="en-GB">English (United Kingdom)</option>
-                            <option value="es">Español</option>
-                            <option value="es-419">Español (Latinoamérica)</option>
-                            <option value="fr">Français</option>
-                            <option value="de">Deutsch</option>
-                            <option value="it">Italiano</option>
-                            <option value="pt">Português</option>
-                            <option value="pt-BR">Português (Brasil)</option>
-                            <option value="pl">Polski</option>
-                            <option value="ja">日本語</option>
-                            <option value="ko">한국어</option>
-                            <option value="zh">中文</option>
-                            <option value="id">Bahasa Indonesia</option>
-                            <option value="vi">Tiếng Việt</option>
+                            <option value="en" data-i18n="demo.locales.en">English</option>
+                            <option value="en-GB" data-i18n="demo.locales.en-GB">English (UK)</option>
+                            <option value="es-ES" data-i18n="demo.locales.es-ES">Español</option>
+                            <option value="es-419" data-i18n="demo.locales.es-419">Español (Latin America)</option>
+                            <option value="fr-FR" data-i18n="demo.locales.fr-FR">Français</option>
+                            <option value="fr-CA" data-i18n="demo.locales.fr-CA">Français (CA)</option>
+                            <option value="pt-PT" data-i18n="demo.locales.pt-PT">Português</option>
+                            <option value="pt-BR" data-i18n="demo.locales.pt-BR">Português (BR)</option>
+                            <option value="pl" data-i18n="demo.locales.pl">Polski</option>
+                            <option value="it" data-i18n="demo.locales.it">Italiano</option>
+                            <option value="ko" data-i18n="demo.locales.ko">한국어</option>
+                            <option value="zh" data-i18n="demo.locales.zh">中文</option>
+                            <option value="ja" data-i18n="demo.locales.ja">日本語</option>
+                            <option value="de" data-i18n="demo.locales.de">Deutsch</option>
+                            <option value="id" data-i18n="demo.locales.id">Bahasa Indonesia</option>
+                            <option value="vi" data-i18n="demo.locales.vi">Tiếng Việt</option>
                         </select>
                     </label>
                 </section>
 
                 <section class="fw-section" aria-labelledby="demo-sec-session">
-                    <h3 id="demo-sec-session" class="fw-section-title"><span class="fw-step">7</span>Session</h3>
+                    <h3 id="demo-sec-session" class="fw-section-title"><span class="fw-step">7</span><span data-i18n="demo.sectionSession">Session</span></h3>
                     <div class="fw-segmented" role="radiogroup" aria-labelledby="demo-sec-session">
-                        <label><input type="radio" name="demo-session" id="demo-session-authenticated" value="authenticated"><span>Authenticated</span></label>
-                        <label><input type="radio" name="demo-session" id="demo-session-anonymous" value="anonymous"><span>Anonymous</span></label>
+                        <label><input type="radio" name="demo-session" id="demo-session-authenticated" value="authenticated"><span data-i18n="demo.sessionAuthenticated">Authenticated</span></label>
+                        <label><input type="radio" name="demo-session" id="demo-session-anonymous" value="anonymous"><span data-i18n="demo.sessionAnonymous">Anonymous</span></label>
                     </div>
                     <p class="fw-help" id="demo-session-note"></p>
                 </section>
 
                 <section class="fw-section" aria-labelledby="demo-sec-credentials">
-                    <h3 id="demo-sec-credentials" class="fw-section-title"><span class="fw-step">8</span>Flywire demo credentials</h3>
+                    <h3 id="demo-sec-credentials" class="fw-section-title"><span class="fw-step">8</span><span data-i18n="demo.sectionCredentials">Flywire demo credentials</span></h3>
                     <dl class="fw-cred-summary" id="demo-credentials-summary"></dl>
-                    <p class="fw-help">Entered once per browser in the hotel back office and used for every checkout and payment action. Flywire demo environment only.</p>
-                    <a class="fw-btn fw-btn-secondary fw-btn-link" href="/dashboard/#credentials">Change credentials in the back office</a>
+                    <p class="fw-help" data-i18n="demo.credentialsHelp">Entered once per browser in the hotel back office and used for every checkout and payment action. Flywire demo environment only.</p>
+                    <a class="fw-btn fw-btn-secondary fw-btn-link" href="/dashboard/#credentials" data-i18n="demo.credentialsChange">Change credentials in the back office</a>
                 </section>
 
                 <details class="fw-section fw-code">
-                    <summary class="fw-section-title"><span class="fw-step">&lt;/&gt;</span>Integration code</summary>
+                    <summary class="fw-section-title"><span class="fw-step">&lt;/&gt;</span><span data-i18n="demo.integrationCode">Integration code</span></summary>
                     <div class="fw-code-toolbar">
-                        <span class="fw-muted">What this page sends to <code>cpx_core.start()</code></span>
-                        <button type="button" id="demo-copy-code" class="fw-btn fw-btn-ghost">Copy</button>
+                        <span class="fw-muted" data-i18n-html="demo.integrationHelp">What this page sends to <code>cpx_core.start()</code></span>
+                        <button type="button" id="demo-copy-code" class="fw-btn fw-btn-ghost" data-i18n="common.copy">Copy</button>
                     </div>
                     <pre><code id="demo-code"></code></pre>
-                    <p class="fw-help">Matching playground samples:</p>
+                    <p class="fw-help" data-i18n="demo.playgroundIntro">Matching playground samples:</p>
                     <ul id="demo-playground-links" class="fw-links"></ul>
                 </details>
             </div>
 
             <footer class="fw-drawer-footer">
-                <button type="button" id="demo-reset" class="fw-btn fw-btn-secondary">Reset</button>
-                <button type="button" class="fw-btn fw-btn-primary" data-drawer-close>Done</button>
+                <button type="button" id="demo-reset" class="fw-btn fw-btn-secondary" data-i18n="demo.reset">Reset</button>
+                <button type="button" class="fw-btn fw-btn-primary" data-drawer-close data-i18n="demo.done">Done</button>
             </footer>
         </aside>
     </div>
@@ -825,39 +880,42 @@
         <aside class="fw-drawer-panel fw-drawer-panel-wide" role="dialog" aria-modal="true" aria-labelledby="activity-drawer-title">
             <header class="fw-drawer-header">
                 <div>
-                    <p class="fw-overline">Flywire Checkout V2</p>
-                    <h2 id="activity-drawer-title" tabindex="-1">Checkout activity</h2>
-                    <p class="fw-drawer-sub">What checkout returns, as it happens: the session, every callback and the final outcome read from your server. Saved in this browser until you clear it.</p>
+                    <p class="fw-overline" data-i18n="demo.overline">Flywire Checkout V2</p>
+                    <h2 id="activity-drawer-title" tabindex="-1" data-i18n="activity.title">Checkout activity</h2>
+                    <p class="fw-drawer-sub" data-i18n="activity.subtitle">What checkout returns, as it happens: the session, every callback and the final outcome read from your server. Saved in this browser until you clear it.</p>
                 </div>
-                <button type="button" class="fw-icon-btn" data-activity-close aria-label="Close checkout activity">
+                <button type="button" class="fw-icon-btn" data-activity-close data-i18n-attr="aria-label:activity.close" aria-label="Close checkout activity">
                     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
                 </button>
             </header>
 
             <div class="fw-drawer-body">
                 <div class="fw-credentials-banner" data-credentials-banner hidden role="status">
-                    <strong>Add your Flywire demo credentials to start</strong>
-                    <p>This demo comes without credentials. Enter your <span data-credentials-missing></span> in the hotel back office. They're saved in this browser and only work with the Flywire demo environment.</p>
-                    <a class="fw-btn fw-btn-primary fw-btn-link" href="/dashboard/#credentials">Add credentials</a>
+                    <strong data-i18n="credentials.drawerTitle">Add your Flywire demo credentials to start</strong>
+                    <p data-credentials-body="credentials.drawerBody"></p>
+                    <a class="fw-btn fw-btn-primary fw-btn-link" href="/dashboard/#credentials" data-i18n="credentials.add">Add credentials</a>
                 </div>
                 <div id="activity-body" aria-live="polite"></div>
             </div>
 
             <footer class="fw-drawer-footer">
                 <div class="fw-footer-group">
-                    <button type="button" id="activity-clear" class="fw-btn fw-btn-secondary">Clear</button>
-                    <button type="button" id="activity-copy" class="fw-btn fw-btn-secondary">Copy log</button>
+                    <button type="button" id="activity-clear" class="fw-btn fw-btn-secondary" data-i18n="activity.clear">Clear</button>
+                    <button type="button" id="activity-copy" class="fw-btn fw-btn-secondary" data-i18n="activity.copyLog">Copy log</button>
                 </div>
-                <button type="button" class="fw-btn fw-btn-primary" data-activity-close>Done</button>
+                <button type="button" class="fw-btn fw-btn-primary" data-activity-close data-i18n="activity.done">Done</button>
             </footer>
         </aside>
     </div>
 
     <!-- Stay dates & guests popover (opened from the hero line on the rooms page). -->
-    <div id="stay-popover" class="stay-popover" role="dialog" aria-label="Change dates and guests" hidden></div>
+    <div id="stay-popover" class="stay-popover" role="dialog" data-i18n-attr="aria-label:rooms.changeDates" aria-label="Change dates and guests" hidden></div>
 
+    <!-- English catalog. The language switcher will call I18n.load(locale) later. -->
+    <script src="/i18n.js"></script>
     <!-- Demo credentials (saved in the browser) and the demo bookings store shared with /dashboard. -->
     <script src="/demo-credentials.js"></script>
+    <script src="/money.js"></script>
     <script src="/bookings-store.js"></script>
     <!-- Flywire Checkout V2 integration module — keeps the SDK call surface in one file. -->
     <script src="/flywire-checkout.js"></script>

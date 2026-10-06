@@ -102,7 +102,7 @@
 
     // ── Formatting ──
 
-    const fmt = (date, options) => date.toLocaleDateString('en-US', options);
+    const fmt = (date, options) => date.toLocaleDateString(global.I18n?.locale || 'en', options);
 
     function formatRange(a, b) {
         const sameYear = a.getFullYear() === b.getFullYear();
@@ -112,13 +112,9 @@
         return `${fmt(a, { month: 'short', day: 'numeric', year: 'numeric' })} – ${fmt(b, { month: 'short', day: 'numeric', year: 'numeric' })}`;
     }
 
-    function plural(n, word) {
-        return `${n} ${word}${n === 1 ? '' : 's'}`;
-    }
-
     function guestsLabel(s = stay) {
-        const parts = [plural(s.adults, 'Adult')];
-        if (s.children) parts.push(s.children === 1 ? '1 Child' : `${s.children} Children`);
+        const parts = [global.I18n.t('stay.adult', { count: s.adults })];
+        if (s.children) parts.push(global.I18n.t('stay.child', { count: s.children }));
         return parts.join(', ');
     }
 
@@ -126,8 +122,13 @@
         short: (date) => fmt(date, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
         long: (date) => fmt(date, { month: 'long', day: 'numeric', year: 'numeric' }),
         guests: () => guestsLabel(),
-        nights: (n) => plural(n, 'night'),
+        nights: (n) => global.I18n.t('stay.night', { count: n }),
     };
+
+    function guestFeeNote() {
+        const amount = global.DemoMoney ? DemoMoney.formatUsdMajor(EXTRA_GUEST_FEE) : `$${EXTRA_GUEST_FEE}`;
+        return global.I18n.t('stay.extraGuestFee', { guests: INCLUDED_GUESTS, amount });
+    }
 
     // ── Popover ──
 
@@ -148,6 +149,9 @@
 
         persist();
         renderTrigger();
+        global.DemoMoney?.onChange(() => {
+            document.querySelectorAll('.stay-guests-note').forEach((node) => { node.textContent = guestFeeNote(); });
+        });
     }
 
     function open(btn) {
@@ -181,8 +185,11 @@
 
     function renderTrigger() {
         const s = get();
-        document.getElementById('stay-summary').textContent =
-            `${formatRange(s.checkIn, s.checkOut)} · ${plural(s.nights, 'Night')} · ${plural(s.guests, 'Guest')}`;
+        document.getElementById('stay-summary').textContent = global.I18n.t('rooms.staySummary', {
+            range: formatRange(s.checkIn, s.checkOut),
+            nights: global.I18n.t('stay.nightTitle', { count: s.nights }),
+            guests: global.I18n.t('stay.guestTitle', { count: s.guests }),
+        });
     }
 
     function render() {
@@ -191,15 +198,17 @@
         const nights = draft.checkOut ? nightsBetween(draft.checkIn, draft.checkOut) : null;
 
         const header = el('div', 'stay-popover-header');
-        const title = el('p', 'stay-popover-title', nights ? plural(nights, 'night') : 'Select check-out date');
+        const title = el('p', 'stay-popover-title', nights
+            ? global.I18n.t('stay.night', { count: nights })
+            : global.I18n.t('stay.selectCheckout'));
         const subtitle = el('p', 'stay-popover-sub', draft.checkOut
             ? formatRange(draft.checkIn, draft.checkOut)
-            : `Check-in ${format.short(draft.checkIn)} · up to ${MAX_NIGHTS} nights`);
+            : global.I18n.t('stay.checkoutHint', { checkIn: format.short(draft.checkIn), max: MAX_NIGHTS }));
         header.append(title, subtitle);
 
         const nav = el('div', 'stay-cal-nav');
-        const prev = navButton('Previous month', 'M15 18l-6-6 6-6', viewMonth <= firstMonth, -1);
-        const next = navButton('Next month', 'M9 18l6-6-6-6', false, 1);
+        const prev = navButton(global.I18n.t('stay.previousMonth'), 'M15 18l-6-6 6-6', viewMonth <= firstMonth, -1);
+        const next = navButton(global.I18n.t('stay.nextMonth'), 'M9 18l6-6-6-6', false, 1);
         nav.append(prev, next);
 
         const months = el('div', 'stay-cal-months');
@@ -212,13 +221,13 @@
 
         const guests = el('div', 'stay-guests');
         guests.append(
-            stepper('adults', 'Adults', 'Ages 13 or above'),
-            stepper('children', 'Children', 'Ages 2–12'),
-            el('p', 'stay-guests-note', `Rates include ${INCLUDED_GUESTS} guests. Each extra guest is $${EXTRA_GUEST_FEE} per night.`)
+            stepper('adults', global.I18n.t('stay.adults'), global.I18n.t('stay.adultsHint')),
+            stepper('children', global.I18n.t('stay.children'), global.I18n.t('stay.childrenHint')),
+            el('p', 'stay-guests-note', guestFeeNote())
         );
 
         const footer = el('div', 'stay-popover-footer');
-        const reset = el('button', 'stay-link', 'Reset');
+        const reset = el('button', 'stay-link', global.I18n.t('common.reset'));
         reset.type = 'button';
         reset.addEventListener('click', () => {
             const fresh = randomStay();
@@ -227,7 +236,7 @@
             viewMonth = new Date(fresh.checkIn.getFullYear(), fresh.checkIn.getMonth(), 1);
             render();
         });
-        const done = el('button', 'stay-done', 'Done');
+        const done = el('button', 'stay-done', global.I18n.t('common.done'));
         done.type = 'button';
         done.addEventListener('click', close);
         footer.append(reset, done);
@@ -254,7 +263,7 @@
 
         const grid = el('div', 'stay-grid');
         grid.setAttribute('role', 'grid');
-        ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].forEach((d) => grid.append(el('span', 'stay-weekday', d)));
+        ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].forEach((d) => grid.append(el('span', 'stay-weekday', global.I18n.t(`stay.weekday${d}`))));
         for (let i = 0; i < month.getDay(); i++) grid.append(el('span'));
 
         const minDate = addDays(today(), 1);
@@ -311,8 +320,9 @@
             render();
             popover.querySelector(`[data-step="${key}${delta}"]`)?.focus({ preventScroll: true });
         };
-        const minus = stepButton(`Remove ${label.toLowerCase()}`, '−', stay[key] <= min, () => change(-1));
-        const plus = stepButton(`Add ${label.toLowerCase()}`, '+', stay[key] >= max, () => change(1));
+        const who = global.I18n.t(key === 'adults' ? 'stay.adultsLower' : 'stay.childrenLower');
+        const minus = stepButton(global.I18n.t('stay.removeGuests', { who }), '−', stay[key] <= min, () => change(-1));
+        const plus = stepButton(global.I18n.t('stay.addGuests', { who }), '+', stay[key] >= max, () => change(1));
         minus.dataset.step = `${key}-1`;
         plus.dataset.step = `${key}1`;
         controls.append(minus, value, plus);

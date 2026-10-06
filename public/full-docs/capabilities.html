@@ -186,7 +186,7 @@
 <section class="doc-section" id="localization-forms">
             <div class="section-kicker">Locale and form behavior</div>
             <h2>Localization and configurable forms</h2>
-            <p>Set <code>config.locale</code> to request a supported checkout locale, such as <code>en</code>, <code>en-US</code>, <code>es</code>, <code>fr-FR</code>, <code>de-DE</code>, <code>pt-PT</code>, <code>it-IT</code>, <code>ko-KR</code>, <code>zh-CN</code>, <code>ja-JP</code>, <code>id-ID</code>, or <code>vi-VN</code>.</p>
+            <p>Set <code>config.locale</code> to one of the 16 checkout languages: <code>en</code>, <code>en-GB</code>, <code>es-ES</code>, <code>es-419</code>, <code>fr-FR</code>, <code>fr-CA</code>, <code>pt-PT</code>, <code>pt-BR</code>, <code>pl</code>, <code>it</code>, <code>ko</code>, <code>zh</code>, <code>ja</code>, <code>de</code>, <code>id</code>, or <code>vi</code>.</p>
             <p>Use <code>showPayerForm</code>, <code>showRecipientForm</code>, and <code>disabledFields</code> to control which payer or recipient fields Flywire Checkout should collect or lock in the UI. You can prefill payer fields such as name, email, phone, and address through <code>payer.fields</code>.</p>
             <div class="code-card" data-language="javascript"><pre><code>payer: {
   fields: {
@@ -197,7 +197,7 @@
   }
 },
 config: {
-  locale: "en-US",
+  locale: "en",
   showPayerForm: "auto",
   showRecipientForm: false,
   disabledFields: ["payer.email"]

@@ -10,13 +10,15 @@
 (function (global) {
     'use strict';
 
-    // Shared with the checkout settings drawer (Recipient section).
+    // Active credentials, shared with the checkout settings drawer.
     const RECIPIENT_KEY = 'flywire.checkoutDemo.recipient';
     const API_KEY_KEY = 'flywire.checkoutDemo.apiKey';
+    // Saved clients. One entry per Client ID: one API key, many recipient codes.
+    const CLIENTS_KEY = 'flywire.checkoutDemo.clients';
     const FIELDS = [
-        ['client_id', 'Client ID'],
-        ['code', 'recipient code'],
-        ['api_key', 'API key'],
+        ['client_id', 'credentials.fields.client_id'],
+        ['code', 'credentials.fields.code'],
+        ['api_key', 'credentials.fields.api_key'],
     ];
     const listeners = new Set();
 
@@ -32,20 +34,26 @@
         const recipient = readJson(RECIPIENT_KEY);
         return {
             client_id: String(recipient.client_id || ''),
+            client_name: String(recipient.client_name || ''),
             code: String(recipient.code || ''),
             api_key: localStorage.getItem(API_KEY_KEY) || '',
         };
     }
 
-    function set({ client_id, code, api_key }) {
+    function set({ client_id, client_name, code, api_key }) {
         const current = get();
         const next = {
             client_id: client_id ?? current.client_id,
+            client_name: client_name ?? current.client_name,
             code: code ?? current.code,
             api_key: api_key ?? current.api_key,
         };
-        if (next.client_id || next.code) {
-            localStorage.setItem(RECIPIENT_KEY, JSON.stringify({ client_id: next.client_id, code: next.code }));
+        if (next.client_id || next.code || next.client_name) {
+            localStorage.setItem(RECIPIENT_KEY, JSON.stringify({
+                client_id: next.client_id,
+                client_name: next.client_name,
+                code: next.code,
+            }));
         } else {
             localStorage.removeItem(RECIPIENT_KEY);
         }
@@ -55,16 +63,91 @@
         return next;
     }
 
+    /** Drops the credentials in use. Saved clients stay available to load. */
     function clear() {
         localStorage.removeItem(RECIPIENT_KEY);
         localStorage.removeItem(API_KEY_KEY);
         notify();
     }
 
-    /** Labels of the credentials still missing, e.g. ['API key']. */
+    function readClients() {
+        try {
+            const parsed = JSON.parse(localStorage.getItem(CLIENTS_KEY));
+            return Array.isArray(parsed) ? parsed.filter((item) => item && item.client_id && item.api_key) : [];
+        } catch {
+            return [];
+        }
+    }
+
+    function writeClients(clients) {
+        localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+    }
+
+    /**
+     * Saved clients, indexed by Client ID. The first time this runs, the
+     * credentials already in use are copied in so they can be loaded again.
+     */
+    function list() {
+        const clients = readClients();
+        if (clients.length || localStorage.getItem(CLIENTS_KEY) != null) return clients;
+        const current = get();
+        if (!current.client_id || !current.api_key) return [];
+        const seeded = [entryFrom(current)];
+        writeClients(seeded);
+        return seeded;
+    }
+
+    function entryFrom(creds) {
+        const code = String(creds.code || '').trim().toUpperCase();
+        return {
+            client_id: String(creds.client_id).trim(),
+            client_name: String(creds.client_name || '').trim(),
+            api_key: creds.api_key,
+            codes: code ? [code] : [],
+        };
+    }
+
+    function find(clientId) {
+        const id = String(clientId || '').trim().toLowerCase();
+        if (!id) return null;
+        return list().find((item) => item.client_id.toLowerCase() === id) || null;
+    }
+
+    function codesFor(clientId) {
+        return find(clientId)?.codes.slice() || [];
+    }
+
+    /**
+     * Remember a connection that the demo API accepted.
+     * Client ID is the index: one API key per Client ID, recipient codes accumulate.
+     */
+    function remember(creds) {
+        const clientId = String(creds.client_id || '').trim();
+        const apiKey = String(creds.api_key || '');
+        if (!clientId || !apiKey) return list();
+
+        const clients = list();
+        const code = String(creds.code || '').trim().toUpperCase();
+        const name = String(creds.client_name || '').trim();
+        let item = clients.find((entry) => entry.client_id.toLowerCase() === clientId.toLowerCase());
+        if (!item) {
+            item = { client_id: clientId, client_name: name, api_key: apiKey, codes: [] };
+            clients.push(item);
+        } else {
+            item.client_id = clientId;
+            item.api_key = apiKey;
+            if (name) item.client_name = name;
+        }
+        if (code && !item.codes.includes(code)) item.codes.push(code);
+        writeClients(clients);
+        notify();
+        return clients;
+    }
+
+    /** Translated labels of the credentials still missing, e.g. ['API key']. */
     function missing() {
         const saved = get();
-        return FIELDS.filter(([key]) => !saved[key]).map(([, label]) => label);
+        return FIELDS.filter(([key]) => !saved[key]).map(([, label]) => global.I18n.t(label));
     }
 
     function isComplete() {
@@ -79,21 +162,31 @@
     /** Show every `[data-credentials-banner]` while credentials are missing. */
     function renderBanners() {
         const gaps = missing();
+        const missingText = gaps.length === FIELDS.length
+            ? global.I18n.t('credentials.allMissing')
+            : joinList(gaps);
         document.querySelectorAll('[data-credentials-banner]').forEach((banner) => {
             banner.hidden = gaps.length === 0;
-            const list = banner.querySelector('[data-credentials-missing]');
-            if (list) list.textContent = gaps.length === FIELDS.length ? 'Client ID, recipient code and API key' : joinList(gaps);
+            if (!gaps.length) return;
+            banner.querySelectorAll('[data-credentials-body]').forEach((body) => {
+                body.innerHTML = global.I18n.t(body.getAttribute('data-credentials-body'), { missing: missingText });
+            });
         });
     }
 
     function joinList(items) {
-        return items.length > 1 ? `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}` : items[0] || '';
+        if (items.length < 2) return items[0] || '';
+        return `${items.slice(0, -1).join(', ')} ${global.I18n.t('common.and')} ${items[items.length - 1]}`;
     }
 
     global.addEventListener('storage', (e) => {
-        if (e.key === RECIPIENT_KEY || e.key === API_KEY_KEY || e.key === null) notify();
+        if (e.key === RECIPIENT_KEY || e.key === API_KEY_KEY || e.key === CLIENTS_KEY || e.key === null) notify();
     });
-    global.addEventListener('DOMContentLoaded', renderBanners);
+    global.addEventListener('DOMContentLoaded', () => {
+        const run = () => renderBanners();
+        if (global.I18n?.ready) global.I18n.ready.then(run);
+        else run();
+    });
 
     /**
      * Undo the usual copy-paste accidents. Returns the cleaned value and a
@@ -113,18 +206,18 @@
         // Repeat until stable: quotes can wrap a "Header: value" paste and vice versa.
         for (let pass = 0, before = null; pass < 4 && before !== value; pass++) {
             before = value;
-            step(/[\u200B-\u200D\u2060\uFEFF]/g, '', 'invisible characters');
-            step(/\u00A0/g, ' ', 'non-breaking spaces');
+            step(/[\u200B-\u200D\u2060\uFEFF]/g, '', 'dashboard.fix.invisible');
+            step(/\u00A0/g, ' ', 'dashboard.fix.nbsp');
             value = value.trim();
-            step(/^(["'`])([\s\S]*)\1$/, '$2', 'surrounding quotes');
-            step(/^[“‘]([\s\S]*)[”’]$/, '$1', 'surrounding quotes');
+            step(/^(["'`])([\s\S]*)\1$/, '$2', 'dashboard.fix.quotes');
+            step(/^[“‘]([\s\S]*)[”’]$/, '$1', 'dashboard.fix.quotes');
             value = value.trim();
-            step(/^(?:x-authentication-key|x-demo-api-key|authorization|api[_ -]?key|cpx_api_key|client[_ ]?id|code)\s*[:=]\s*/i, '', 'the field name in front');
-            step(/^bearer\s+/i, '', 'a "Bearer" prefix');
-            step(/[;,]+$/, '', 'trailing punctuation');
+            step(/^(?:x-authentication-key|x-demo-api-key|authorization|api[_ -]?key|cpx_api_key|client[_ ]?id|code)\s*[:=]\s*/i, '', 'dashboard.fix.fieldName');
+            step(/^bearer\s+/i, '', 'dashboard.fix.bearer');
+            step(/[;,]+$/, '', 'dashboard.fix.punctuation');
         }
-        step(/\s+/g, '', kind === 'key' ? 'line breaks or spaces inside the key' : 'spaces');
-        if (kind === 'code') step(/[a-z]/g, (c) => c.toUpperCase(), 'lowercase letters');
+        step(/\s+/g, '', kind === 'key' ? 'dashboard.fix.spacesInKey' : 'dashboard.fix.spaces');
+        if (kind === 'code') step(/[a-z]/g, (c) => c.toUpperCase(), 'dashboard.fix.lowercase');
 
         return { value, fixes: [...new Set(fixes)] };
     }
@@ -148,7 +241,7 @@
     };
 
     global.DemoCredentials = {
-        get, set, clear, clean, mask, missing, isComplete, renderBanners,
+        get, set, clear, list, find, codesFor, remember, clean, mask, missing, isComplete, renderBanners,
         onChange: (fn) => listeners.add(fn),
     };
 })(window);

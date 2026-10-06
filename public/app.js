@@ -19,17 +19,19 @@ const bookingState = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+    await I18n.ready;
     const config = await fetch('/api/config').then(r => r.json());
 
     DemoConfig.init(config);
     DemoConfig.onChange(updatePaymentOption);
     DemoCredentials.onChange(updatePaymentOption);
+    DemoMoney.onChange(applyCurrency);
     CheckoutActivity.init();
 
     Stay.init();
     Stay.onChange(() => {
         renderStay();
-        DemoConfig.setBookingAmount(totalCents());
+        DemoConfig.setBookingAmount(totalCents(), chargeMinorUnits());
         updatePaymentOption();
     });
     renderStay();
@@ -37,15 +39,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.btn-select-room').forEach(btn => {
         btn.addEventListener('click', () => {
             const card = btn.closest('.room-card');
+            const roomId = card.dataset.room;
             bookingState.room = {
-                id: card.dataset.room,
-                name: card.dataset.name,
+                id: roomId,
+                name: I18n.t(`rooms.cards.${roomId}.name`),
                 price: parseInt(card.dataset.price),
-                size: card.dataset.size,
-                viewType: card.dataset.viewType,
+                size: I18n.t(`rooms.cards.${roomId}.size`),
+                viewType: I18n.t(`rooms.cards.${roomId}.view`),
                 image: card.dataset.image
             };
-            DemoConfig.setBookingAmount(totalCents());
+            DemoConfig.setBookingAmount(totalCents(), chargeMinorUnits());
             showView('guest');
             prefillGuestForm();
             updateGuestSummary();
@@ -60,7 +63,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('retry-btn').addEventListener('click', handleRetry);
 
     updatePaymentOption();
+    applyCurrency();
+    DemoMoney.refresh();
 });
+
+/** Room cards, stay totals and the pay button follow the recipient currency. */
+function applyCurrency() {
+    renderRoomPrices();
+    renderStay();
+    DemoConfig.setBookingAmount(totalCents(), chargeMinorUnits());
+    updatePaymentOption();
+}
+
+function renderRoomPrices() {
+    document.querySelectorAll('.room-card').forEach((card) => {
+        const usd = Number(card.dataset.price);
+        const amount = card.querySelector('.price-amount');
+        const unit = card.querySelector('.price-unit');
+        if (amount && Number.isFinite(usd)) amount.textContent = DemoMoney.formatUsdMajor(usd);
+        if (unit) {
+            unit.textContent = DemoMoney.code() === 'USD'
+                ? I18n.t('rooms.perNight')
+                : I18n.t('rooms.perNightWithCurrency', { currency: DemoMoney.code() });
+        }
+    });
+}
 
 function priceBreakdown() {
     const stay = Stay.get();
@@ -78,8 +105,27 @@ function totalCents() {
     return Math.round(totalDollars() * 100);
 }
 
-function formatDollars(amount) {
-    return `$${amount.toLocaleString()}`;
+/**
+ * Guest-facing total in recipient minor units.
+ * Each USD rate is converted and rounded once, then multiplied, so
+ * "3 nights × nightly" equals the amount checkout is asked to charge.
+ */
+function pricedLines() {
+    const breakdown = priceBreakdown();
+    const { stay, price } = breakdown;
+    const nightly = DemoMoney.usdMajorToMinor(price);
+    const extraEach = DemoMoney.usdMajorToMinor(stay.extraGuestFee);
+    const roomMinor = nightly * stay.nights;
+    const extraMinor = extraEach * stay.extraGuests * stay.nights;
+    return { ...breakdown, nightly, extraEach, roomMinor, extraMinor, totalMinor: roomMinor + extraMinor };
+}
+
+function chargeMinorUnits() {
+    return pricedLines().totalMinor;
+}
+
+function formatMoney(usdMajor) {
+    return DemoMoney.formatUsdMajor(usdMajor);
 }
 
 // ── Guest Data ──
@@ -112,18 +158,25 @@ function updateGuestSummary() {
 
 /** Fill every `[data-stay]` field (both summary panels and the success view). */
 function renderStay() {
-    const { stay, price, room, extra, total } = priceBreakdown();
+    const { stay, nightly, extraEach, roomMinor, extraMinor, totalMinor } = pricedLines();
     const values = {
         'check-in': Stay.format.short(stay.checkIn),
         'check-out': Stay.format.short(stay.checkOut),
         'check-in-long': Stay.format.long(stay.checkIn),
         'check-out-long': Stay.format.long(stay.checkOut),
         'guests': Stay.format.guests(),
-        'nightly-calc': `${Stay.format.nights(stay.nights)} × ${formatDollars(price)}`,
-        'room-subtotal': `${formatDollars(room)}.00`,
-        'extra-calc': `${stay.extraGuests} extra guest${stay.extraGuests === 1 ? '' : 's'} × ${formatDollars(stay.extraGuestFee)} × ${Stay.format.nights(stay.nights)}`,
-        'extra-subtotal': `${formatDollars(extra)}.00`,
-        'grand-total': `${formatDollars(total)}.00`,
+        'nightly-calc': I18n.t('booking.nightlyCalc', {
+            nights: Stay.format.nights(stay.nights),
+            amount: DemoMoney.formatMinor(nightly),
+        }),
+        'room-subtotal': DemoMoney.formatMinor(roomMinor),
+        'extra-calc': I18n.t('booking.extraCalc', {
+            extras: I18n.t('stay.extraGuest', { count: stay.extraGuests }),
+            amount: DemoMoney.formatMinor(extraEach),
+            nights: Stay.format.nights(stay.nights),
+        }),
+        'extra-subtotal': DemoMoney.formatMinor(extraMinor),
+        'grand-total': DemoMoney.formatMinor(totalMinor),
     };
     for (const [key, value] of Object.entries(values)) {
         document.querySelectorAll(`[data-stay="${key}"]`).forEach(node => { node.textContent = value; });
@@ -164,14 +217,14 @@ async function handleGuestSubmit(e) {
     } finally {
         submitBtn.disabled = false;
         submitBtn.classList.remove('loading');
-        submitBtn.textContent = 'Continue to Payment';
+        submitBtn.textContent = I18n.t('guest.continueToPayment');
     }
 }
 
 function updateBookingView() {
     if (bookingState.guest) {
         const name = `${bookingState.guest.first_name} ${bookingState.guest.last_name}`;
-        document.getElementById('booking-guest-name').textContent = name;
+        document.getElementById('booking-guest-line').textContent = I18n.t('booking.guestLine', { name });
     }
     if (bookingState.room) {
         document.getElementById('booking-room-name').textContent = bookingState.room.name;
@@ -182,7 +235,8 @@ function updateBookingView() {
 
 /** Guest-facing summary of the flow selected in the demo drawer. */
 function updatePaymentOption() {
-    const copy = DemoConfig.describeForGuest(formatDollars(totalDollars() || 7350));
+    const lines = pricedLines();
+    const copy = DemoConfig.describeForGuest(lines.price ? DemoMoney.formatMinor(lines.totalMinor) : formatMoney(7350));
     document.getElementById('payment-option-title').textContent = copy.title;
     document.getElementById('payment-option-desc').textContent = copy.description;
     document.getElementById('payment-option-notes').textContent = copy.notes.join(' ');
@@ -192,7 +246,7 @@ function updatePaymentOption() {
         btn.textContent = copy.cta;
         // No default credentials: checkout can't start until the user has entered their own.
         btn.disabled = !DemoCredentials.isComplete();
-        btn.title = btn.disabled ? 'Add your Flywire demo credentials in the hotel back office first' : '';
+        btn.title = btn.disabled ? I18n.t('booking.credentialsFirst') : '';
     }
 }
 
@@ -210,7 +264,11 @@ async function handleProceed() {
     if (!DemoCredentials.isComplete()) return;
     const btn = document.getElementById('proceed-btn');
     const paymentSection = document.getElementById('payment-section');
-    const options = DemoConfig.buildCheckoutOptions({ amountCents: totalCents(), embedTo: '#payment-embed-target' });
+    const options = DemoConfig.buildCheckoutOptions({
+        amountCents: totalCents(),
+        amountMinor: chargeMinorUnits(),
+        embedTo: '#payment-embed-target',
+    });
     const embedded = Boolean(options.config.embed_to);
     let lastError = null;
 
@@ -223,10 +281,12 @@ async function handleProceed() {
 
     const { details } = options.transaction;
     CheckoutActivity.startRun({
-        flow: DemoConfig.currentFlow().title,
+        flow: I18n.t(`flows.${DemoConfig.currentFlow().id}.title`),
         transaction: [options.transaction.type, details?.authorization, details?.channel].filter(Boolean).join(' · '),
-        amount: details?.amount ? `${formatDollars(details.amount / 100)} (${details.amount} in minor units)` : 'No amount (card saved only)',
-        display: embedded ? 'Embedded in page' : 'Full-screen overlay',
+        amount: details?.amount
+            ? `${DemoMoney.formatMinor(details.amount)} (${details.amount} ${DemoMoney.code()} minor units)`
+            : I18n.t('booking.noAmount'),
+        display: embedded ? I18n.t('booking.displayEmbedded') : I18n.t('booking.displayOverlay'),
         session: options.authenticated ? 'authenticated' : 'anonymous',
     });
 
@@ -235,7 +295,7 @@ async function handleProceed() {
     const recipient = DemoConfig.recipient();
     const booking = Bookings.create({
         guest: {
-            name: bookingState.guest ? `${bookingState.guest.first_name} ${bookingState.guest.last_name}` : 'Guest',
+            name: bookingState.guest ? `${bookingState.guest.first_name} ${bookingState.guest.last_name}` : I18n.t('common.guest'),
             email: bookingState.guest?.email || '',
         },
         room: bookingState.room?.name || '',
@@ -244,10 +304,10 @@ async function handleProceed() {
         nights: stay.nights,
         guests: Stay.format.guests(),
         amount: details?.amount || 0,
-        currency: 'USD',
+        currency: DemoMoney.code(),
         flow: {
             id: DemoConfig.currentFlow().id,
-            title: DemoConfig.currentFlow().title,
+            title: I18n.t(`flows.${DemoConfig.currentFlow().id}.title`),
             type: options.transaction.type,
             preauth: details?.authorization === 'preauth',
             channel: details?.channel,
@@ -284,7 +344,7 @@ async function handleProceed() {
             onCancel: () => {
                 restoreEmbedded();
                 if (lastError?.type === 'init_fields') {
-                    showPaymentNotice(`Checkout rejected this configuration: ${describeInitFieldsError(lastError.payload)}`);
+                    showPaymentNotice(I18n.t('booking.configRejected', { detail: describeInitFieldsError(lastError.payload) }));
                 }
             },
             onTimeout: () => { restoreEmbedded(); showOutcome('timeout'); },
@@ -300,7 +360,7 @@ async function handleProceed() {
         CheckoutActivity.record('launch_failed', { error: err.message });
         Bookings.update(booking.id, { checkoutStatus: 'failed', error: err.message });
         restoreEmbedded();
-        showPaymentNotice(`Checkout could not start: ${err.message}`);
+        showPaymentNotice(I18n.t('booking.couldNotStart', { detail: err.message }));
     } finally {
         btn.disabled = false;
         btn.classList.remove('loading');
@@ -334,16 +394,16 @@ function handleRetry() {
 // ── Outcomes ──
 
 const SUCCESS_COPY = {
-    payment: { eyebrow: 'Booking Confirmed', note: (amt) => `${amt} paid in full.` },
-    preauth: { eyebrow: 'Reservation Held', note: (amt) => `A hold of ${amt} is on your card. You'll be charged at check-in.` },
-    saveCard: { eyebrow: 'Reservation Guaranteed', note: () => 'Your card is securely saved. Nothing has been charged today.' },
-    moto: { eyebrow: 'Booking Confirmed', note: (amt) => `${amt} taken by our reservations team.` },
+    payment: { eyebrow: 'success.eyebrowPaid', note: (amt) => I18n.t('success.notePaid', { amount: amt }) },
+    preauth: { eyebrow: 'success.eyebrowHold', note: (amt) => I18n.t('success.noteHold', { amount: amt }) },
+    saveCard: { eyebrow: 'success.eyebrowCard', note: () => I18n.t('success.noteCard') },
+    moto: { eyebrow: 'success.eyebrowPaid', note: (amt) => I18n.t('success.noteMoto', { amount: amt }) },
 };
 
 const CARD_ON_FILE_NOTE = {
-    tokenization: ' Your card is saved for extras during your stay.',
-    optional_tokenization: ' Your card is saved if you chose to keep it.',
-    implicit_tokenization: ' Your card is kept on file where supported.',
+    tokenization: 'success.cardSaved',
+    optional_tokenization: 'success.cardSavedIfChosen',
+    implicit_tokenization: 'success.cardKeptWhereSupported',
 };
 
 function showSuccess(report, sessionId) {
@@ -352,22 +412,22 @@ function showSuccess(report, sessionId) {
         : flow.preauth ? SUCCESS_COPY.preauth
         : flow.channel === 'moto' ? SUCCESS_COPY.moto
         : SUCCESS_COPY.payment;
-    const cardNote = flow.noAmount ? '' : (CARD_ON_FILE_NOTE[flow.type] || '');
+    const cardNote = flow.noAmount ? '' : (CARD_ON_FILE_NOTE[flow.type] ? I18n.t(CARD_ON_FILE_NOTE[flow.type]) : '');
 
-    document.getElementById('success-eyebrow').textContent = copy.eyebrow;
-    document.getElementById('success-payment-note').textContent = copy.note(formatDollars(totalDollars())) + cardNote;
+    document.getElementById('success-eyebrow').textContent = I18n.t(copy.eyebrow);
+    document.getElementById('success-payment-note').textContent = copy.note(DemoMoney.formatMinor(chargeMinorUnits())) + cardNote;
 
     renderFlywireResult(report, sessionId, flow);
     showView('success');
 }
 
 function renderFlywireResult(report, sessionId, flow) {
-    const rows = [['Booking', currentBookingId || '—'], ['Flow', flow.title]];
-    if (sessionId) rows.push(['Session', sessionId]);
-    if (report?.session_report?.status) rows.push(['Session status', report.session_report.status]);
-    if (report?.payment_report?.status) rows.push(['Payment status', report.payment_report.status]);
+    const rows = [[I18n.t('success.resultBooking'), currentBookingId || I18n.t('common.dash')], [I18n.t('success.resultFlow'), I18n.t(`flows.${flow.id}.title`)]];
+    if (sessionId) rows.push([I18n.t('success.resultSession'), sessionId]);
+    if (report?.session_report?.status) rows.push([I18n.t('success.resultSessionStatus'), report.session_report.status]);
+    if (report?.payment_report?.status) rows.push([I18n.t('success.resultPaymentStatus'), report.payment_report.status]);
     const method = report?.payment_report?.payment_watchlist?.[0];
-    if (method) rows.push(['Payment method', CardBrands.describe(CardBrands.withSavedCard(method, report))]);
+    if (method) rows.push([I18n.t('success.resultMethod'), CardBrands.describe(CardBrands.withSavedCard(method, report))]);
 
     const list = document.getElementById('flywire-result-list');
     list.replaceChildren(...rows.flatMap(([term, value]) => {
@@ -385,24 +445,24 @@ function renderFlywireResult(report, sessionId, flow) {
 const OUTCOME_COPY = {
     declined: {
         icon: '\u2715',
-        title: 'Woopsie!',
-        subtitle: 'Denied!',
-        message: 'Your payment could not be processed.<br>Perhaps the universe is telling you to try a different card.',
+        title: 'error.declinedTitle',
+        subtitle: 'error.declinedSubtitle',
+        message: 'error.declinedMessage',
     },
     timeout: {
         icon: '\u29D6',
-        title: "Time's up",
-        subtitle: 'Your checkout expired',
-        message: 'We held your suite for as long as we could.<br>Start again to complete your booking.',
+        title: 'error.timeoutTitle',
+        subtitle: 'error.timeoutSubtitle',
+        message: 'error.timeoutMessage',
     },
 };
 
 function showOutcome(kind) {
     const copy = OUTCOME_COPY[kind];
     document.getElementById('error-icon').textContent = copy.icon;
-    document.getElementById('error-title').textContent = copy.title;
-    document.getElementById('error-subtitle').textContent = copy.subtitle;
-    document.getElementById('error-message').innerHTML = copy.message;
+    document.getElementById('error-title').textContent = I18n.t(copy.title);
+    document.getElementById('error-subtitle').textContent = I18n.t(copy.subtitle);
+    document.getElementById('error-message').innerHTML = I18n.t(copy.message);
     showView('error');
 }
 
@@ -434,8 +494,9 @@ function showView(view) {
             document.getElementById('success-view').classList.remove('hidden');
             nav.classList.add('hidden');
             if (bookingState.guest) {
-                document.getElementById('success-guest-name').textContent =
-                    `${bookingState.guest.first_name} ${bookingState.guest.last_name}`;
+                document.getElementById('success-guest-greeting').textContent = I18n.t('success.welcome', {
+                    name: `${bookingState.guest.first_name} ${bookingState.guest.last_name}`,
+                });
             }
             if (bookingState.room) {
                 document.getElementById('success-suite-name').textContent = bookingState.room.name;

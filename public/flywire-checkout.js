@@ -22,7 +22,7 @@
  *       transaction: { type, details? },                   // required — see below
  *       payer?:      { fields: { first_name, ... } },      // optional — prefill payer info
  *       session?:    { id, run_id, run_token },            // authenticated session (recommended; required for tokenization)
- *       config?:     { locale, embed_to, offer_rules, timeout },
+ *       config?:     { locale, embed_to, offer_rules, timeout, header, show_amount_info, close_button },
  *       styles?:     { primary_color, primary_font, base_font_size, base_space },
  *       response: {
  *         on_end:   (reason, payload) => {},               // required — 'completed' | 'canceled' | 'timeout'
@@ -56,7 +56,7 @@
      * @param {{client_id: string, code: string}} opts.recipient
      * @param {{type: string, details?: Object}} opts.transaction
      * @param {Object} [opts.payer]    Prefill: `{ first_name, last_name, email, phone, address, city, zip, country }`.
-     * @param {Object} [opts.config]   `initFields.config` (locale, embed_to, offer_rules, timeout).
+     * @param {Object} [opts.config]   `initFields.config` (locale, embed_to, offer_rules, timeout, header, show_amount_info, close_button).
      * @param {Object} [opts.styles]   `initFields.styles`.
      * @param {boolean} [opts.authenticated=true]
      *        Create a server-side session first. Required for every tokenization type;
@@ -140,7 +140,7 @@
      * Returns `{ id, run_id, run_token }`, passed straight into `initFields.session`.
      */
     async function createSession() {
-        return requestJson(SESSION_ENDPOINT, { method: 'POST' }, 'Session creation failed');
+        return requestJson(SESSION_ENDPOINT, { method: 'POST' }, global.I18n.t('sdk.sessionCreateFailed'));
     }
 
     /**
@@ -148,14 +148,14 @@
      *   GET {API_BASE}/commercial_payex/v2/session/{id}
      */
     async function getSession(id) {
-        return requestJson(`${SESSION_ENDPOINT}/${encodeURIComponent(id)}`, {}, 'Session lookup failed');
+        return requestJson(`${SESSION_ENDPOINT}/${encodeURIComponent(id)}`, {}, global.I18n.t('sdk.sessionLookupFailed'));
     }
 
     async function requestJson(url, init, failureMessage) {
         const res = await fetch(url, init);
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-            throw new Error(data.error || data.detail || data.message || `${failureMessage} (${res.status})`);
+            throw new Error(data.error || data.detail || data.message || global.I18n.t('sdk.requestFailed', { message: failureMessage, status: res.status }));
         }
         return data;
     }
@@ -178,7 +178,7 @@
         const start = Date.now();
         while (!(global.cpx_core && typeof global.cpx_core.start === 'function')) {
             if (Date.now() - start > SDK_LOAD_TIMEOUT_MS) {
-                throw new Error('Flywire Checkout V2 SDK did not load. Is connect.js included in the page?');
+                throw new Error(global.I18n.t('sdk.sdkMissing'));
             }
             await new Promise((r) => setTimeout(r, 100));
         }

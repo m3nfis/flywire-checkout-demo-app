@@ -37,16 +37,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ─── Flywire configuration ───────────────────────────────────────────────────
 // Hard-coded on purpose: this demo only ever talks to the Flywire demo environment.
 const FLYWIRE_DEMO_API = 'https://api-platform.demo.flywire.com';
+const CHECKOUT_DEMO = 'https://checkout.demo.flywire.com';
 
 const RETIRED_ENV = ['CPX_CLIENT_ID', 'CPX_CODE', 'CPX_API_KEY', 'CPX_API_BASE'].filter((name) => process.env[name]);
 const CPX_EVENT_URL = process.env.CPX_EVENT_URL;
 // Partner portal codes to prefill in the split editor; empty by default (presenters enter their own).
 const CPX_SPLIT_RECIPIENTS = listFromEnv(process.env.CPX_SPLIT_RECIPIENTS, []);
-// Capabilities that exist in the SDK but are not deployed to every environment yet.
-const CPX_PREVIEW_FEATURES = listFromEnv(process.env.CPX_PREVIEW_FEATURES, []);
 
 const SESSION_PATH = '/commercial_payex/v2/session';
 const SESSION_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const CLIENT_ID_PATTERN = SESSION_ID_PATTERN;
+const PORTAL_CODE = /^(?:[A-Z]{3}|[A-Z][A-Z0-9]{4})$/;
+const recipientCache = new Map();
+const RECIPIENT_TTL_MS = 30 * 60 * 1000;
 
 function listFromEnv(value, fallback) {
     if (!value) return fallback;
@@ -76,8 +79,7 @@ app.get('/api/config', (_req, res) => {
     res.json({
         environment: 'demo',
         api_base: FLYWIRE_DEMO_API,
-        split_recipients: CPX_SPLIT_RECIPIENTS,
-        preview_features: CPX_PREVIEW_FEATURES
+        split_recipients: CPX_SPLIT_RECIPIENTS
     });
 });
 
@@ -261,9 +263,10 @@ app.post('/api/payments/charge', async (req, res) => {
 /**
  * GET /api/credentials/check
  *
- * Verifies the API key against the Flywire DEMO API without creating anything:
- * looking up a session that cannot exist answers 404 for a valid key and 401
- * for an invalid one. Production keys are not valid on the demo API.
+ * Verifies the API key against the Flywire DEMO API without creating anything.
+ * A lookup for a session id that cannot exist returns 404 when the key is
+ * valid and 401 when it is not. Production keys are not valid on the demo API.
+ * The 404 is the success signal; it is not returned as the user-facing detail.
  */
 app.get('/api/credentials/check', async (req, res) => {
     const key = demoApiKey(req);
@@ -281,11 +284,179 @@ app.get('/api/credentials/check', async (req, res) => {
                 detail: `${(data.detail || 'The API key was rejected').replace(/\.?$/, '.')} Only Flywire demo keys work here; production keys are rejected.`,
             });
         }
-        res.json({ ok: response.status === 404 || response.ok, environment: 'demo', detail: `Demo API answered ${response.status}.` });
+        if (response.status === 404) {
+            return res.json({
+                ok: true,
+                environment: 'demo',
+                detail: 'Demo API accepted this key.',
+            });
+        }
+        const data = await response.json().catch(() => ({}));
+        res.json({
+            ok: response.ok,
+            environment: 'demo',
+            detail: data.detail || `Demo API answered ${response.status}.`,
+        });
     } catch {
         res.status(502).json({ ok: false, environment: 'demo', detail: 'Could not reach the Flywire demo API.' });
     }
 });
+
+/**
+ * GET /api/recipient?client_id=&code=
+ *
+ * Reads the recipient's billing currency from a demo checkout session run.
+ * The USD conversion rate is not fetched here; the browser keeps each
+ * currency pair in localStorage for 3 days and calls GET /api/fx only when
+ * that pair is missing or older than that.
+ * Cached in memory for 30 minutes per client id + code.
+ */
+app.get('/api/recipient', async (req, res) => {
+    const key = demoApiKey(req);
+    if (!key) return res.status(401).json({ ok: false, detail: 'No API key entered yet.' });
+
+    const clientId = String(req.query.client_id || '').trim();
+    const code = String(req.query.code || '').trim().toUpperCase();
+    if (!CLIENT_ID_PATTERN.test(clientId)) {
+        return res.status(400).json({ ok: false, detail: 'Enter a Client ID before the currency can be looked up.' });
+    }
+    if (!PORTAL_CODE.test(code)) {
+        return res.status(400).json({ ok: false, detail: 'Enter a recipient code before the currency can be looked up.' });
+    }
+
+    const cacheKey = `${clientId}|${code}`;
+    const hit = recipientCache.get(cacheKey);
+    if (hit && Date.now() - hit.at < RECIPIENT_TTL_MS) return res.json(hit.value);
+
+    try {
+        const value = await lookupRecipient(key, clientId, code);
+        recipientCache.set(cacheKey, { at: Date.now(), value });
+        res.json(value);
+    } catch (err) {
+        const status = err.status >= 400 && err.status < 500 ? err.status : 502;
+        console.error('Recipient currency lookup failed:', status, err.message);
+        res.status(status).json({ ok: false, detail: err.message || 'Could not read the recipient currency.' });
+    }
+});
+
+async function lookupRecipient(key, clientId, code) {
+    const sessionRes = await fetch(`${FLYWIRE_DEMO_API}${SESSION_PATH}`, {
+        method: 'POST',
+        headers: { 'X-Authentication-Key': key, 'Content-Type': 'application/json' },
+    });
+    const session = await sessionRes.json().catch(() => ({}));
+    if (!sessionRes.ok || !session.id || !session.run_id || !session.run_token) {
+        const err = new Error(session.detail || 'Could not open a demo session to read the recipient.');
+        err.status = sessionRes.status || 502;
+        throw err;
+    }
+
+    const initFields = {
+        recipient: { client_id: clientId, code },
+        transaction: { type: 'payment', details: { amount: 100 } },
+        payer: {
+            fields: {
+                first_name: DUMMY_PAYOR.first_name,
+                last_name: DUMMY_PAYOR.last_name,
+                email: DUMMY_PAYOR.email,
+                phone: DUMMY_PAYOR.phone,
+                address: DUMMY_PAYOR.address,
+                city: DUMMY_PAYOR.city,
+                zip: DUMMY_PAYOR.zip,
+                country: DUMMY_PAYOR.country,
+            },
+        },
+        config: { locale: 'en', env: 'demo' },
+        session: { id: session.id, run_id: session.run_id, run_token: session.run_token },
+    };
+
+    const startRes = await fetch(`${CHECKOUT_DEMO}/backend_demo/rest/v2/session_run/start`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Session-Type': 'authenticated',
+            'X-Session-Id': session.id,
+            'X-Session-Run-Id': session.run_id,
+            'X-Session-Run-Token': session.run_token,
+        },
+        body: JSON.stringify({ gateway_init_fields: initFields, checkout_init_fields: initFields }),
+    });
+    const started = await startRes.json().catch(() => ({}));
+    if (!startRes.ok) {
+        const err = new Error(recipientError(started) || 'Flywire rejected this Client ID or recipient code.');
+        err.status = startRes.status;
+        throw err;
+    }
+
+    const recipient = started.data?.recipient;
+    const currency = recipient?.currency;
+    if (!currency?.code) {
+        const err = new Error('The demo checkout did not return a currency for this recipient.');
+        err.status = 502;
+        throw err;
+    }
+
+    return {
+        ok: true,
+        recipient: { id: recipient.id || code, name: recipient.name || code },
+        currency: {
+            code: currency.code,
+            name: currency.name,
+            symbol: currency.symbol,
+            symbol_first: currency.symbol_first,
+            subunit_to_unit: currency.subunit_to_unit,
+            units_to_round: currency.units_to_round,
+        },
+    };
+}
+
+/**
+ * GET /api/fx?to=THB
+ *
+ * One USD → currency rate from the European Central Bank via Frankfurter.
+ * The browser calls this only when that pair is not already in localStorage
+ * or the saved rate is older than 3 days.
+ */
+app.get('/api/fx', async (req, res) => {
+    const to = String(req.query.to || '').trim().toUpperCase();
+    if (!/^[A-Z]{3}$/.test(to)) {
+        return res.status(400).json({ ok: false, detail: 'A 3-letter currency code is required.' });
+    }
+    try {
+        const fx = await usdRate(to);
+        res.json({ ok: true, pair: `USD-${to}`, ...fx });
+    } catch (err) {
+        const status = err.status >= 400 && err.status < 500 ? err.status : 502;
+        res.status(status).json({ ok: false, detail: err.message || 'Could not read the exchange rate.' });
+    }
+});
+
+function recipientError(body) {
+    if (!body || typeof body !== 'object') return '';
+    if (typeof body.detail === 'string') return body.detail;
+    if (typeof body.title === 'string') return body.title;
+    const errors = body.errors || body.data?.errors;
+    if (Array.isArray(errors) && errors.length) {
+        const first = errors[0];
+        return first.message || first.detail || first.code || '';
+    }
+    return '';
+}
+
+async function usdRate(code) {
+    if (code === 'USD') {
+        return { base: 'USD', rate: 1, date: new Date().toISOString().slice(0, 10) };
+    }
+    const res = await fetch(`https://api.frankfurter.app/latest?from=USD&to=${encodeURIComponent(code)}`);
+    const data = await res.json().catch(() => ({}));
+    const rate = data.rates?.[code];
+    if (!res.ok || !(Number(rate) > 0)) {
+        const err = new Error(`No exchange rate from USD to ${code}. Amounts stay in USD until a rate is available.`);
+        err.status = 502;
+        throw err;
+    }
+    return { base: 'USD', rate: Number(rate), date: data.date || null };
+}
 
 async function proxyFlywireApi(res, key, method, pathname, body) {
     try {
@@ -318,5 +489,8 @@ app.listen(PORT, () => {
     console.log(`Flywire API: ${FLYWIRE_DEMO_API} (demo only). Credentials are entered per user in /dashboard.`);
     if (RETIRED_ENV.length) {
         console.warn(`⚠  Ignoring ${RETIRED_ENV.join(', ')}: this demo holds no server credentials and always uses the demo API. You can delete them.`);
+    }
+    if (process.env.CPX_PREVIEW_FEATURES) {
+        console.warn('⚠  Ignoring CPX_PREVIEW_FEATURES: MOTO and checkout timeout are part of the demo checkout now. You can delete it.');
     }
 });

@@ -10,21 +10,20 @@
     'use strict';
 
     const $ = (id) => document.getElementById(id);
+    const t = (key, vars) => I18n.t(key, vars);
     const PLAYGROUND = 'https://checkout.demo.flywire.com/playground/authenticated_sessions/';
     const DEFAULT_API_BASE = 'https://api-platform.demo.flywire.com';
     const SESSION_API = '/commercial_payex/v2/session';
     const PREVIEW_LANG_KEY = 'caldera.dashboard.previewLang';
 
-    const PAYMENT_STATUS = {
-        NO_PAYMENTS: 'No payment was made.',
-        SOME_IN_PROGRESS: 'A payment is still processing.',
-        ALL_UNSUCCESSFUL: 'Every payment attempt failed.',
-        FULLY_PAID: 'The full amount was paid or authorized.',
-        PARTIALLY_PAID: 'Only part of the amount was paid.',
-        OVERPAID: 'More than the requested amount was paid.',
-    };
-
-    const CHARGE_PRESETS = ['Minibar', 'Spa treatment', 'Late checkout', 'Airport transfer', 'Dive equipment rental', 'No-show fee'];
+    const CHARGE_PRESETS = [
+        'dashboard.charges.minibar',
+        'dashboard.charges.spa',
+        'dashboard.charges.lateCheckout',
+        'dashboard.charges.transfer',
+        'dashboard.charges.dive',
+        'dashboard.charges.noShow',
+    ];
 
     let serverConfig = {};
     const CREDENTIALS_HASH = 'credentials';
@@ -44,10 +43,14 @@
     const drafts = new Map();
 
     document.addEventListener('DOMContentLoaded', async () => {
+        await I18n.ready;
         serverConfig = await fetch('/api/config').then((r) => r.json()).catch(() => ({}));
+        const host = (serverConfig.api_base || DEFAULT_API_BASE).replace(/^https?:\/\//, '');
+        const intro = $('db-connection-intro');
+        if (intro) intro.innerHTML = t('dashboard.connectionIntro', { host });
         initCredentials();
         $('db-clear-bookings').addEventListener('click', () => {
-            if (!Bookings.list().length || !confirm('Delete all demo bookings from this browser?')) return;
+            if (!Bookings.list().length || !confirm(t('dashboard.confirmClearBookings'))) return;
             Bookings.clear();
         });
         window.addEventListener('hashchange', () => {
@@ -56,12 +59,18 @@
         });
         Bookings.onChange(render);
         DemoCredentials.onChange(() => {
+            renderSavedClients();
             if (!document.activeElement?.closest('#db-credentials-form')) fillCredentials();
         });
         render();
         DemoCredentials.renderBanners();
+        DemoMoney.onChange(() => {
+            renderRecipientCurrency();
+            render();
+        });
         if (location.hash.slice(1) === CREDENTIALS_HASH || !DemoCredentials.isComplete()) focusCredentials();
         testConnection();
+        DemoMoney.refresh();
     });
 
     // ── Credentials ──
@@ -73,6 +82,7 @@
             ['db-api-key', 'api_key', 'key'],
         ];
         fillCredentials();
+        renderSavedClients();
 
         fields.forEach(([id, , kind]) => {
             const input = $(id);
@@ -85,16 +95,31 @@
             fields.forEach(([id, , kind]) => cleanInput($(id), kind));
             DemoCredentials.set({
                 client_id: $('db-client-id').value,
+                client_name: $('db-client-name').value.trim(),
                 code: $('db-code').value,
                 api_key: $('db-api-key').value,
             });
-            testConnection();
+            testConnection({ persist: true });
+        });
+
+        $('db-client-id').addEventListener('input', renderCodeOptions);
+
+        $('db-saved-open').addEventListener('click', openSavedDrawer);
+        document.querySelectorAll('[data-saved-close]').forEach((el) => el.addEventListener('click', closeSavedDrawer));
+        $('db-saved-drawer').addEventListener('keydown', onSavedDrawerKeydown);
+
+        $('db-code-saved').addEventListener('change', () => {
+            const code = $('db-code-saved').value;
+            if (!code) return;
+            $('db-code').value = code;
+            $('db-code-saved').value = '';
         });
 
         $('db-credentials-reset').addEventListener('click', () => {
-            if (!confirm('Remove the Flywire demo credentials from this browser? Checkout stays disabled until new ones are added.')) return;
+            if (!confirm(t('dashboard.confirmClearCredentials'))) return;
             DemoCredentials.clear();
             fillCredentials();
+            renderSavedClients();
             fixNotes.clear();
             $('db-credentials-fixes').hidden = true;
             testConnection();
@@ -104,20 +129,141 @@
             const input = $('db-api-key');
             const show = input.type === 'password';
             input.type = show ? 'text' : 'password';
-            e.currentTarget.textContent = show ? 'Hide' : 'Show';
+            e.currentTarget.textContent = show ? t('common.hide') : t('common.show');
             e.currentTarget.setAttribute('aria-pressed', String(show));
         });
     }
 
     function fillCredentials() {
         const saved = DemoCredentials.get();
+        $('db-client-name').value = saved.client_name;
         $('db-client-id').value = saved.client_id;
-        $('db-client-id').placeholder = 'UUID from your Flywire demo account';
+        $('db-client-id').placeholder = t('dashboard.clientIdPlaceholder');
         $('db-code').value = saved.code;
-        $('db-code').placeholder = 'e.g. ABC';
+        $('db-code').placeholder = t('dashboard.recipientCodePlaceholder');
         $('db-api-key').value = saved.api_key;
-        $('db-api-key').placeholder = 'Paste your demo API key';
-        if (serverConfig.api_base) $('db-api-base').textContent = serverConfig.api_base.replace(/^https?:\/\//, '');
+        $('db-api-key').placeholder = t('dashboard.apiKeyPlaceholder');
+        renderSavedClients();
+    }
+
+    let savedDrawerFocus = null;
+
+    function renderSavedClients() {
+        const clients = DemoCredentials.list();
+        const count = $('db-saved-count');
+        const openBtn = $('db-saved-open');
+        if (count) {
+            count.hidden = clients.length === 0;
+            count.textContent = String(clients.length);
+        }
+        if (openBtn) {
+            openBtn.setAttribute('aria-label', clients.length ? t('dashboard.savedClientsCount', { count: clients.length }) : t('dashboard.savedClients'));
+        }
+        const list = $('db-saved-list');
+        if (list) {
+            const activeId = (DemoCredentials.get().client_id || '').toLowerCase();
+            const cards = clients.map((item) => savedClientCard(item, item.client_id.toLowerCase() === activeId));
+            list.replaceChildren(...(cards.length
+                ? cards
+                : [h('p', { class: 'db-muted' }, t('dashboard.saved.empty'))]));
+        }
+        renderCodeOptions();
+    }
+
+    function savedClientCard(item, active) {
+        const load = h('button', { type: 'button', class: 'db-btn db-btn-secondary db-btn-sm' }, t('dashboard.saved.load'));
+        load.addEventListener('click', () => loadClient(item.client_id));
+        const codes = item.codes.length
+            ? h('div', { class: 'db-saved-codes' }, ...item.codes.map((code) => {
+                const chip = h('button', { type: 'button', class: 'db-code-chip' }, code);
+                chip.addEventListener('click', () => loadClient(item.client_id, code));
+                return chip;
+            }))
+            : h('span', { class: 'db-muted' }, t('dashboard.saved.noneYet'));
+        return h('article', { class: active ? 'db-saved-card db-saved-card-active' : 'db-saved-card' },
+            h('div', { class: 'db-saved-card-head' },
+                h('div', {},
+                    h('h3', {}, item.client_name || t('dashboard.saved.unnamed')),
+                    active ? h('span', { class: 'db-pill db-pill-success' }, t('dashboard.saved.inUse')) : null,
+                ),
+                load,
+            ),
+            h('dl', {},
+                h('dt', {}, t('dashboard.saved.clientId')),
+                h('dd', {}, item.client_id),
+                h('dt', {}, t('dashboard.saved.apiKey')),
+                h('dd', {}, DemoCredentials.mask(item.api_key)),
+                h('dt', {}, t('dashboard.saved.recipientCodes')),
+                h('dd', {}, codes),
+            ),
+        );
+    }
+
+    function openSavedDrawer() {
+        const drawer = $('db-saved-drawer');
+        savedDrawerFocus = document.activeElement;
+        renderSavedClients();
+        drawer.hidden = false;
+        requestAnimationFrame(() => drawer.classList.add('open'));
+        $('db-saved-open').setAttribute('aria-expanded', 'true');
+        document.body.classList.add('db-drawer-locked');
+        $('db-saved-title').focus();
+    }
+
+    function closeSavedDrawer() {
+        const drawer = $('db-saved-drawer');
+        if (!drawer || drawer.hidden) return;
+        drawer.classList.remove('open');
+        $('db-saved-open').setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('db-drawer-locked');
+        setTimeout(() => { drawer.hidden = true; }, 250);
+        savedDrawerFocus?.focus();
+    }
+
+    function onSavedDrawerKeydown(e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            closeSavedDrawer();
+            return;
+        }
+        if (e.key !== 'Tab') return;
+        const focusable = [...$('db-saved-drawer').querySelectorAll('button:not(:disabled), [tabindex="0"]')]
+            .filter((el) => el.offsetParent !== null);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first) return;
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+
+    function renderCodeOptions() {
+        const select = $('db-code-saved');
+        if (!select) return;
+        const codes = DemoCredentials.codesFor($('db-client-id').value);
+        select.replaceChildren(
+            h('option', { value: '' }, codes.length ? t('dashboard.savedCodes') : t('dashboard.noSavedCodes')),
+            ...codes.map((code) => h('option', { value: code }, code)),
+        );
+        select.disabled = codes.length === 0;
+    }
+
+    function loadClient(clientId, code) {
+        const item = DemoCredentials.find(clientId);
+        if (!item) return;
+        code = code || item.codes[item.codes.length - 1] || '';
+        closeSavedDrawer();
+        $('db-client-name').value = item.client_name || '';
+        $('db-client-id').value = item.client_id;
+        $('db-code').value = code;
+        $('db-api-key').value = item.api_key;
+        DemoCredentials.set({
+            client_id: item.client_id,
+            client_name: item.client_name || '',
+            code,
+            api_key: item.api_key,
+        });
+        renderSavedClients();
+        testConnection({ persist: true });
     }
 
     function focusCredentials() {
@@ -131,8 +277,8 @@
     function formatWarnings() {
         const { client_id, code } = DemoCredentials.get();
         const warnings = [];
-        if (client_id && !UUID.test(client_id)) warnings.push('The Client ID doesn’t look like a UUID (8-4-4-4-12 characters).');
-        if (code && !PORTAL_CODE.test(code)) warnings.push('Recipient codes are 3 letters (ABC) or 5 characters starting with a letter (ABC1D).');
+        if (client_id && !UUID.test(client_id)) warnings.push(t('dashboard.clientIdFormat'));
+        if (code && !PORTAL_CODE.test(code)) warnings.push(t('dashboard.recipientFormat'));
         return warnings;
     }
 
@@ -142,46 +288,61 @@
         const { value, fixes } = DemoCredentials.clean(input.value, { kind });
         if (value === input.value) return;
         input.value = value;
-        const label = { id: 'Client ID', code: 'Recipient code', key: 'API key' }[kind];
-        fixNotes.set(kind, `${label}: removed ${fixes.join(', ')}.`);
+        const label = { id: t('dashboard.clientId'), code: t('dashboard.recipientCode'), key: t('dashboard.apiKey') }[kind];
+        const fixText = fixes.map((key) => t(key)).join(', ');
+        fixNotes.set(kind, t('dashboard.cleanedField', { label, fixes: fixText }));
         const notice = $('db-credentials-fixes');
-        notice.textContent = `Cleaned up what was pasted. ${[...fixNotes.values()].join(' ')}`;
+        notice.textContent = t('dashboard.cleanedPaste', { fixes: [...fixNotes.values()].join(' ') });
         notice.hidden = false;
     }
 
-    async function testConnection() {
+    async function testConnection({ persist = false } = {}) {
         const pill = $('db-connection-status');
         const result = $('db-credentials-result');
         const missing = DemoCredentials.missing();
         const warnings = formatWarnings();
 
         if (!DemoCredentials.get().api_key) {
-            setPill(pill, 'warn', 'Not set');
+            setPill(pill, 'warn', t('dashboard.status.notSet'));
+            renderRecipientCurrency();
             if (warnings.length) showNotice(result, 'error', warnings.join(' '));
             else result.hidden = true;
             return;
         }
 
-        setPill(pill, 'neutral', 'Checking…');
+        setPill(pill, 'neutral', t('dashboard.status.checking'));
         try {
             const check = await fetch('/api/credentials/check').then((r) => r.json());
             if (!check.ok) {
-                setPill(pill, 'error', 'Key rejected');
-                showNotice(result, 'error', `${check.detail} Check for a missing character, or paste the key again.`);
+                setPill(pill, 'error', t('dashboard.status.keyRejected'));
+                showNotice(result, 'error', t('dashboard.keyRejectedDetail', { detail: check.detail }));
                 return;
             }
             if (missing.length) {
-                setPill(pill, 'warn', 'Incomplete');
-                showNotice(result, 'error', `API key works on the demo API. Still missing: ${missing.join(', ')}.`);
+                setPill(pill, 'warn', t('dashboard.status.incomplete'));
+                showNotice(result, 'error', t('dashboard.keyWorksMissing', { missing: missing.join(', ') }));
             } else if (warnings.length) {
-                setPill(pill, 'warn', 'Connected · check fields');
+                setPill(pill, 'warn', t('dashboard.status.checkFields'));
                 showNotice(result, 'error', warnings.join(' '));
             } else {
-                setPill(pill, 'success', 'Connected · demo API');
-                result.hidden = true;
+                setPill(pill, 'success', t('dashboard.status.connected'));
+                const saved = DemoCredentials.get();
+                if (persist && saved.client_id && saved.api_key) {
+                    DemoCredentials.remember(saved);
+                    renderSavedClients();
+                }
+                const named = saved.client_name ? `${saved.client_name} · ` : '';
+                const stored = persist
+                    ? t('dashboard.savedInBrowser', {
+                        name: named,
+                        id: saved.client_id,
+                        code: saved.code ? ` / ${saved.code}` : '',
+                    })
+                    : '';
+                showNotice(result, 'info', `${check.detail || t('dashboard.demoKeyAccepted')}${stored}`);
             }
         } catch {
-            setPill(pill, 'error', 'Server unreachable');
+            setPill(pill, 'error', t('dashboard.status.unreachable'));
         }
     }
 
@@ -201,7 +362,7 @@
         if (!selectedId && bookings[0]) selectedId = bookings[0].id;
 
         $('db-bookings-count').textContent = bookings.length
-            ? `${bookings.length} booking${bookings.length === 1 ? '' : 's'} made on the booking site`
+            ? t('stay.booking', { count: bookings.length })
             : '';
         $('db-clear-bookings').hidden = !bookings.length;
         renderList(bookings);
@@ -212,9 +373,9 @@
         const container = $('db-bookings-list');
         if (!bookings.length) {
             container.replaceChildren(h('div', { class: 'db-empty' },
-                h('p', { class: 'db-empty-title' }, 'No bookings yet'),
-                h('p', { class: 'db-muted' }, 'Make a booking on the booking site. Every checkout you start shows up here.'),
-                h('a', { href: '/', class: 'db-btn db-btn-primary' }, 'Go to the booking site')
+                h('p', { class: 'db-empty-title' }, t('dashboard.emptyTitle')),
+                h('p', { class: 'db-muted' }, t('dashboard.emptyBody')),
+                h('a', { href: '/', class: 'db-btn db-btn-primary' }, t('dashboard.emptyAction'))
             ));
             return;
         }
@@ -230,14 +391,20 @@
             },
                 h('td', {}, h('span', { class: 'db-ref' }, b.id), h('span', { class: 'db-sub' }, timeAgo(b.createdAt))),
                 h('td', {}, h('span', {}, b.guest?.name || '—'), h('span', { class: 'db-sub' }, b.room)),
-                h('td', {}, stayRange(b), h('span', { class: 'db-sub' }, `${b.nights} night${b.nights === 1 ? '' : 's'}`)),
+                h('td', {}, stayRange(b), h('span', { class: 'db-sub' }, t('stay.nightShort', { count: b.nights }))),
                 h('td', { class: 'db-num' }, b.amount ? money(b.amount, b.currency) : '—'),
                 h('td', {}, pill(status.tone, status.label))
             );
         });
 
         container.replaceChildren(h('div', { class: 'db-table-wrap' }, h('table', { class: 'db-table' },
-            h('thead', {}, h('tr', {}, ...['Booking', 'Guest', 'Stay', 'Amount', 'Status'].map((t, i) => h('th', { class: i === 3 ? 'db-num' : '' }, t)))),
+            h('thead', {}, h('tr', {}, ...[
+                t('dashboard.colBooking'),
+                t('dashboard.colGuest'),
+                t('dashboard.colStay'),
+                t('dashboard.colAmount'),
+                t('dashboard.colStatus'),
+            ].map((label, i) => h('th', { class: i === 3 ? 'db-num' : '' }, label)))),
             h('tbody', {}, ...rows)
         )));
     }
@@ -247,22 +414,22 @@
         const tokenization = b.report?.tokenization_report?.status;
         const captured = sum(b.captures);
         switch (b.checkoutStatus) {
-            case 'failed': return { tone: 'error', label: 'Failed to start' };
-            case 'canceled': return { tone: 'neutral', label: 'Abandoned' };
-            case 'timeout': return { tone: 'warn', label: 'Timed out' };
-            case 'started': return { tone: 'info', label: 'In checkout' };
+            case 'failed': return { tone: 'error', label: t('dashboard.bookingStatus.failed') };
+            case 'canceled': return { tone: 'neutral', label: t('dashboard.bookingStatus.abandoned') };
+            case 'timeout': return { tone: 'warn', label: t('dashboard.bookingStatus.timedOut') };
+            case 'started': return { tone: 'info', label: t('dashboard.bookingStatus.inCheckout') };
         }
-        if (payment === 'ALL_UNSUCCESSFUL') return { tone: 'error', label: 'Declined' };
+        if (payment === 'ALL_UNSUCCESSFUL') return { tone: 'error', label: t('dashboard.bookingStatus.declined') };
         if (b.flow?.preauth && captured) {
             return captured >= (b.authorizedAmount || b.amount)
-                ? { tone: 'success', label: 'Captured' }
-                : { tone: 'success', label: 'Partly captured' };
+                ? { tone: 'success', label: t('dashboard.bookingStatus.captured') }
+                : { tone: 'success', label: t('dashboard.bookingStatus.partlyCaptured') };
         }
-        if (b.flow?.preauth && payment && payment !== 'NO_PAYMENTS') return { tone: 'info', label: 'Authorized' };
-        if (payment === 'SOME_IN_PROGRESS') return { tone: 'warn', label: 'Processing' };
-        if (payment === 'FULLY_PAID') return { tone: 'success', label: 'Paid' };
-        if (tokenization === 'SUCCESS' || b.token) return { tone: 'success', label: 'Card saved' };
-        return { tone: 'success', label: 'Checkout completed' };
+        if (b.flow?.preauth && payment && payment !== 'NO_PAYMENTS') return { tone: 'info', label: t('dashboard.bookingStatus.authorized') };
+        if (payment === 'SOME_IN_PROGRESS') return { tone: 'warn', label: t('dashboard.bookingStatus.processing') };
+        if (payment === 'FULLY_PAID') return { tone: 'success', label: t('dashboard.bookingStatus.paid') };
+        if (tokenization === 'SUCCESS' || b.token) return { tone: 'success', label: t('dashboard.bookingStatus.cardSaved') };
+        return { tone: 'success', label: t('dashboard.bookingStatus.completed') };
     }
 
     // ── Booking detail ──
@@ -270,7 +437,7 @@
     function renderDetail(b) {
         const panel = $('db-detail');
         if (!b) {
-            panel.replaceChildren(h('p', { class: 'db-muted db-detail-empty' }, 'Select a booking to see its payments and actions.'));
+            panel.replaceChildren(h('p', { class: 'db-muted db-detail-empty' }, t('dashboard.selectBooking')));
             return;
         }
 
@@ -280,27 +447,27 @@
         const charged = sum(b.charges);
 
         const facts = h('dl', { class: 'db-facts' });
-        addFact(facts, 'Guest', h('span', {}, b.guest?.name || '—', b.guest?.email ? h('span', { class: 'db-sub' }, b.guest.email) : null));
-        addFact(facts, 'Stay', h('span', {}, `${b.room}`, h('span', { class: 'db-sub' }, `${stayRange(b)} · ${b.guests || ''}`)));
-        addFact(facts, 'Checkout', h('span', {}, b.flow?.title || '—', h('span', { class: 'db-sub' }, flowTech(b))));
-        addFact(facts, 'Booking total', b.amount ? money(b.amount, b.currency) : 'No amount (card saved only)');
+        addFact(facts, t('dashboard.factGuest'), h('span', {}, b.guest?.name || t('common.dash'), b.guest?.email ? h('span', { class: 'db-sub' }, b.guest.email) : null));
+        addFact(facts, t('dashboard.factStay'), h('span', {}, b.room || t('common.dash'), h('span', { class: 'db-sub' }, `${stayRange(b)} · ${b.guests || ''}`)));
+        addFact(facts, t('dashboard.factCheckout'), h('span', {}, flowTitle(b), h('span', { class: 'db-sub' }, flowTech(b))));
+        addFact(facts, t('dashboard.factTotal'), b.amount ? money(b.amount, b.currency) : t('booking.noAmount'));
         if (b.flow?.preauth) {
-            addFact(facts, 'Authorized', money(b.authorizedAmount || b.amount, b.currency));
-            addFact(facts, 'Captured', money(captured, b.currency));
+            addFact(facts, t('dashboard.factAuthorized'), money(b.authorizedAmount || b.amount, b.currency));
+            addFact(facts, t('dashboard.factCaptured'), money(captured, b.currency));
         }
-        if (charged) addFact(facts, 'Charged to saved card', money(charged, b.currency));
-        addFact(facts, 'Session', b.sessionId ? h('code', {}, b.sessionId) : 'Anonymous (browser only)');
-        if (report.session_report?.status) addFact(facts, 'Session status', h('code', {}, report.session_report.status));
+        if (charged) addFact(facts, t('dashboard.factCharged'), money(charged, b.currency));
+        addFact(facts, t('dashboard.factSession'), b.sessionId ? h('code', {}, b.sessionId) : t('dashboard.anonymousSession'));
+        if (report.session_report?.status) addFact(facts, t('dashboard.factSessionStatus'), h('code', {}, report.session_report.status));
         if (report.payment_report?.status) {
-            addFact(facts, 'Payment status', h('span', {}, h('code', {}, report.payment_report.status),
+            addFact(facts, t('dashboard.factPaymentStatus'), h('span', {}, h('code', {}, report.payment_report.status),
                 h('span', { class: 'db-sub' }, paymentStatusText(b, report.payment_report.status))));
         }
-        if (report.tokenization_report?.status) addFact(facts, 'Tokenization', h('code', {}, report.tokenization_report.status));
-        if (b.reportedAt) addFact(facts, 'Last checked', timeAgo(b.reportedAt));
+        if (report.tokenization_report?.status) addFact(facts, t('dashboard.factTokenization'), h('code', {}, report.tokenization_report.status));
+        if (b.reportedAt) addFact(facts, t('dashboard.factLastChecked'), timeAgo(b.reportedAt));
 
         panel.replaceChildren(...[
             h('div', { class: 'db-detail-head' },
-                h('div', {}, h('h2', {}, b.id), h('p', { class: 'db-muted' }, `Created ${new Date(b.createdAt).toLocaleString('en-GB')}`)),
+                h('div', {}, h('h2', {}, b.id), h('p', { class: 'db-muted' }, t('dashboard.created', { when: new Date(b.createdAt).toLocaleString(I18n.locale) }))),
                 pill(status.tone, status.label)
             ),
             facts,
@@ -313,8 +480,8 @@
                 h('button', {
                     type: 'button',
                     class: 'db-btn db-btn-ghost db-btn-sm db-danger',
-                    onclick: () => { if (confirm(`Delete booking ${b.id}?`)) Bookings.remove(b.id); },
-                }, 'Delete booking')
+                    onclick: () => { if (confirm(t('dashboard.confirmDeleteBooking', { id: b.id }))) Bookings.remove(b.id); },
+                }, t('dashboard.deleteBooking'))
             ),
         ].filter(Boolean));
     }
@@ -322,18 +489,24 @@
     function paymentStatusText(b, status) {
         if (b.flow?.preauth && status === 'SOME_IN_PROGRESS') {
             return b.captures?.length
-                ? 'Capture sent; Flywire processes it asynchronously. Refresh status to see it settle.'
-                : 'Authorized: the amount is held on the card, waiting for capture.';
+                ? t('dashboard.holdCaptureSent')
+                : t('dashboard.holdPending');
         }
-        return PAYMENT_STATUS[status] || '';
+        const key = `dashboard.paymentStatusText.${status}`;
+        return I18n.has(key) ? t(key) : '';
+    }
+
+    function flowTitle(b) {
+        if (b.flow?.id && I18n.has(`flows.${b.flow.id}.title`)) return t(`flows.${b.flow.id}.title`);
+        return b.flow?.title || t('common.dash');
     }
 
     function renderPayments(b) {
         if (!b.payments?.length) return null;
         return h('div', { class: 'db-block' },
-            h('h3', {}, 'Payments'),
+            h('h3', {}, t('dashboard.payments')),
             h('div', { class: 'db-table-wrap' }, h('table', { class: 'db-table db-table-compact' },
-                h('thead', {}, h('tr', {}, h('th', {}, 'Payment ID'), h('th', {}, 'Method'), h('th', { class: 'db-num' }, 'Captured'))),
+                h('thead', {}, h('tr', {}, h('th', {}, t('dashboard.colPaymentId')), h('th', {}, t('dashboard.colMethod')), h('th', { class: 'db-num' }, t('dashboard.colCaptured')))),
                 h('tbody', {}, ...b.payments.map((p) => h('tr', {},
                     h('td', {}, h('code', {}, p.payment_id)),
                     h('td', {}, CardBrands.describe(CardBrands.withSavedCard(p, b.report))),
@@ -360,17 +533,17 @@
                 h('td', {}, h('span', {}, c.description || '—'), h('span', { class: 'db-sub' }, c.external_reference || '')),
                 h('td', {}, h('code', {}, c.payment_id || chargePaymentId(response) || '—')),
                 h('td', { class: 'db-num' }, money(c.amount, b.currency),
-                    info ? h('span', { class: 'db-sub' }, `guest paid ${money(info.amount, info.currency)}`) : null),
+                    info ? h('span', { class: 'db-sub' }, t('dashboard.guestPaid', { amount: money(info.amount, info.currency) })) : null),
                 h('td', {}, status ? pill(status === 'success' ? 'success' : status === 'pending' ? 'warn' : 'error', status) : '—')
             );
         });
         return h('div', { class: 'db-block' },
-            h('h3', {}, 'Charges to saved card'),
+            h('h3', {}, t('dashboard.chargesTitle')),
             h('div', { class: 'db-table-wrap' }, h('table', { class: 'db-table db-table-compact' },
-                h('thead', {}, h('tr', {}, h('th', {}, 'What for'), h('th', {}, 'Flywire payment'), h('th', { class: 'db-num' }, 'Amount'), h('th', {}, 'Result'))),
+                h('thead', {}, h('tr', {}, h('th', {}, t('dashboard.colWhatFor')), h('th', {}, t('dashboard.colFlywirePayment')), h('th', { class: 'db-num' }, t('dashboard.colAmount')), h('th', {}, t('dashboard.colResult')))),
                 h('tbody', {}, ...rows)
             )),
-            h('p', { class: 'db-sub db-table-note' }, 'Amount is what the hotel charged; “guest paid” is what Flywire charged the guest in their own currency (charge_info).')
+            h('p', { class: 'db-sub db-table-note' }, t('dashboard.chargesNote'))
         );
     }
 
@@ -379,14 +552,14 @@
         const facts = h('dl', { class: 'db-facts db-facts-compact' });
         const card = b.report?.tokenization_report;
         if (card?.brand || card?.last_four) {
-            addFact(facts, 'Card', CardBrands.describe({ payment_method: 'credit_card', ...card }));
+            addFact(facts, t('dashboard.factCard'), CardBrands.describe({ payment_method: 'credit_card', ...card }));
         } else if (card?.type) {
-            addFact(facts, 'Method', card.type);
+            addFact(facts, t('dashboard.factMethod'), card.type);
         }
-        addFact(facts, 'payment_method_token', h('code', {}, b.token.payment_method_token || '—'));
-        addFact(facts, 'mandate_id', h('code', {}, b.token.mandate_id || '—'));
-        addFact(facts, 'payor_id', h('code', {}, b.token.payor_id || '—'));
-        return h('div', { class: 'db-block' }, h('h3', {}, 'Saved card'), facts);
+        addFact(facts, t('dashboard.paymentMethodToken'), h('code', {}, b.token.payment_method_token || t('common.dash')));
+        addFact(facts, t('dashboard.mandateId'), h('code', {}, b.token.mandate_id || t('common.dash')));
+        addFact(facts, t('dashboard.payorId'), h('code', {}, b.token.payor_id || t('common.dash')));
+        return h('div', { class: 'db-block' }, h('h3', {}, t('dashboard.savedCard')), facts);
     }
 
     // ── Actions ──
@@ -394,55 +567,61 @@
     function actionsFor(b) {
         const hasPayment = b.payments?.length > 0;
         const noSession = b.sessionId ? null : {
-            reason: 'This booking used an anonymous session, so there is no session to look up or resume on the server.',
-            fix: 'Use an authenticated session (settings drawer, Session) for new bookings.',
+            reason: t('dashboard.action.noSessionReason'),
+            fix: t('dashboard.action.noSessionFix'),
         };
         const notPreauth = b.flow?.preauth ? null : {
-            reason: `Flywire can only capture or extend a pre-authorized payment (a hold). This booking used “${b.flow?.title || 'a flow'}”, ${b.flow?.type === 'tokenization' && !b.amount ? 'which saves the card without charging or holding anything' : 'which charged the guest straight away'}.`,
-            fix: 'To demo it, make a booking with a hold flow: Reserve & hold, Hold & save card, Hold (guest may save card) or Hold & keep card on file.',
+            reason: t('dashboard.action.notHoldReason', {
+                flow: flowTitle(b),
+                how: b.flow?.type === 'tokenization' && !b.amount
+                    ? t('dashboard.action.savedOnly')
+                    : t('dashboard.action.chargedImmediately'),
+            }),
+            fix: t('dashboard.action.notHoldFix'),
         };
         const noPayment = hasPayment ? null : {
-            reason: 'There is no payment ID on this booking yet.',
-            fix: b.sessionId ? 'Click Refresh status after the guest completes checkout.' : 'The guest hasn’t completed checkout.',
+            reason: t('dashboard.action.noPaymentReason'),
+            fix: b.sessionId ? t('dashboard.action.noPaymentFixRefresh') : t('dashboard.action.noPaymentFixGuest'),
         };
         // A hold is captured once; whatever isn't captured is released to the guest.
         const captured = sum(b.captures);
         const holdEnded = captured ? {
-            reason: `${money(captured, b.currency)} was captured on ${new Date(b.captures[0].at).toLocaleString('en-GB')}, which ends the hold: anything not captured was released to the guest.`,
-            fix: b.token
-                ? 'For extras, use Charge saved card: this booking has the card on file.'
-                : 'To demo it again, make a new booking with a hold flow.',
+            reason: t('dashboard.action.holdEndedReason', {
+                amount: money(captured, b.currency),
+                when: new Date(b.captures[0].at).toLocaleString(I18n.locale),
+            }),
+            fix: b.token ? t('dashboard.action.holdEndedFixCard') : t('dashboard.action.holdEndedFixNew'),
         } : null;
         const savesCard = b.flow?.type !== 'payment' || b.token;
 
         return [
             {
-                id: 'refresh', label: 'Refresh status', method: 'GET', endpoint: '/commercial_payex/v2/session/{session_id}', playground: 'get_session',
-                help: 'Reads the session from Flywire: session, payment and tokenization reports.',
+                id: 'refresh', label: t('dashboard.action.refresh'), method: 'GET', endpoint: '/commercial_payex/v2/session/{session_id}', playground: 'get_session',
+                help: t('dashboard.action.refreshHelp'),
                 disabled: noSession, spec: refreshSpec,
             },
             {
-                id: 'resume', label: 'Resume session', method: 'POST', endpoint: '/commercial_payex/v2/session/{session_id}', playground: 'resume_session',
-                help: 'Gets new run credentials for this session, then reopens checkout with them where the guest left off, e.g. to send a payment link.',
-                disabled: noSession || (b.checkout ? null : { reason: 'This booking was made before resume support.', fix: 'Make a new booking.' }),
+                id: 'resume', label: t('dashboard.action.resume'), method: 'POST', endpoint: '/commercial_payex/v2/session/{session_id}', playground: 'resume_session',
+                help: t('dashboard.action.resumeHelp'),
+                disabled: noSession || (b.checkout ? null : { reason: t('dashboard.action.resumeOldReason'), fix: t('dashboard.action.resumeOldFix') }),
                 spec: resumeSpec,
             },
             {
-                id: 'capture', label: 'Capture payment', method: 'POST', endpoint: '/payments/v1/payments/{payment_id}/captures', playground: 'capture_payment',
-                help: 'Collects the held funds, fully or partly (e.g. at check-in). Any uncaptured amount is released to the guest.',
+                id: 'capture', label: t('dashboard.action.capture'), method: 'POST', endpoint: '/payments/v1/payments/{payment_id}/captures', playground: 'capture_payment',
+                help: t('dashboard.action.captureHelp'),
                 disabled: notPreauth || noPayment || holdEnded, spec: captureSpec,
             },
             {
-                id: 'extend', label: 'Extend hold', method: 'POST', endpoint: '/payments/v1/payments/{payment_id}/authorization_adjustments', playground: 'extend_preauth',
-                help: 'Resets the hold to 7 days from today and can raise the authorized amount (increase only).',
+                id: 'extend', label: t('dashboard.action.extend'), method: 'POST', endpoint: '/payments/v1/payments/{payment_id}/authorization_adjustments', playground: 'extend_preauth',
+                help: t('dashboard.action.extendHelp'),
                 disabled: notPreauth || noPayment || holdEnded, spec: extendSpec,
             },
             {
-                id: 'charge', label: 'Charge saved card', method: 'POST', endpoint: '/payments/v1/payments/charge', playground: 'charge_token',
-                help: 'Charges the card saved at checkout without the guest present, e.g. minibar or a no-show fee.',
+                id: 'charge', label: t('dashboard.action.charge'), method: 'POST', endpoint: '/payments/v1/payments/charge', playground: 'charge_token',
+                help: t('dashboard.action.chargeHelp'),
                 disabled: savesCard ? null : {
-                    reason: 'No card was saved on this booking.',
-                    fix: 'Make a booking with a card-on-file flow, e.g. Save card, charge later or Pay now & save card.',
+                    reason: t('dashboard.action.noCardReason'),
+                    fix: t('dashboard.action.noCardFix'),
                 },
                 spec: chargeSpec,
             },
@@ -464,14 +643,14 @@
                 actionError = null;
                 render();
             },
-        }, h('span', { class: `db-method db-method-${a.method.toLowerCase()}` }, a.method), busyAction === a.id ? 'Working…' : a.label)));
+        }, h('span', { class: `db-method db-method-${a.method.toLowerCase()}` }, a.method), busyAction === a.id ? t('dashboard.working') : a.label)));
 
         const active = actions.find((a) => a.id === openAction);
 
         return h('div', { class: 'db-block' },
             h('div', { class: 'db-block-head' },
-                h('h3', {}, 'Actions'),
-                h('span', { class: 'db-sub' }, 'Flywire API calls, made through this demo’s server')
+                h('h3', {}, t('dashboard.actionsTitle')),
+                h('span', { class: 'db-sub' }, t('dashboard.actionsSubtitle'))
             ),
             buttons,
             active ? h('div', { class: 'db-action-panel' },
@@ -479,13 +658,13 @@
                     h('div', { class: 'db-endpoint' },
                         h('span', { class: `db-method db-method-${active.method.toLowerCase()}` }, active.method),
                         h('code', {}, active.endpoint),
-                        h('a', { href: PLAYGROUND + active.playground, target: '_blank', rel: 'noopener', class: 'db-btn db-btn-ghost db-btn-sm db-playground' }, 'Open in playground ↗')
+                        h('a', { href: PLAYGROUND + active.playground, target: '_blank', rel: 'noopener', class: 'db-btn db-btn-ghost db-btn-sm db-playground' }, t('dashboard.openPlayground'))
                     ),
                     h('p', {}, active.help)
                 ),
                 active.disabled
                     ? h('div', { class: 'db-notice db-notice-warn', role: 'status' },
-                        h('strong', {}, `${active.label} isn’t available for this booking. `), active.disabled.reason,
+                        h('strong', {}, t('dashboard.unavailableTitle', { label: active.label })), active.disabled.reason,
                         h('span', { class: 'db-notice-fix' }, active.disabled.fix))
                     : actionForm(b, active, active.spec(b))
             ) : null
@@ -503,20 +682,20 @@
             onResult: (result, req) => {
                 if (result.ok) Bookings.applyReport(b.id, result.data);
                 const status = result.data?.payment_report?.status || result.data?.session_report?.status;
-                record(b, result, req, result.ok ? `Status refreshed${status ? ` · ${status}` : ''}` : 'Status refresh failed', 'refresh');
+                record(b, result, req, result.ok ? (status ? t('dashboard.history.statusRefreshedWith', { status }) : t('dashboard.history.statusRefreshed')) : t('dashboard.history.statusFailed'), 'refresh');
             },
         };
     }
 
     function resumeSpec(b) {
         return {
-            note: 'After Flywire answers, checkout opens on this page with the new run_id and run_token.',
+            note: t('dashboard.resumeNote'),
             request: () => ({
                 upstream: { method: 'POST', path: `${SESSION_API}/${b.sessionId}` },
                 proxy: { method: 'POST', url: `/api/flywire-session/${b.sessionId}/resume` },
             }),
             onResult: (result, req) => {
-                record(b, result, req, result.ok ? 'Session resumed · checkout reopened' : 'Resume failed', 'resume');
+                record(b, result, req, result.ok ? t('dashboard.history.resumed') : t('dashboard.history.resumeFailed'), 'resume');
                 if (result.ok) reopenCheckout(b, result.data);
             },
         };
@@ -525,13 +704,13 @@
     function captureSpec(b) {
         const remaining = Math.max(0, (b.authorizedAmount || b.amount) - sum(b.captures));
         const paymentSelect = paymentPicker(b, 'capture');
-        const amount = amountInput(`${b.id}:capture:amount`, remaining);
+        const amount = amountInput(`${b.id}:capture:amount`, remaining, undefined, b.currency);
         return {
             fields: [paymentSelect.field, amount.field],
             request: () => paymentRequest(paymentSelect.value(), 'captures', { amount: amount.cents() }),
             onResult: (result, req) => {
                 const cents = req.upstream.body.amount;
-                record(b, result, req, `Captured ${money(cents, b.currency)}${resultStatus(result)}`, 'capture', (x) => {
+                record(b, result, req, t('dashboard.history.captured', { amount: money(cents, b.currency), status: resultStatus(result) }), 'capture', (x) => {
                     x.captures.push({ payment_id: req.paymentId, amount: cents, at: Date.now() });
                 });
             },
@@ -541,14 +720,16 @@
     function extendSpec(b) {
         const current = b.authorizedAmount || b.amount;
         const paymentSelect = paymentPicker(b, 'extend');
-        const amount = amountInput(`${b.id}:extend:amount`, current, current);
+        const amount = amountInput(`${b.id}:extend:amount`, current, current, b.currency);
         return {
             fields: [paymentSelect.field, amount.field],
-            note: `Minimum ${money(current, b.currency)}: holds can only increase.`,
+            note: t('dashboard.extendMinimum', { amount: money(current, b.currency) }),
             request: () => paymentRequest(paymentSelect.value(), 'authorization_adjustments', { amount: amount.cents() }),
             onResult: (result, req) => {
                 const cents = req.upstream.body.amount;
-                const label = (cents > current ? `Hold raised to ${money(cents, b.currency)} and extended 7 days` : 'Hold extended 7 days') + resultStatus(result);
+                const label = (cents > current
+                    ? t('dashboard.history.holdRaised', { amount: money(cents, b.currency) })
+                    : t('dashboard.history.holdExtended')) + resultStatus(result);
                 record(b, result, req, label, 'extend', (x) => {
                     x.adjustments.push({ payment_id: req.paymentId, amount: cents, at: Date.now() });
                     x.authorizedAmount = Math.max(x.authorizedAmount || 0, cents);
@@ -567,8 +748,11 @@
     }
 
     function chargeSpec(b) {
-        const amount = amountInput(`${b.id}:charge:amount`, 12000);
-        const description = remember(`${b.id}:charge:description`, h('select', {}, ...CHARGE_PRESETS.map((p) => h('option', {}, p))));
+        const suggested = window.DemoMoney && b.currency === DemoMoney.code()
+            ? DemoMoney.usdCentsToMinor(12000)
+            : 12000;
+        const amount = amountInput(`${b.id}:charge:amount`, suggested, undefined, b.currency);
+        const description = remember(`${b.id}:charge:description`, h('select', {}, ...CHARGE_PRESETS.map((p) => h('option', { value: t(p) }, t(p)))));
         const reference = textInput(`${b.id}:charge:reference`, `${b.id}-${(b.charges?.length || 0) + 1}`);
         const token = b.token || {};
         const tokenInput = textInput(`${b.id}:charge:token`, token.payment_method_token);
@@ -576,16 +760,16 @@
         const payorInput = textInput(`${b.id}:charge:payor`, token.payor_id);
         const tokenFields = h('div', { class: 'db-token-fields' },
             h('p', { class: 'db-sub' }, b.token
-                ? 'From the session’s tokenization_report. Edit if needed.'
-                : 'The card token was not in the session report. Refresh status first, or paste the token details from the Flywire portal.'),
-            field('payment_method_token', tokenInput),
-            field('mandate_id', mandateInput),
-            field('payor_id', payorInput)
+                ? t('dashboard.tokenFromReport')
+                : t('dashboard.tokenMissing')),
+            field(t('dashboard.paymentMethodToken'), tokenInput),
+            field(t('dashboard.mandateId'), mandateInput),
+            field(t('dashboard.payorId'), payorInput)
         );
         const clean = (input) => DemoCredentials.clean(input.value, { kind: 'id' }).value;
 
         return {
-            fields: [amount.field, field('What for (kept in the back office)', description), field('external_reference', reference), tokenFields],
+            fields: [amount.field, field(t('dashboard.whatForOffice'), description), field(t('dashboard.externalReference'), reference), tokenFields],
             request: () => {
                 const tokenData = {
                     payment_method_token: clean(tokenInput),
@@ -593,7 +777,7 @@
                     payor_id: clean(payorInput),
                 };
                 const externalReference = reference.value.trim();
-                if (!externalReference) throw new Error('Add an external_reference for this charge, e.g. the booking number.');
+                if (!externalReference) throw new Error(t('dashboard.needReference'));
                 const recipientCode = DemoCredentials.get().code || b.recipientCode;
                 const cents = amount.cents();
                 return {
@@ -621,7 +805,12 @@
                 const cents = req.proxy.body.amount;
                 const externalReference = req.proxy.body.external_reference;
                 const chargeStatus = result.data?.charge_result?.status;
-                const label = `Charged ${money(cents, b.currency)} · ${description.value} · ${externalReference}${chargeStatus && chargeStatus !== 'success' ? ` · ${chargeStatus}` : ''}`;
+                const label = t('dashboard.history.charged', {
+                    amount: money(cents, b.currency),
+                    what: description.value,
+                    reference: externalReference,
+                    status: chargeStatus && chargeStatus !== 'success' ? ` · ${chargeStatus}` : '',
+                });
                 record(b, result, req, label, 'charge', (x) => {
                     x.token = { ...x.token, ...req.tokenData };
                     const paymentId = chargePaymentId(result.data);
@@ -642,8 +831,8 @@
     function actionForm(b, action, spec) {
         const showError = actionError && actionError.bookingId === b.id && actionError.action === action.id;
         const busy = busyAction === action.id;
-        const submitLabel = `Send ${action.method} request`;
-        const submit = h('button', { type: 'submit', class: 'db-btn db-btn-primary', disabled: busy }, busy ? 'Sending…' : submitLabel);
+        const submitLabel = t('dashboard.sendRequest', { method: action.method });
+        const submit = h('button', { type: 'submit', class: 'db-btn db-btn-primary', disabled: busy }, busy ? t('dashboard.sending') : submitLabel);
         const preview = h('div', { class: 'db-request' });
 
         const updatePreview = () => {
@@ -676,7 +865,7 @@
                 }
                 busyAction = action.id;
                 submit.disabled = true;
-                submit.textContent = 'Sending…';
+                submit.textContent = t('dashboard.sending');
                 try {
                     const result = await callApi(req.proxy);
                     await spec.onResult(result, req);
@@ -696,8 +885,8 @@
     // ── Request preview (curl / fetch) ──
 
     function requestPreview(upstream, problem, rerender) {
-        const tabs = h('div', { class: 'db-tabs', role: 'tablist', 'aria-label': 'Request format' },
-            ...[['curl', 'curl'], ['fetch', 'Node fetch']].map(([id, label]) => h('button', {
+        const tabs = h('div', { class: 'db-tabs', role: 'tablist', 'aria-label': t('dashboard.requestFormat') },
+            ...[['curl', t('dashboard.curl')], ['fetch', t('dashboard.nodeFetch')]].map(([id, label]) => h('button', {
                 type: 'button',
                 role: 'tab',
                 class: `db-tab${previewLang === id ? ' active' : ''}`,
@@ -709,15 +898,15 @@
                 },
             }, label)));
         const code = upstream ? (previewLang === 'fetch' ? toFetch(upstream) : toCurl(upstream)) : '';
-        const copy = h('button', { type: 'button', class: 'db-btn db-btn-ghost db-btn-sm', disabled: !upstream }, 'Copy');
+        const copy = h('button', { type: 'button', class: 'db-btn db-btn-ghost db-btn-sm', disabled: !upstream }, t('common.copy'));
         copy.addEventListener('click', () => copyText(copy, code));
 
         return [
-            h('div', { class: 'db-request-head' }, h('span', { class: 'db-request-title' }, 'Request to Flywire'), tabs, copy),
+            h('div', { class: 'db-request-head' }, h('span', { class: 'db-request-title' }, t('dashboard.requestTitle')), tabs, copy),
             upstream
                 ? h('pre', { class: 'db-code' }, h('code', {}, code))
-                : h('p', { class: 'db-notice db-notice-error' }, problem || 'Fill in the fields above.'),
-            h('p', { class: 'db-sub' }, 'This demo’s server sends it with your demo API key as X-Authentication-Key. The key is never shown here.'),
+                : h('p', { class: 'db-notice db-notice-error' }, problem || t('dashboard.fillFields')),
+            h('p', { class: 'db-sub' }, t('dashboard.requestFootnote')),
         ];
     }
 
@@ -753,11 +942,11 @@
     async function copyText(button, text) {
         try {
             await navigator.clipboard.writeText(text);
-            button.textContent = 'Copied';
+            button.textContent = t('common.copied');
         } catch {
-            button.textContent = 'Copy failed';
+            button.textContent = t('common.copyFailed');
         }
-        setTimeout(() => { button.textContent = 'Copy'; }, 1500);
+        setTimeout(() => { button.textContent = t('common.copy'); }, 1500);
     }
 
     function remember(key, control) {
@@ -775,22 +964,30 @@
         const select = remember(`${b.id}:${action}:payment`, h('select', {}, ...b.payments.map((p) => h('option', { value: p.payment_id },
             `${p.payment_id}${p.last_four ? ` · •••• ${p.last_four}` : ''}`))));
         return {
-            field: b.payments.length > 1 ? field('Payment', select) : null,
+            field: b.payments.length > 1 ? field(t('dashboard.payment'), select) : null,
             value: () => select.value || b.payments[0].payment_id,
         };
     }
 
-    function amountInput(key, defaultCents, minCents) {
+    function amountInput(key, defaultCents, minCents, currency = 'USD') {
+        const subunit = window.DemoMoney && currency === DemoMoney.code()
+            ? (DemoMoney.currency().subunit_to_unit || 100)
+            : 100;
+        const digits = subunit === 1 ? 0 : 2;
+        const major = (cents) => (cents / subunit).toFixed(digits);
         const input = remember(key, h('input', {
-            type: 'number', step: '0.01', min: minCents ? (minCents / 100).toFixed(2) : '0.01',
-            value: (defaultCents / 100).toFixed(2), inputmode: 'decimal',
+            type: 'number',
+            step: digits === 0 ? '1' : '0.01',
+            min: minCents ? major(minCents) : (digits === 0 ? '1' : '0.01'),
+            value: major(defaultCents),
+            inputmode: 'decimal',
         }));
         return {
-            field: field('Amount (USD)', input),
+            field: field(t('dashboard.amountLabel', { currency }), input),
             cents: () => {
-                const cents = Math.round(Number(input.value) * 100);
-                if (!Number.isFinite(cents) || cents <= 0) throw new Error('Enter an amount greater than zero.');
-                if (minCents && cents < minCents) throw new Error(`The amount must be at least ${money(minCents)}.`);
+                const cents = Math.round(Number(input.value) * subunit);
+                if (!Number.isFinite(cents) || cents <= 0) throw new Error(t('dashboard.amountPositive'));
+                if (minCents && cents < minCents) throw new Error(t('dashboard.amountMinimum', { amount: money(minCents, currency) }));
                 return cents;
             },
         };
@@ -813,17 +1010,19 @@
                 session,
                 onEvent: (name, detail) => Bookings.trackCheckout(b.id, name, detail),
                 onComplete: ({ report }) => Bookings.addHistory(b.id, {
-                    action: 'resume', ok: true, label: `Checkout completed after resume${report?.payment_report?.status ? ` · ${report.payment_report.status}` : ''}`,
+                    action: 'resume', ok: true, label: report?.payment_report?.status
+                        ? t('dashboard.history.checkoutAfterResumeStatus', { status: report.payment_report.status })
+                        : t('dashboard.history.checkoutAfterResume'),
                     response: report,
                 }),
-                onCancel: () => Bookings.addHistory(b.id, { action: 'resume', ok: true, label: 'Guest closed checkout again' }),
-                onTimeout: () => Bookings.addHistory(b.id, { action: 'resume', ok: false, label: 'Checkout timed out' }),
+                onCancel: () => Bookings.addHistory(b.id, { action: 'resume', ok: true, label: t('dashboard.history.guestClosedAgain') }),
+                onTimeout: () => Bookings.addHistory(b.id, { action: 'resume', ok: false, label: t('dashboard.history.checkoutTimedOut') }),
                 onError: ({ type, payload }) => Bookings.addHistory(b.id, {
-                    action: 'resume', ok: false, label: `on_error('${type}')`, response: payload,
+                    action: 'resume', ok: false, label: t('dashboard.history.onError', { type }), response: payload,
                 }),
             });
         } catch (err) {
-            Bookings.addHistory(b.id, { action: 'resume', ok: false, label: `Checkout could not start: ${err.message}` });
+            Bookings.addHistory(b.id, { action: 'resume', ok: false, label: t('dashboard.history.couldNotStart', { detail: err.message }) });
         }
     }
 
@@ -847,7 +1046,7 @@
         Bookings.addHistory(b.id, {
             action,
             ok: result.ok,
-            label: result.ok ? label : `${label.split(' · ')[0]} failed · ${errorText(result)}`,
+            label: result.ok ? label : t('dashboard.history.failedLine', { what: label.split(' · ')[0], error: errorText(result) }),
             status: result.status,
             ms: result.ms,
             upstream: req.upstream,
@@ -880,24 +1079,24 @@
     function renderHistory(b) {
         if (!b.history?.length) return null;
         return h('div', { class: 'db-block' },
-            h('h3', {}, 'Activity'),
+            h('h3', {}, t('dashboard.activity')),
             h('ol', { class: 'db-history' }, ...b.history.map((entry) => {
                 // Entries recorded before the Flywire endpoint was stored show this demo's proxy URL instead.
                 const call = entry.upstream || entry.request;
                 const path = entry.upstream ? entry.upstream.path : entry.request?.url;
                 const summary = call
                     ? [`${call.method} ${path}`, entry.status ? `→ ${entry.status}` : '', entry.ms !== undefined ? `· ${entry.ms} ms` : ''].filter(Boolean).join(' ')
-                    : 'Show data';
+                    : t('dashboard.showData');
                 return h('li', { class: entry.ok ? 'ok' : 'failed' },
                     h('div', { class: 'db-history-head' },
                         h('span', {}, entry.label),
-                        h('span', { class: 'db-sub' }, new Date(entry.at).toLocaleTimeString('en-GB'))
+                        h('span', { class: 'db-sub' }, new Date(entry.at).toLocaleTimeString(I18n.locale))
                     ),
                     call || entry.response !== undefined ? h('details', {},
                         h('summary', {}, summary),
-                        entry.upstream ? historyCode('Request', toCurl(entry.upstream)) : null,
-                        !entry.upstream && entry.request?.body ? historyCode('Request body', JSON.stringify(entry.request.body, null, 2)) : null,
-                        entry.response !== undefined ? historyCode('Response', maskJson(entry.response)) : null
+                        entry.upstream ? historyCode(t('dashboard.request'), toCurl(entry.upstream)) : null,
+                        !entry.upstream && entry.request?.body ? historyCode(t('dashboard.requestBody'), JSON.stringify(entry.request.body, null, 2)) : null,
+                        entry.response !== undefined ? historyCode(t('dashboard.response'), maskJson(entry.response)) : null
                     ) : null
                 );
             }))
@@ -905,7 +1104,7 @@
     }
 
     function historyCode(title, text) {
-        const copy = h('button', { type: 'button', class: 'db-btn db-btn-ghost db-btn-sm' }, 'Copy');
+        const copy = h('button', { type: 'button', class: 'db-btn db-btn-ghost db-btn-sm' }, t('common.copy'));
         copy.addEventListener('click', () => copyText(copy, text));
         return h('div', { class: 'db-history-code' },
             h('div', { class: 'db-request-head' }, h('span', { class: 'db-request-title' }, title), copy),
@@ -924,7 +1123,7 @@
 
     function stayRange(b) {
         const opts = { month: 'short', day: 'numeric' };
-        return `${new Date(b.checkIn).toLocaleDateString('en-US', opts)} – ${new Date(b.checkOut).toLocaleDateString('en-US', { ...opts, year: 'numeric' })}`;
+        return `${new Date(b.checkIn).toLocaleDateString(I18n.locale, opts)} – ${new Date(b.checkOut).toLocaleDateString(I18n.locale, { ...opts, year: 'numeric' })}`;
     }
 
     function sum(items) {
@@ -932,15 +1131,49 @@
     }
 
     function money(cents, currency = 'USD') {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format((cents || 0) / 100);
+        if (window.DemoMoney && currency === DemoMoney.code()) return DemoMoney.formatMinor(cents);
+        try {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format((cents || 0) / 100);
+        } catch {
+            return `${((cents || 0) / 100).toFixed(2)} ${currency}`;
+        }
+    }
+
+    function renderRecipientCurrency() {
+        const box = $('db-recipient-currency');
+        const value = $('db-recipient-currency-value');
+        const fxLine = $('db-recipient-fx');
+        if (!box) return;
+
+        const saved = DemoMoney.recipient();
+        const currency = DemoMoney.currency();
+        const rate = DemoMoney.fx();
+        const err = DemoMoney.lastError();
+        if (!saved && !err) {
+            box.hidden = true;
+            return;
+        }
+        box.hidden = false;
+        if (!saved) {
+            value.textContent = t('dashboard.currencyUnavailable');
+            fxLine.textContent = err || '';
+            return;
+        }
+        const symbol = currency.symbol ? ` (${currency.symbol})` : '';
+        value.textContent = t('dashboard.currencyValue', { code: currency.code, name: currency.name || currency.code, symbol });
+        const who = `${saved.name || saved.id} (${saved.id})`;
+        const rateText = currency.code === 'USD'
+            ? t('dashboard.currencyUsd')
+            : t('dashboard.currencyRate', { rate: rate.rate, code: currency.code, date: rate.date ? ` · ${rate.date}` : '' });
+        fxLine.textContent = t('dashboard.currencyLine', { who, detail: err || rateText });
     }
 
     function timeAgo(ms) {
         const minutes = Math.round((Date.now() - ms) / 60000);
-        if (minutes < 1) return 'just now';
-        if (minutes < 60) return `${minutes} min ago`;
+        if (minutes < 1) return t('stay.justNow');
+        if (minutes < 60) return t('stay.minutesAgo', { count: minutes });
         const hours = Math.round(minutes / 60);
-        if (hours < 24) return `${hours} h ago`;
+        if (hours < 24) return t('stay.hoursAgo', { count: hours });
         return new Date(ms).toLocaleDateString('en-GB');
     }
 

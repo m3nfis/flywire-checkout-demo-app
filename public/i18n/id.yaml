@@ -1,0 +1,1288 @@
+# =============================================================================
+# The Caldera House — English source strings
+# Locale: id
+#
+# This file is the source the translation team edits. The page reads it at
+# runtime (see public/i18n.js). Comments are for translators and are not shown.
+#
+# How to read a key
+# - The comment directly above a key says where it appears and any constraint.
+# - Nested keys become dotted names in the app, e.g. rooms.hero.title.
+#
+# Rules
+# - Keep every {placeholder} exactly, including the braces. The app fills them
+#   in. Example: "{amount} paid in full." — translate the words, leave {amount}.
+# - Keys that end in _one, _other, _two, _few, _many or _zero are plural forms.
+#   {count} is the number. English only needs _one (exactly 1) and _other
+#   (everything else). Add the other suffixes if your language needs them
+#   (Polish, Arabic, Russian, and others). If a form is missing, the app uses
+#   _other.
+# - [html] means the value contains tags such as <br>, <strong>, <em>, <a> or
+#   <code>. Translate the words. Leave tags, hrefs and class names unchanged.
+# - [do not translate] means the value is a proper noun, brand, code or
+#   endonym and must stay as written.
+# - Tone: sections under "guest" voice speak to the hotel guest (warm, luxury,
+#   second person). Sections marked "presenter" speak to the person running
+#   the demo or the hotel back office (plain instructions).
+# - Keep button and stepper labels short. Where length matters, the comment says so.
+# - Do not translate API field names, URLs, currency codes, portal codes, or
+#   the sample code in the integration preview. Those are not in this file.
+#
+# Not in this file
+# - Developer documentation under public/full-docs and public/minimal-docs.
+# - Code comments, console messages, and the generated checkout payload.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Shared words used on more than one screen
+# -----------------------------------------------------------------------------
+common:
+  # Booking total row. Short label, paired with a money amount.
+  total: "Total"
+  # Date the guest arrives. Short label in a summary list.
+  checkIn: "Check-in"
+  # Date the guest leaves. Short label in a summary list.
+  checkOut: "Check-out"
+  # How many people are staying. Short label in a summary list.
+  guests: "Tamu"
+  # The room that was booked. Short label.
+  suite: "Suite"
+  # Closes a popover or drawer. Button.
+  done: "Selesai"
+  # Restores the previous dates and guest counts. Text button in the date popover.
+  reset: "Atur ulang"
+  # Copies text to the clipboard. Small button. Restored after "Copied".
+  copy: "Salin"
+  # Shown for about a second after a copy succeeds. Same button as "Copy".
+  copied: "Tersalin"
+  # Shown for about a second when the browser blocks clipboard access.
+  copyFailed: "Gagal menyalin"
+  # Reveals a secret field (the API key). Small button. Opposite of "Hide".
+  show: "Tampilkan"
+  # Masks a secret field. Small button. Opposite of "Show".
+  hide: "Sembunyikan"
+  # Fallback when the guest has not given a name yet. Used in greetings.
+  guest: "Tamu Terhormat"
+  # Empty value in a definition list, e.g. a credential that has not been entered.
+  notSet: "Belum diatur"
+  # Word before the last item of a list: "Client ID, recipient code and API key".
+  and: "dan"
+  # Placeholder when a value is unknown. A single em dash. [do not translate]
+  dash: "—"
+
+# -----------------------------------------------------------------------------
+# Browser tab titles
+# -----------------------------------------------------------------------------
+meta:
+  # Browser tab title for the public booking site.
+  # "The Caldera House" is the hotel name. "Oia" and "Santorini" are place names.
+  # [do not translate] the hotel name and the place names. The em dash can stay.
+  bookingTitle: "The Caldera House — Oia, Santorini"
+  # Browser tab title for the hotel back office (staff page, not the guest page).
+  # [do not translate] "The Caldera House".
+  backOfficeTitle: "Back office — The Caldera House"
+
+# -----------------------------------------------------------------------------
+# Top bar of the booking site
+# -----------------------------------------------------------------------------
+nav:
+  # Logo text. Hotel name. [do not translate]
+  logo: "The Caldera House"
+  # Small location label next to the logo. Place names. [do not translate]
+  location: "Oia, Santorini"
+  # Tooltip and screen-reader name for the heartbeat icon. Opens a presenter drawer
+  # that lists what the payment checkout returned. Not part of the guest story.
+  checkoutActivity: "Aktivitas Checkout"
+  # Tooltip and screen-reader name for the grid icon. Opens the staff back office.
+  backOffice: "Back office hotel"
+  # Tooltip and screen-reader name for the gear icon. Opens presenter checkout settings.
+  # {flow} is the name of the selected payment flow, e.g. "Pay in full".
+  checkoutSettings: "Pengaturan Checkout"
+  checkoutSettingsWithFlow: "Pengaturan Checkout · {flow}"
+
+# -----------------------------------------------------------------------------
+# Three-step progress bar under the header. Keep each label short.
+# -----------------------------------------------------------------------------
+stepper:
+  # Step 1. Guest is choosing a room.
+  selectRoom: "Pilih kamar"
+  # Step 2. Guest is entering name, email and address.
+  guestDetails: "Data tamu"
+  # Step 3. Guest is about to pay.
+  payment: "Pembayaran"
+
+# -----------------------------------------------------------------------------
+# Page 1 — room selection. Guest voice.
+# -----------------------------------------------------------------------------
+rooms:
+  # Decorative photo behind the headline. Describe the picture, not the hotel brand.
+  heroAlt: "Kubah biru Santorini yang menghadap Laut Aegean"
+  # Small line above the headline. Hotel name and place. [do not translate]
+  eyebrow: "The Caldera House · Oia, Santorini"
+  # Main headline on the room list.
+  title: "Pilih suite Anda"
+  # Tooltip, screen-reader text, and the date popover name. Opens the date and guest picker.
+  changeDates: "Ubah tanggal dan jumlah tamu"
+  # Price suffix when the hotel bills in US dollars. Keep the leading slash.
+  perNight: "/malam"
+  # Price suffix when the hotel bills in another currency.
+  # {currency} is an ISO code such as EUR or GBP. Do not translate the code.
+  perNightWithCurrency: "/malam · {currency}"
+  # Button on every room card. Keep it short enough for a card footer.
+  selectSuite: "Pilih suite ini"
+
+  # Hero line under the headline, built in script.
+  # {range} is the dates, e.g. "June 12 – 15, 2026".
+  # {nights} and {guests} are already-translated phrases such as "3 Nights" and "2 Guests".
+  staySummary: "{range} · {nights} · {guests}"
+
+  cards:
+    royal-caldera:
+      # Marketing name of the featured suite. "Caldera" is the volcanic bay at Santorini;
+      # keep it. "Royal" and "Suite" may be translated.
+      name: "Suite Royal Caldera"
+      # Alt text for the suite photo. Same name guests see on the card.
+      alt: "Suite Royal Caldera"
+      # Ribbon on the photo. One word if possible.
+      badge: "Rekomendasi"
+      # Facts line under the name. Middle dots separate three facts. "m²" is square metres.
+      specs: "120 m² · Pemandangan Caldera · Kolam renang infinity pribadi"
+      # Size only, reused in the booking summary. Keep "m²".
+      size: "120 m²"
+      # View only, reused in the booking summary.
+      view: "Pemandangan Caldera"
+      # Paragraph on the card. Warm, descriptive.
+      description: "Permata utama The Caldera House. Ruang peristirahatan yang luas dengan jendela dari lantai hingga langit-langit yang membingkai caldera, kolam renang infinity pribadi, dan teras yang dirancang untuk menikmati matahari terbenam paling terkenal di dunia."
+      # Short amenity chips. Keep each to one or two words.
+      tagPool: "Kolam pribadi"
+      tagButler: "Layanan butler"
+      tagTerrace: "Teras"
+      tagKitchen: "Dapur koki"
+
+    sunset-villa:
+      # Marketing name. "Sunset" and "Honeymoon" may be translated. "Villa" may be translated.
+      name: "Vila Bulan Madu Senja"
+      alt: "Vila Bulan Madu Senja"
+      specs: "95 m² · Pemandangan matahari terbenam · Bak mandi luar ruangan"
+      size: "95 m²"
+      view: "Pemandangan matahari terbenam"
+      description: "Vila tersembunyi yang dikelilingi bunga bugenvil, dengan halaman pribadi, bak mandi tembaga luar ruangan, dan pemandangan tanpa halangan ke arah matahari terbenam legendaris di Oia."
+      tagBath: "Bak mandi luar ruangan"
+      tagCourtyard: "Halaman dalam"
+      tagSunset: "Pemandangan senja"
+
+    captains-quarters:
+      # Marketing name. Nautical theme. The apostrophe is the hotel’s name for the room.
+      name: "Kamar Kapten"
+      alt: "Kamar Kapten"
+      specs: "65 m² · Pemandangan pelabuhan · Kolam celup"
+      size: "65 m²"
+      view: "Pemandangan pelabuhan"
+      description: "Terinspirasi oleh warisan bahari Santorini, dengan langit-langit melengkung bercat putih, barang antik pilihan, dan halaman pribadi dengan kolam celup."
+      tagPlunge: "Kolam celup"
+      tagVaulted: "Langit-langit melengkung"
+      tagCourtyard: "Halaman dalam"
+
+    aegean-studio:
+      # Marketing name. "Aegean" is the sea; keep it. "Cliff" and "Studio" may be translated.
+      name: "Studio Tebing Aegean"
+      alt: "Studio Tebing Aegean"
+      specs: "45 m² · Pemandangan laut · Balkon pribadi"
+      size: "45 m²"
+      view: "Pemandangan laut"
+      description: "Tempat peristirahatan elegan yang dipahat di tebing vulkanik, dengan balkon pribadi yang menggantung di atas Laut Aegean. Garis-garis bersih berpadu dengan batu alam di studio rancangan arsitek ini."
+      tagSea: "Pemandangan laut"
+      tagBalcony: "Balkon"
+      tagShower: "Pancuran hujan"
+
+# -----------------------------------------------------------------------------
+# Date and guest popover. Guest voice. Opened from "Change dates and guests".
+# -----------------------------------------------------------------------------
+stay:
+  # Plural of nights, lowercase, used inside sentences and the price breakdown.
+  # {count} is a number. See the plural rules at the top of this file.
+  night_one: "{count} malam"
+  night_other: "{count} malam"
+  # Same idea, title case, used in the hero summary ("3 Nights").
+  nightTitle_one: "{count} malam"
+  nightTitle_other: "{count} malam"
+  # Title case, hero summary ("2 Guests").
+  guestTitle_one: "{count} tamu"
+  guestTitle_other: "{count} tamu"
+  # Guest count in the summary panel ("2 Adults").
+  adult_one: "{count} dewasa"
+  adult_other: "{count} dewasa"
+  # Guest count when there are children. English "Child" / "Children" is irregular.
+  child_one: "{count} anak"
+  child_other: "{count} anak"
+  # Extra people beyond the two guests included in the rate. Lowercase, mid-sentence.
+  extraGuest_one: "{count} tamu tambahan"
+  extraGuest_other: "{count} tamu tambahan"
+  # Bookings count on the back office list.
+  booking_one: "{count} pemesanan dibuat di situs pemesanan"
+  booking_other: "{count} pemesanan dibuat di situs pemesanan"
+  # Nights column in the back office table.
+  nightShort_one: "{count} malam"
+  nightShort_other: "{count} malam"
+  # Relative time in the back office. {count} is minutes or hours.
+  minutesAgo_one: "{count} menit lalu"
+  minutesAgo_other: "{count} menit lalu"
+  hoursAgo_one: "{count} jam lalu"
+  hoursAgo_other: "{count} jam lalu"
+  # Less than a minute ago.
+  justNow: "baru saja"
+
+  # Popover heading while the guest still needs to pick the departure date.
+  selectCheckout: "Pilih tanggal check-out"
+  # Subtitle before a departure date is chosen.
+  # {checkIn} is a short date such as "Fri, Jun 12, 2026". {max} is a number (30).
+  checkoutHint: "Check-in {checkIn} · maksimal {max} malam"
+  # Screen-reader name for the previous-month arrow.
+  previousMonth: "Bulan sebelumnya"
+  # Screen-reader name for the next-month arrow.
+  nextMonth: "Bulan berikutnya"
+  # Stepper label. Adults are ages 13+.
+  adults: "Dewasa"
+  # Hint under "Adults".
+  adultsHint: "Usia 13 tahun ke atas"
+  # Stepper label.
+  children: "Anak-anak"
+  # Hint under "Children". An en dash between the ages.
+  childrenHint: "Usia 2–12 tahun"
+  # Note under the steppers. {guests} is a number (2). {amount} is a money amount.
+  extraGuestFee: "Tarif sudah termasuk {guests} tamu. Setiap tamu tambahan dikenakan {amount} per malam."
+  # Screen-reader name for the minus button. {who} is "adults" or "children", lowercase.
+  removeGuests: "Kurangi jumlah {who}"
+  # Screen-reader name for the plus button. {who} is "adults" or "children", lowercase.
+  addGuests: "Tambah jumlah {who}"
+  # Lowercase plural used only inside the screen-reader phrases above.
+  adultsLower: "dewasa"
+  childrenLower: "anak-anak"
+
+  # Column headers of the month grid, Sunday through Saturday, in that order.
+  # The grid starts on Sunday. Do not reorder these seven keys.
+  # Keep them very short (about 2 letters in English).
+  weekdaySu: "Mg"
+  weekdayMo: "Sn"
+  weekdayTu: "Sl"
+  weekdayWe: "Rb"
+  weekdayTh: "Km"
+  weekdayFr: "Jm"
+  weekdaySa: "Sb"
+
+# -----------------------------------------------------------------------------
+# Page 2 — guest details form. Guest voice.
+# -----------------------------------------------------------------------------
+guest:
+  # Form heading.
+  title: "Informasi tamu"
+  # Line under the heading.
+  subtitle: "Silakan konfirmasi data Anda untuk reservasi ini"
+  # Form labels. Each sits above an empty text field.
+  firstName: "Nama depan"
+  lastName: "Nama belakang"
+  email: "Alamat email"
+  phone: "Nomor telepon"
+  address: "Alamat jalan"
+  city: "Kota"
+  # Postal code. "ZIP" is the US term; "Postal" covers other countries. Keep both ideas.
+  zip: "Kode pos"
+  country: "Negara"
+  # First option in the country menu, shown before a country is chosen.
+  countryPlaceholder: "Pilih…"
+  # Returns to the room list. The arrow is part of the label; you may use your language’s back arrow.
+  backToRooms: "← Kembali ke daftar kamar"
+  # Submits the form and opens the payment step. Button.
+  continueToPayment: "Lanjutkan ke pembayaran"
+  # Heading of the side panel that repeats the chosen room.
+  yourSelection: "Pilihan Anda"
+
+  # Country menu. The stored value is the two-letter code; only the name is translated.
+  # Use the country’s usual name in your language.
+  countries:
+    ES: "Spanyol"
+    GR: "Yunani"
+    IT: "Italia"
+    FR: "Prancis"
+    DE: "Jerman"
+    GB: "Inggris Raya"
+    US: "Amerika Serikat"
+    PT: "Portugal"
+    NL: "Belanda"
+    CH: "Swiss"
+    AT: "Austria"
+    BE: "Belgia"
+    SE: "Swedia"
+    NO: "Norwegia"
+    DK: "Denmark"
+    AU: "Australia"
+    CA: "Kanada"
+    JP: "Jepang"
+
+# -----------------------------------------------------------------------------
+# Page 3 — payment. Guest voice, plus a few presenter warnings.
+# -----------------------------------------------------------------------------
+booking:
+  # Large photo on the payment page.
+  heroAlt: "Pemandangan caldera Santorini saat matahari terbenam"
+  # Three gallery captions under the payment-page photos.
+  gallerySuiteAlt: "Interior Suite Royal"
+  gallerySuite: "Suite Royal"
+  galleryPoolAlt: "Kolam renang infinity"
+  galleryPool: "Kolam renang infinity"
+  galleryDiningAlt: "Santapan istimewa"
+  galleryDining: "Santap privat"
+  # Property story heading.
+  sanctuaryTitle: "Tempat peristirahatan di atas laut"
+  # First paragraph of the property story. Place names stay.
+  sanctuaryBody1: "Bertengger di tebing vulkanik Oia, The Caldera House adalah tempat Laut Aegean bertemu langit. Setiap suite menawarkan pemandangan caldera tanpa halangan, dengan interior batu pahatan tangan, kolam celup pribadi, dan teras yang dirancang untuk menyaksikan matahari terbenam paling terkenal di dunia."
+  # Second paragraph.
+  sanctuaryBody2: "Dari makan malam diterangi cahaya lilin yang disiapkan oleh koki residen kami hingga yoga saat fajar di puncak tebing, setiap detail telah dipertimbangkan agar Anda dapat sepenuhnya menikmati momen."
+  # Amenity list. Short phrases.
+  amenityPool: "Kolam renang infinity pribadi"
+  amenityChef: "Layanan koki di dalam suite"
+  amenityTerrace: "Teras dengan pemandangan Caldera"
+  amenitySpa: "Spa & kebugaran"
+  amenitySailing: "Pelayaran senja"
+  amenityAirport: "Layanan concierge bandara"
+  # Returns to the guest form. Arrow may be mirrored in RTL languages.
+  backToGuest: "← Kembali ke data tamu"
+  # Side panel heading on the payment step.
+  yourStay: "Masa inap Anda"
+  # Heading above the payment choice.
+  payment: "Pembayaran"
+  # Security reassurance under the pay button.
+  secured: "Semua transaksi diamankan dan dienkripsi."
+  # Line under that reassurance. {name} is the guest’s full name.
+  guestLine: "Tamu: {name}"
+  # Tooltip on the pay button while Flywire demo credentials are missing.
+  # Presenter voice — the person clicking has to open the back office first.
+  credentialsFirst: "Tambahkan kredensial demo Flywire Anda di back office hotel terlebih dahulu"
+  # Notice when checkout rejects the configuration. {detail} is a technical field list from Flywire.
+  # Presenter voice.
+  configRejected: "Checkout menolak konfigurasi ini: {detail}"
+  # Notice when checkout fails to open. {detail} is the error text.
+  couldNotStart: "Checkout tidak dapat dimulai: {detail}"
+  # Shown in the activity log when a card is saved and no money is taken.
+  noAmount: "Tanpa jumlah (hanya menyimpan kartu)"
+  # Activity log value. Presenter voice. Checkout drawn on top of the page.
+  displayOverlay: "Overlay layar penuh"
+  # Activity log value. Checkout placed inside the booking panel.
+  displayEmbedded: "Disematkan di halaman"
+
+  # Price breakdown lines. {nights} is "3 nights". {amount} is the nightly rate.
+  nightlyCalc: "{nights} × {amount}"
+  # {extras} is "1 extra guest" or "2 extra guests". {amount} is the fee. {nights} is "3 nights".
+  extraCalc: "{extras} × {amount} × {nights}"
+
+# -----------------------------------------------------------------------------
+# Guest-facing names for the payment flow the presenter picked.
+# These replace the "Payment" card title, description and the pay button.
+# {amount} is a money amount such as "$7,350" or "€6.800".
+# -----------------------------------------------------------------------------
+flows:
+  pay_full:
+    # Guest sees this as the payment option title.
+    guestTitle: "Bayar penuh"
+    guestDesc: "Pembayaran satu kali sebesar {amount}"
+    # Pay button. {amount} is included.
+    cta: "Bayar {amount}"
+    # Presenter sees this in the settings drawer, as the flow name.
+    title: "Bayar penuh"
+    # Presenter. One sentence under the flow name.
+    pitch: "Tarif prabayar, tur, dan pengalaman menit terakhir."
+    # Link to a matching sample. Presenter.
+    playground: "Pembayaran dengan kolom umum"
+
+  reserve_hold:
+    guestTitle: "Reservasi & tahan dana"
+    guestDesc: "Pra-otorisasi {amount} hari ini, ditagih saat check-in"
+    cta: "Reservasi dengan penahanan dana"
+    title: "Reservasi & tahan dana"
+    # "Pre-authorize" means a card hold, not a charge. "API" is the Flywire programming interface; you may keep "API".
+    pitch: "Pra-otorisasi saat pemesanan, tarik dana saat check-in. Penahanan dana dapat diperpanjang atau ditambah melalui API."
+    playground: "Pembayaran dengan pra-otorisasi"
+
+  moto:
+    # MOTO means Mail Order / Telephone Order: staff take the card, the guest is not on the website.
+    # You may spell that out if the abbreviation is unknown, but keep it short (it is a menu title).
+    guestTitle: "Pembayaran melalui bagian reservasi"
+    guestDesc: "Pembayaran {amount} dibantu petugas"
+    cta: "Terima pembayaran {amount}"
+    title: "Pemesanan via telepon & email (MOTO)"
+    pitch: "Staf reservasi menerima pembayaran untuk tamu yang memesan melalui telepon atau email."
+    playground: "Pembayaran MOTO"
+
+  save_card:
+    guestTitle: "Jaminan dengan kartu"
+    guestDesc: "Kartu Anda menjamin pemesanan ini. Tidak ada tagihan hari ini."
+    cta: "Simpan kartu & reservasi"
+    title: "Simpan kartu, tagih nanti"
+    pitch: "Jaminan kartu tersimpan. Tagih deposit, sisa pembayaran, atau biaya no-show nanti dengan token."
+    playground: "Tokenisasi tanpa jumlah"
+
+  pay_save:
+    guestTitle: "Bayar & simpan kartu"
+    guestDesc: "Bayar {amount} sekarang; kartu disimpan untuk biaya tambahan"
+    cta: "Bayar {amount} & simpan kartu"
+    title: "Bayar sekarang & simpan kartu"
+    pitch: "Tagih sekarang dan simpan kartu untuk biaya tambahan: peralatan selam, spa, ekskursi, sisa pembayaran."
+    playground: "Tokenisasi dengan jumlah"
+
+  hold_save:
+    guestTitle: "Tahan dana & simpan kartu"
+    guestDesc: "Pra-otorisasi {amount}; kartu disimpan untuk tagihan akhir Anda"
+    cta: "Reservasi dengan penahanan dana"
+    title: "Tahan dana & simpan kartu"
+    pitch: "Pra-otorisasi biaya menginap dan simpan kartu untuk tagihan akhir serta biaya insidental."
+    playground: "Tokenisasi dengan pra-otorisasi"
+
+  optional:
+    guestTitle: "Bayar penuh"
+    guestDesc: "Pembayaran satu kali sebesar {amount}, dengan opsi menyimpan kartu Anda"
+    cta: "Bayar {amount}"
+    title: "Bayar, tamu dapat menyimpan kartu"
+    pitch: "Tamu memutuskan apakah akan menyimpan kartu untuk perjalanan berikutnya. Sangat cocok untuk tamu yang kembali menginap."
+    playground: "Tokenisasi opsional"
+
+  optional_hold:
+    guestTitle: "Reservasi & tahan dana"
+    guestDesc: "Pra-otorisasi {amount}, dengan opsi menyimpan kartu Anda"
+    cta: "Reservasi dengan penahanan dana"
+    title: "Tahan dana, tamu dapat menyimpan kartu"
+    pitch: "Pra-otorisasi biaya menginap; tamu dapat memilih untuk menyimpan kartu."
+    playground: "Tokenisasi opsional dengan pra-otorisasi"
+
+  implicit:
+    guestTitle: "Bayar penuh"
+    guestDesc: "Pembayaran satu kali sebesar {amount}; kartu disimpan selama Anda menginap"
+    cta: "Bayar {amount}"
+    title: "Bayar & kartu tersimpan"
+    pitch: "Kartu disimpan secara otomatis jika metode pembayaran mendukung. Ideal untuk pelunasan sisa tagihan dan rencana cicilan."
+    playground: "Tokenisasi implisit"
+
+  implicit_hold:
+    guestTitle: "Reservasi & tahan dana"
+    guestDesc: "Pra-otorisasi {amount}; kartu disimpan selama Anda menginap"
+    cta: "Reservasi dengan penahanan dana"
+    title: "Tahan dana & kartu tersimpan"
+    pitch: "Pra-otorisasi biaya menginap dan simpan kartu secara otomatis untuk tagihan berikutnya."
+    playground: "Tokenisasi implisit dengan pra-otorisasi"
+
+  # Extra sentence under the payment option when part of the money goes to partners.
+  # {parts} is a list such as "sunset catamaran excursion ($350) and couples spa ritual ($250)".
+  splitNote: "Termasuk {parts}, yang diselesaikan langsung dengan mitra kami."
+  # Joiner used inside {parts} before the last partner. Same role as common.and, kept here
+  # because it sits inside a guest sentence.
+  splitAnd: "dan"
+  # Extra sentence when the hotel absorbs the card fee.
+  noSurcharge: "Tanpa biaya tambahan kartu."
+
+  # Presenter. Group headings in the flow list.
+  groups:
+    payment: "Pembayaran"
+    tokenization: "Kartu tersimpan"
+    # Grey hint after the group name. Technical term for saving a card.
+    tokenizationHint: "Tokenisasi"
+    optional: "Tamu memilih menyimpan kartu"
+    optionalHint: "Tokenisasi opsional"
+    implicit: "Kartu tersimpan otomatis"
+    implicitHint: "Tokenisasi implisit"
+  # Presenter. Badge when a flow cannot be selected until an API key is saved.
+  needsApiKey: "Memerlukan kunci API"
+  # Presenter. Appended to the technical summary when the flow does not charge now.
+  noAmountTech: "tanpa jumlah"
+
+  # Presenter. Extra sample links that appear when the matching setting is on.
+  playground:
+    authenticated: "Pembayaran dengan sesi terautentikasi"
+    embedded: "Pembayaran tersemat"
+    split: "Pembayaran dengan pembagian dana"
+    waive: "Pembayaran tanpa biaya tambahan"
+    offerRules: "Pembayaran dengan aturan penawaran"
+    styles: "Pembayaran dengan gaya kustom"
+    timeout: "Pembayaran dengan batas waktu"
+    docs: "Panduan konfigurasi Checkout V2"
+
+# -----------------------------------------------------------------------------
+# Confirmation page after a successful checkout. Guest voice.
+# -----------------------------------------------------------------------------
+success:
+  # Photo behind the confirmation.
+  backgroundAlt: "Matahari terbenam di Santorini"
+  # Small line above the confirmation headline. Changes with the kind of payment.
+  eyebrowPaid: "Pemesanan dikonfirmasi"
+  eyebrowHold: "Reservasi ditahan"
+  eyebrowCard: "Reservasi dijamin"
+  # Headline. The <br> is a deliberate line break. [html]
+  title: "Liburan Santorini Anda<br>telah menanti"
+  # {name} is the guest’s first and last name.
+  welcome: "Selamat datang, {name}"
+  # {amount} is the money amount.
+  notePaid: "{amount} telah dibayar penuh."
+  noteHold: "Dana sebesar {amount} ditahan pada kartu Anda. Tagihan akan dikenakan saat check-in."
+  noteCard: "Kartu Anda telah disimpan dengan aman. Tidak ada tagihan hari ini."
+  noteMoto: "{amount} telah diterima oleh tim reservasi kami."
+  # Appended after the note when the card was also stored. Leading space is intentional.
+  cardSaved: " Kartu Anda disimpan untuk biaya tambahan selama Anda menginap."
+  cardSavedIfChosen: " Kartu Anda disimpan jika Anda memilih untuk menyimpannya."
+  cardKeptWhereSupported: " Kartu Anda disimpan jika metode pembayaran mendukung."
+  # Heading above a short list of stay highlights.
+  awaits: "Yang menanti Anda"
+  highlightPool: "Kolam renang infinity pribadi di atas caldera"
+  highlightDinner: "Makan malam senja di teras Anda, disiapkan oleh koki kami"
+  highlightSailing: "Pelayaran katamaran eksklusif saat senja keemasan"
+  highlightSpa: "Ritual spa pasangan tanpa biaya"
+  # Presenter-only box under the confirmation. Not guest marketing.
+  returnedBy: "Dikembalikan oleh Flywire · demo"
+  viewActivity: "Lihat aktivitas Checkout →"
+  openDashboard: "Buka di dasbor hotel →"
+  # Reloads the site so the presenter can run the booking again.
+  bookAnother: "Pesan masa inap lainnya"
+  # Labels in the presenter result list. The values next to them are ids and status codes.
+  resultBooking: "Pemesanan"
+  resultFlow: "Alur"
+  resultSession: "Sesi"
+  resultSessionStatus: "Status sesi"
+  resultPaymentStatus: "Status pembayaran"
+  resultMethod: "Metode pembayaran"
+
+# -----------------------------------------------------------------------------
+# Failure page. Guest voice, slightly playful on the card decline.
+# -----------------------------------------------------------------------------
+error:
+  # Decline headline. Playful, not a formal banking error. Short.
+  declinedTitle: "Mohon maaf"
+  declinedSubtitle: "Pembayaran ditolak"
+  # [html] <br> is a line break.
+  declinedMessage: "Pembayaran Anda tidak dapat diproses.<br>Silakan coba dengan kartu lain."
+  # Checkout timer ran out. The presenter enabled a countdown.
+  timeoutTitle: "Waktu habis"
+  timeoutSubtitle: "Sesi pembayaran Anda telah berakhir"
+  # [html]
+  timeoutMessage: "Kami telah menahan suite Anda selama mungkin.<br>Silakan mulai kembali untuk menyelesaikan pemesanan Anda."
+  # Returns the guest to the payment step.
+  tryAgain: "Coba lagi"
+  viewActivity: "Lihat aktivitas Checkout →"
+
+# -----------------------------------------------------------------------------
+# Warnings shown when Flywire demo credentials have not been entered.
+# Presenter voice. {missing} is a list such as "API key" or "Client ID and recipient code".
+# -----------------------------------------------------------------------------
+credentials:
+  # Field names used inside {missing}. "Client ID" and "API key" are product terms;
+  # translate them consistently everywhere in this file.
+  fields:
+    client_id: "ID Klien"
+    code: "kode penerima"
+    api_key: "kunci API"
+  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "ID Klien, kode penerima, dan kunci API"
+  # Payment step. Bold first line.
+  paymentTitle: "Checkout memerlukan kredensial demo Flywire."
+  # [html] Payment step, the sentence after the title. Keep the <a> and its href.
+  paymentBody: "Tambahkan {missing} Anda di <a href=\"/dashboard/#credentials\">back office hotel</a>, lalu kembali untuk membayar."
+  # Settings drawer and activity drawer. Bold first line.
+  drawerTitle: "Tambahkan kredensial demo Flywire Anda untuk memulai"
+  # Drawer paragraph. {missing} is the same list as above.
+  drawerBody: "Demo ini tidak menyertakan kredensial. Masukkan {missing} Anda di back office hotel. Kredensial disimpan di browser ini dan hanya berfungsi di lingkungan demo Flywire."
+  # Button in the drawer.
+  add: "Tambahkan kredensial"
+  # Back office banner. Bold first line, includes the period.
+  officeTitle: "Tambahkan kredensial demo Flywire Anda untuk memulai."
+  # Back office banner body. {missing} is the list. "Save & test connection" is the submit button; use the same translation as dashboard.saveAndTest.
+  officeBody: "Demo ini tidak menyertakan kredensial. Masukkan {missing} dari akun demo Flywire, lalu tekan Simpan & uji koneksi. Hingga saat itu, Checkout di situs pemesanan tetap dinonaktifkan."
+
+# -----------------------------------------------------------------------------
+# Checkout settings drawer (gear icon). Presenter voice throughout.
+# Technical tokens in <code> or in the "hint" strings are API names. Do not translate those tokens.
+# -----------------------------------------------------------------------------
+demo:
+  # Small label above the drawer title. Product name. [do not translate] "Flywire". "Checkout V2" is the product version.
+  overline: "Flywire Checkout V2"
+  title: "Pengaturan Checkout"
+  # Subtitle under the title.
+  subtitle: "Pilih apa yang ditampilkan. Pengaturan berlaku saat Checkout dibuka berikutnya dan disimpan di browser ini."
+  # Screen-reader name for the language icon in this header. The names in the menu (English, Español, …) are each language’s own name and are not in this file.
+  pageLanguage: "Bahasa halaman"
+  # Screen-reader name for the X button.
+  close: "Tutup pengaturan Checkout"
+  # Numbered section titles. The number is drawn separately; translate only the word.
+  sectionFlow: "Alur"
+  sectionDisplay: "Tampilan"
+  sectionPages: "Halaman & pengalaman tamu"
+  sectionOptions: "Opsi pembayaran"
+  sectionMethods: "Metode pembayaran & mata uang"
+  sectionBrand: "Branding & bahasa"
+  sectionSession: "Sesi"
+  sectionCredentials: "Kredensial demo Flywire"
+
+  # Display choices.
+  displayOverlay: "Overlay layar penuh"
+  displayEmbedded: "Sematkan Checkout di halaman"
+  # [html] Keep <code>config.embed_to</code> unchanged.
+  displayHelp: "Mode tersemat memasang Checkout di dalam panel pemesanan dengan <code>config.embed_to</code>. Panel sudah menampilkan hotel dan total, jadi sembunyikan header dan jumlah Checkout di bawah saat Anda menyematkannya."
+
+  # [html] The hint in the label is the API field. Do not translate show_payer_form.
+  payerFormLabel: "Halaman data pembayar <span class=\"fw-label-hint\">show_payer_form</span>"
+  # [html] Do not translate show_recipient_form.
+  recipientFormLabel: "Halaman kolom kustom <span class=\"fw-label-hint\">show_recipient_form</span>"
+  # Three-way choice used for both pages above.
+  pageAuto: "Otomatis"
+  pageAlways: "Selalu tampilkan"
+  pageHide: "Sembunyikan"
+  # Help under those choices. Changes with the selection.
+  pagesNoteAuto: "Otomatis melewati halaman jika semua isinya sudah terisi, seperti halnya data tamu yang sudah diisi sebelumnya."
+  pagesNoteHidePayer: "Menyembunyikan halaman pembayar hanya berfungsi jika Checkout sudah memiliki semua data pembayar yang wajib. Formulir tamu mengisinya terlebih dahulu."
+  # [html] Do not translate disabled_fields.
+  readOnlyLabel: "Kolom pembayar hanya-baca <span class=\"fw-label-hint\">disabled_fields</span>"
+  readOnlyNote: "Tamu melihat kolom ini tetapi tidak dapat mengubahnya, misalnya email yang digunakan untuk pemesanan."
+  readOnlyNoteHidden: "Tamu hanya melihat kolom ini di halaman pembayar, yang dilewati oleh Otomatis jika data sudah terisi. Atur halaman pembayar ke Selalu tampilkan untuk mendemonstrasikannya."
+  # Payer field chips. Short. These match the guest form, but they are presenter labels.
+  fieldFirstName: "Nama depan"
+  fieldLastName: "Nama belakang"
+  fieldEmail: "Email"
+  fieldPhone: "Telepon"
+  fieldAddress: "Alamat"
+  fieldCity: "Kota"
+  fieldZip: "Kode pos"
+  fieldCountry: "Negara"
+
+  # Toggle titles are the bold line. Hints in <span class="fw-label-hint"> are code. Descriptions are the second line.
+  # [html] on every *Label key. Do not translate the code inside the hint span.
+  hideCloseLabel: "<strong>Sembunyikan tombol tutup</strong> <span class=\"fw-label-hint\">close_button: 'hidden'</span>"
+  hideCloseHelp: "Tamu tidak dapat menutup Checkout, sehingga harus menyelesaikannya atau menunggu batas waktu berakhir. Paling cocok dengan tampilan tersemat."
+  hideHeaderLabel: "<strong>Sembunyikan header Checkout</strong> <span class=\"fw-label-hint\">header: 'hidden'</span>"
+  hideHeaderHelp: "Halaman pemesanan sudah menampilkan nama hotel. Checkout tidak menampilkan header-nya sendiri, baik dalam overlay maupun saat disematkan."
+  hideAmountLabel: "<strong>Sembunyikan jumlah</strong> <span class=\"fw-label-hint\">show_amount_info: false</span>"
+  hideAmountHelp: "Panel pemesanan sudah menampilkan total. Checkout melewati ringkasan jumlahnya. Ditampilkan secara default."
+  disableEmailsLabel: "<strong>Jangan kirim email ke pembayar</strong> <span class=\"fw-label-hint\">disable_payer_emails</span>"
+  disableEmailsHelp: "Flywire tidak akan mengirim email status pembayaran, sehingga hotel dapat mengirim konfirmasi dengan mereknya sendiri."
+
+  # [html]
+  splitLabel: "<strong>Bagi dengan mitra</strong> <span class=\"fw-label-hint\">transaction.details.split</span>"
+  splitHelp: "Kirim sebagian pembayaran langsung ke portal mitra (ekskursi, spa, kapal penyelaman). Sisanya untuk hotel."
+  waiveLabel: "<strong>Bebaskan biaya tambahan kartu</strong>"
+  waiveHelp: "Tanggung biaya tambahan hanya untuk pemesanan ini, tanpa mengubah pengaturan portal."
+  # [html]
+  timeoutLabel: "<strong>Batas waktu Checkout</strong> <span class=\"fw-label-hint\">config.timeout</span>"
+  timeoutHelp: "Tampilkan hitung mundur dan tutup Checkout saat waktu habis, misalnya untuk melepas kamar yang ditahan."
+  timeoutCountdown: "Hitung mundur"
+  timeoutWhole: "Seluruh Checkout"
+  timeoutEachAttempt: "Setiap upaya pembayaran"
+  timeoutDuration: "Durasi"
+  # {count} is 3, 5, 10 or 15. Keep short; it is a menu item.
+  minutes_one: "{count} menit"
+  minutes_other: "{count} menit"
+
+  # [html] Do not translate config.offer_rules.
+  methodsHelp: "Mengatur penawaran yang dilihat tamu, beserta urutannya, menggunakan <code>config.offer_rules</code>."
+  # Screen-reader name for the method chips.
+  methodsGroup: "Metode pembayaran yang ditampilkan"
+  methodCards: "Kartu"
+  methodDebit: "Debit langsung"
+  methodOnline: "Metode online lokal"
+  methodTransfer: "Transfer bank"
+  hideAmex: "Sembunyikan American Express"
+  # [html] Do not translate filters.currency.
+  currenciesLabel: "Mata uang yang ditawarkan <span class=\"fw-label-hint\">filters.currency</span>"
+  currencyAll: "Semua mata uang yang tersedia"
+  currencyPayer: "Hanya mata uang asal tamu"
+  currencyOtherThanPayer: "Selain mata uang tamu"
+  currencyHotel: "Hanya mata uang hotel"
+  currencyOtherThanHotel: "Selain mata uang hotel"
+  currencyBoth: "Mata uang tamu dan hotel"
+  # [html] "sort · currency" is an API hint. Do not translate "sort" or "currency" inside the hint.
+  currencySortLabel: "Urutan penawaran menurut mata uang <span class=\"fw-label-hint\">sort · currency</span>"
+  sortDefault: "Default Checkout"
+  sortPayerFirst: "Mata uang tamu terlebih dahulu"
+  sortHotelFirst: "Mata uang hotel terlebih dahulu"
+  sortOtherFirst: "Mata uang lain terlebih dahulu"
+  # [html]
+  methodSortLabel: "Urutan penawaran menurut metode <span class=\"fw-label-hint\">sort · method</span>"
+  sortCardsFirst: "Kartu terlebih dahulu"
+  sortOnlineFirst: "Metode online lokal terlebih dahulu"
+  sortDebitFirst: "Debit langsung terlebih dahulu"
+  sortTransferFirst: "Transfer bank terlebih dahulu"
+
+  # [html] Do not translate styles.
+  brandLabel: "<strong>Sesuaikan dengan merek klien</strong>"
+  brandHelp: "Atur warna, font, ukuran teks, dan spasi Checkout dengan <code>styles</code>."
+  brandColor: "Warna utama"
+  brandFont: "Font"
+  # Menu item that reveals a free-text font field. "Google Font" is a product name; you may keep it.
+  brandFontCustom: "Google Font kustom"
+  # [html] Do not translate fonts.googleapis.com.
+  brandFontCustomLabel: "Google Font <span class=\"fw-label-hint\">fonts.googleapis.com</span>"
+  # Example text inside the empty font field.
+  brandFontPlaceholder: "Libre Baskerville, atau tempel tautan CSS"
+  # Shown when the font name is accepted. {family} is the font name the user typed.
+  brandFontOk: "Checkout memuat “{family}” dari fonts.googleapis.com."
+  brandFontEmpty: "Masukkan nama font, misalnya Libre Baskerville, atau tempel tautan CSS fonts.googleapis.com."
+  brandFontBadUrl: "Tautan tersebut bukan URL yang valid."
+  brandFontOrigin: "Checkout hanya memuat font dari https://fonts.googleapis.com."
+  brandFontFamily: "Tautan memerlukan nama font yang terdiri dari huruf, angka, dan spasi."
+  brandFontChars: "Gunakan huruf, angka, dan spasi saja. Checkout menolak karakter lain dalam nama font."
+  # [html] Do not translate base_font_size. The sizes below keep the pixel value.
+  brandSizeLabel: "Ukuran teks <span class=\"fw-label-hint\">base_font_size</span>"
+  brandSizeSmall: "Kecil · 14px"
+  brandSizeRegular: "Reguler · 16px"
+  brandSizeLarge: "Besar · 18px"
+  brandSizeXl: "Ekstra besar · 20px"
+  # [html] Do not translate base_space. Keep the rem values.
+  brandSpaceLabel: "Spasi <span class=\"fw-label-hint\">base_space</span>"
+  brandSpaceCompact: "Rapat · 0.75rem"
+  brandSpaceStandard: "Standar · 1rem"
+  brandSpaceRoomy: "Lega · 1.25rem"
+  checkoutLanguage: "Bahasa Checkout"
+
+  # Session choice. "Authenticated" means the hotel server creates the payment session.
+  sessionAuthenticated: "Terautentikasi"
+  sessionAnonymous: "Anonim"
+  sessionAuthenticatedNote: "Direkomendasikan. Server Anda membuat sesi dan mengonfirmasi hasilnya."
+  sessionAnonymousNote: "Hanya di browser, untuk pembayaran satu kali. Tanpa pencarian status di sisi server."
+
+  # Help under the credential summary.
+  credentialsHelp: "Dimasukkan sekali per browser di back office hotel dan digunakan untuk setiap tindakan Checkout dan pembayaran. Hanya untuk lingkungan demo Flywire."
+  credentialsChange: "Ubah kredensial di back office"
+  # Labels in the credential summary. Values are what the user typed.
+  clientName: "Nama klien"
+  clientId: "ID Klien"
+  recipientCode: "Kode penerima"
+  apiKey: "Kunci API"
+
+  # Collapsed section that shows the code sent to checkout.
+  integrationCode: "Kode integrasi"
+  # [html] Do not translate cpx_core.start().
+  integrationHelp: "Apa yang dikirim halaman ini ke <code>cpx_core.start()</code>"
+  playgroundIntro: "Contoh playground yang sesuai:"
+
+  reset: "Atur ulang"
+  done: "Selesai"
+
+  # Why a control is disabled. Presenter voice.
+  unavailable:
+    needsAmount: "Memerlukan jumlah; tidak tersedia jika hanya menyimpan kartu."
+    noForcePage: "Checkout tidak mengizinkan halaman ini ditampilkan paksa jika hanya menyimpan kartu."
+    cardOnFileNeedsSession: "Alur kartu tersimpan selalu memerlukan sesi terautentikasi."
+    needsApiKey: "Tambahkan kunci API demo Anda di back office hotel terlebih dahulu."
+
+  # Partner split editor.
+  split:
+    # Column headers.
+    portalCode: "Kode portal"
+    # {currency} is an ISO code such as USD.
+    amount: "Jumlah ({currency})"
+    description: "Deskripsi"
+    # Placeholders inside the row. {n} is 1, 2, 3…
+    codePlaceholder: "Kode"
+    codeLabel: "Kode portal mitra {n}"
+    # Placeholder when the currency has no cents.
+    amountPlaceholderWhole: "0"
+    amountPlaceholderCents: "0.00"
+    amountLabel: "Jumlah mitra {n} dalam {currency}"
+    whatFor: "Keperluan"
+    descriptionLabel: "Deskripsi mitra {n}"
+    # Screen-reader name for the remove button. {n} is the row number.
+    remove: "Hapus mitra {n}"
+    add: "+ Tambah mitra"
+    useDefaults: "Gunakan mitra default"
+    # {partners} and {hotel} and {total} are money amounts.
+    # The example note is added only before a room has been chosen.
+    summary: "Mitra {partners} · hotel menerima {hotel} dari {total}"
+    summaryExample: "Mitra {partners} · hotel menerima {hotel} dari {total} (contoh total)"
+    # Validation. {row} is "Partner 1". {code} is a portal code such as ABC.
+    needCode: "{row}: tambahkan kode portal."
+    badCode: "{row}: kode portal terdiri dari 3 huruf (ABC) atau 5 karakter yang diawali huruf (ABC1D)."
+    ownPortal: "{row}: tidak boleh portal milik hotel sendiri ({code})."
+    duplicate: "{row}: {code} tercantum dua kali."
+    needAmount: "{row}: masukkan jumlah."
+    # {partners} and {total} are money amounts.
+    overTotal: "Mitra menerima {partners}, melebihi total pemesanan sebesar {total}."
+    rowLabel: "Mitra {n}"
+
+  # Default descriptions for the two sample partners. Guest may see these in the payment note.
+  partners:
+    excursion: "Ekskursi katamaran senja"
+    spa: "Ritual spa pasangan"
+
+  # Checkout language menu.
+  # Names match the checkout language list. Endonyms stay untranslated.
+  locales:
+    en: "English"
+    en-GB: "English (UK)"
+    es-ES: "Español"
+    es-419: "Español (Latin America)"
+    fr-FR: "Français"
+    fr-CA: "Français (CA)"
+    pt-PT: "Português"
+    pt-BR: "Português (BR)"
+    pl: "Polski"
+    it: "Italiano"
+    ko: "한국어"
+    zh: "中文"
+    ja: "日本語"
+    de: "Deutsch"
+    id: "Bahasa Indonesia"
+    vi: "Tiếng Việt"
+
+# -----------------------------------------------------------------------------
+# Checkout activity drawer (heartbeat icon). Presenter voice.
+# Status codes such as FULLY_PAID stay in English in the UI; only the explanations are here.
+# -----------------------------------------------------------------------------
+activity:
+  title: "Aktivitas Checkout"
+  subtitle: "Apa yang dikembalikan Checkout, secara langsung: sesi, setiap callback, dan hasil akhir yang dibaca dari server Anda. Disimpan di browser ini hingga Anda menghapusnya."
+  close: "Tutup aktivitas Checkout"
+  clear: "Hapus"
+  # Copies the whole log. Restored after "Copied".
+  copyLog: "Salin log"
+  done: "Selesai"
+  emptyTitle: "Belum ada aktivitas Checkout"
+  emptyBody: "Buka Checkout dari langkah pembayaran. Semua yang dikembalikannya akan muncul di sini secara langsung."
+  earlierRuns: "Proses sebelumnya"
+  # {n} is the run number. {time} is a clock time.
+  runMeta: "Proses #{n} · {time}"
+  # Collapsed row. {n} is the run number. {flow} is the flow name.
+  runSummary: "Proses #{n} · {flow}"
+  # {status} is a translated status. {time} is a clock time.
+  runSummaryStatus: "{status} · {time}"
+  # {count} is how many events were recorded.
+  events_one: "{count} peristiwa"
+  events_other: "{count} peristiwa"
+  timeline: "Linimasa"
+  outcome: "Hasil"
+  # Fact labels in the latest-run summary. Values next to them come from the checkout that just ran.
+  flow: "Alur"
+  transaction: "Transaksi"
+  amount: "Jumlah"
+  session: "Sesi"
+  display: "Tampilan"
+  # While the server is still creating the session.
+  authenticatedCreating: "Terautentikasi (sedang dibuat…)"
+  anonymous: "Anonim"
+  timeInCheckout: "Waktu di Checkout"
+  # "on_error" is the name of a callback. Do not translate on_error.
+  onErrorCalls: "Panggilan on_error"
+  # Do not translate on_end.
+  onEndReason: "Alasan on_end"
+  sessionStatus: "Status sesi"
+  paymentStatus: "Status pembayaran"
+  reportedAmount: "Jumlah yang dilaporkan"
+  report: "Laporan"
+  reportPending: "Belum tersedia."
+  # {amount} is the minor-unit number. {currency} is an ISO code. "subunits" means cents or the local equivalent.
+  subunits: "{amount} {currency} dalam satuan terkecil"
+  paymentId: "ID pembayaran"
+  method: "Metode"
+  card: "Kartu"
+  expires: "Kedaluwarsa"
+  canceledHelp: "Pembayar menutup Checkout. Tidak ada laporan untuk proses yang dibatalkan."
+  # Do not translate config.timeout.
+  timeoutHelp: "config.timeout berakhir dan Checkout tertutup dengan sendirinya."
+  refresh: "Perbarui status"
+  # Shown on the refresh button while the request is in flight.
+  refreshing: "Memperbarui…"
+  refreshHelp: "Membaca sesi kembali dari server Anda, misalnya saat transfer bank masih tertunda."
+  # Do not translate on_end.
+  anonymousReport: "Sesi anonim: laporan ini diterima di browser sebagai payload on_end."
+  showData: "Tampilkan data"
+  # {elapsed} is a duration such as "1.2s" already formatted by the app.
+  elapsed: "+{elapsed}"
+
+  # Status pill on a run.
+  status:
+    # Shown for the moment between clicking pay and checkout actually opening.
+    starting: "Memulai"
+    open: "Checkout terbuka"
+    completed: "Selesai"
+    declined: "Ditolak"
+    canceled: "Dibatalkan oleh pembayar"
+    timeout: "Waktu habis"
+    failed: "Gagal dimulai"
+    interrupted: "Terputus karena muat ulang"
+
+  # Plain-language meaning of Flywire session status codes. The code itself stays in English next to this sentence.
+  sessionStatusText:
+    ACTIVE: "Sesi terbuka; pembayar masih dapat melakukan tindakan."
+    PARTIALLY_COMPLETED: "Sebagian operasi yang diminta telah selesai."
+    COMPLETED: "Semua yang diminta dalam sesi telah selesai."
+    ARCHIVED: "Sesi telah ditutup dan hanya dapat dibaca."
+
+  # Plain-language meaning of Flywire payment status codes.
+  paymentStatusText:
+    NO_PAYMENTS: "Tidak ada pembayaran (misalnya, kartu hanya disimpan)."
+    SOME_IN_PROGRESS: "Pembayaran masih diproses (misalnya, transfer bank yang tertunda)."
+    # Used instead of the generic line when the payment is a card hold waiting for the hotel to capture it.
+    SOME_IN_PROGRESS_HOLD: "Diotorisasi: jumlah ditahan pada kartu, menunggu penarikan dana (back office hotel)."
+    ALL_UNSUCCESSFUL: "Semua upaya pembayaran gagal."
+    FULLY_PAID: "Jumlah penuh telah dibayar."
+    PARTIALLY_PAID: "Hanya sebagian jumlah yang dibayar."
+    OVERPAID: "Jumlah yang dibayar melebihi jumlah yang diminta."
+
+  # Timeline event titles. Callback names (on_error, on_end, cpx_core.start) stay in English.
+  events:
+    requested: "Checkout diminta"
+    sessionCreated: "Sesi dibuat oleh server Anda"
+    sessionCreatedText: "POST /commercial_payex/v2/session mengembalikan kredensial yang diteruskan ke initFields.session."
+    sessionResumed: "Sesi dilanjutkan oleh server Anda"
+    sessionResumedText: "POST /commercial_payex/v2/session/{id} mengembalikan kredensial proses baru untuk sesi yang ada."
+    # [do not translate] This is the function the page calls. Shown as a timeline title.
+    startTitle: "cpx_core.start(initFields)"
+    startText: "Checkout dibuka dengan payload ini."
+    # {type} is an error code such as init_fields. The on_error('…') wrapper stays.
+    onErrorTitle: "on_error('{type}')"
+    onErrorRetry: "Checkout tetap terbuka agar pembayar dapat mencoba lagi."
+    # {reason} is completed, canceled or timeout.
+    onEndTitle: "on_end('{reason}')"
+    onEndPayload: "Payload dikembalikan di browser (sesi anonim)."
+    onEndNoPayload: "Tidak ada payload untuk sesi terautentikasi; tanyakan hasilnya ke server Anda."
+    refreshed: "Status diperbarui dari server Anda"
+    outcomeFromServer: "Hasil sesi dari server Anda"
+    lookupFailed: "Pencarian sesi gagal"
+    launchFailed: "Checkout tidak dapat dimulai"
+
+# -----------------------------------------------------------------------------
+# Hotel back office (/dashboard). Presenter / staff voice.
+# -----------------------------------------------------------------------------
+dashboard:
+  # Header tag next to the hotel name.
+  backOffice: "Back office"
+  # [html] Keep <strong> around the words that should stay bold. "Flywire" is the company name.
+  demoTag: "Flywire <strong>hanya lingkungan demo</strong> · data disimpan di browser ini"
+  backToBooking: "← Situs pemesanan"
+  # Card heading. [html] "DEMO only" is a warning badge; keep the <span>.
+  connectionTitle: "Koneksi Flywire <span class=\"db-env-badge\">Hanya DEMO</span>"
+  # [html] The <code> wraps the API host, which is filled in by the app. Do not translate the host.
+  connectionIntro: "Kredensial akun <strong>demo</strong> Flywire Anda, yang digunakan oleh situs pemesanan dan setiap tindakan di halaman ini. Permintaan selalu dikirim ke API demo Flywire (<code>{host}</code>); kredensial produksi akan ditolak di sana."
+  # Screen-reader name for the book icon. {count} is added when clients exist.
+  savedClients: "Klien tersimpan"
+  savedClientsCount: "Klien tersimpan, {count} tersimpan"
+  connectionNotChecked: "Belum diperiksa"
+  # Form labels.
+  clientName: "Nama klien"
+  clientNamePlaceholder: "mis. Mykonos Hotel"
+  clientId: "ID Klien"
+  clientIdPlaceholder: "UUID dari akun demo Flywire Anda"
+  recipientCode: "Kode penerima"
+  recipientCodePlaceholder: "mis. ABC"
+  savedCodesLabel: "Kode tersimpan untuk ID Klien ini"
+  savedCodes: "Kode tersimpan"
+  noSavedCodes: "Tidak ada kode tersimpan"
+  # Short label used when a pasted API key is cleaned. "API key" only; the header name stays in apiKeyLabel.
+  apiKey: "Kunci API"
+  # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
+  apiKeyLabel: "Kunci API <span class=\"db-hint\">X-Authentication-Key</span>"
+  apiKeyPlaceholder: "Tempel kunci API demo Anda"
+  # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
+  saveAndTest: "Simpan & uji koneksi"
+  clearCredentials: "Hapus kredensial"
+  recipientCurrency: "Mata uang penerima"
+  # Fine print at the bottom of the credentials card.
+  credentialsFootnote: "Khusus demo: kredensial disimpan di browser ini dan kunci API dikirim ke server demo ini pada setiap permintaan, yang kemudian meneruskannya ke API demo Flywire. Dalam integrasi nyata, kunci API Anda tetap berada di server Anda."
+  bookings: "Pemesanan"
+  clearAll: "Hapus semua"
+  # Confirm dialog before deleting every booking in this browser.
+  confirmClearBookings: "Hapus semua pemesanan demo dari browser ini?"
+  # Confirm dialog before forgetting the credentials currently in use.
+  confirmClearCredentials: "Berhenti menggunakan kredensial ini? Klien tersimpan tetap ada di browser ini dan dapat dimuat kembali."
+  # {id} is the booking reference, such as a short id.
+  confirmDeleteBooking: "Hapus pemesanan {id}?"
+
+  saved:
+    title: "Klien tersimpan"
+    intro: "Satu kunci API per ID Klien. Kode penerima yang disimpan bersama klien tersebut tercantum di kartunya."
+    close: "Tutup klien tersimpan"
+    empty: "Belum ada klien tersimpan. Gunakan Simpan & uji koneksi untuk menyimpannya di sini."
+    load: "Muat"
+    noneYet: "Belum ada"
+    unnamed: "Klien tanpa nama"
+    inUse: "Sedang digunakan"
+    clientId: "ID Klien"
+    apiKey: "Kunci API"
+    recipientCodes: "Kode penerima"
+
+  # Connection status pill. Keep these short.
+  status:
+    notSet: "Belum diatur"
+    checking: "Memeriksa…"
+    keyRejected: "Kunci ditolak"
+    incomplete: "Belum lengkap"
+    checkFields: "Terhubung · periksa kolom"
+    connected: "Terhubung · API demo"
+    unreachable: "Server tidak dapat dijangkau"
+  # {detail} is the reason from the server.
+  keyRejectedDetail: "{detail} Periksa apakah ada karakter yang hilang, atau tempel kembali kuncinya."
+  # {missing} is the list of fields still empty.
+  keyWorksMissing: "Kunci API berfungsi di API demo. Masih kurang: {missing}."
+  # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
+  savedInBrowser: " {name}{id}{code} telah disimpan di browser ini."
+  demoKeyAccepted: "API demo menerima kunci ini."
+  # Format warnings, shown before the API is called.
+  clientIdFormat: "ID Klien tampaknya bukan UUID (8-4-4-4-12 karakter)."
+  recipientFormat: "Kode penerima terdiri dari 3 huruf (ABC) atau 5 karakter yang diawali huruf (ABC1D)."
+  # {label} is Client ID, Recipient code or API key. {fixes} is a list of what was removed.
+  cleanedPaste: "Isi yang ditempel telah dibersihkan. {fixes}"
+  cleanedField: "{label}: {fixes} dihapus."
+  # What paste-cleanup removed. Used inside {fixes}. Lowercase, mid-sentence.
+  fix:
+    invisible: "karakter tak terlihat"
+    nbsp: "spasi tak terputus"
+    quotes: "tanda kutip di sekelilingnya"
+    fieldName: "nama kolom di depan"
+    bearer: "awalan \"Bearer\""
+    punctuation: "tanda baca di akhir"
+    spacesInKey: "jeda baris atau spasi di dalam kunci"
+    spaces: "spasi"
+    lowercase: "huruf kecil"
+
+  # Empty bookings table.
+  emptyTitle: "Belum ada pemesanan"
+  emptyBody: "Buat pemesanan di situs pemesanan. Setiap Checkout yang Anda mulai akan muncul di sini."
+  emptyAction: "Buka situs pemesanan"
+  # Table headers.
+  colBooking: "Pemesanan"
+  colGuest: "Tamu"
+  colStay: "Masa inap"
+  colAmount: "Jumlah"
+  colStatus: "Status"
+  # Shown in the detail pane before a row is chosen.
+  selectBooking: "Pilih pemesanan untuk melihat pembayaran dan tindakannya."
+  deleteBooking: "Hapus pemesanan"
+  # Fact labels in the detail pane.
+  factGuest: "Tamu"
+  factStay: "Masa inap"
+  factCheckout: "Checkout"
+  factTotal: "Total pemesanan"
+  factAuthorized: "Diotorisasi"
+  factCaptured: "Dana ditarik"
+  factCharged: "Ditagihkan ke kartu tersimpan"
+  factSession: "Sesi"
+  anonymousSession: "Anonim (hanya browser)"
+  factSessionStatus: "Status sesi"
+  factPaymentStatus: "Status pembayaran"
+  factTokenization: "Tokenisasi"
+  factLastChecked: "Terakhir diperiksa"
+  payments: "Pembayaran"
+  colPaymentId: "ID pembayaran"
+  colMethod: "Metode"
+  colCaptured: "Dana ditarik"
+  chargesTitle: "Tagihan ke kartu tersimpan"
+  colWhatFor: "Keperluan"
+  colFlywirePayment: "Pembayaran Flywire"
+  colResult: "Hasil"
+  # “guest paid” is the label Flywire uses for the amount in the guest’s currency. You may keep the quotes.
+  chargesNote: "Jumlah adalah nominal yang ditagih hotel; “tamu membayar” adalah nominal yang ditagih Flywire kepada tamu dalam mata uang tamu sendiri (charge_info)."
+  # Secondary line under a charge amount. {amount} is money in the guest’s currency. Lowercase, mid-sentence.
+  guestPaid: "tamu membayar {amount}"
+  savedCard: "Kartu tersimpan"
+  factCard: "Kartu"
+  factMethod: "Metode"
+  # Card line. {brand} is Visa, Mastercard, etc. {last4} is four digits. {exp} is MM/YY.
+  cardLine: "{brand} •••• {last4}"
+  cardExpiry: "· kedaluwarsa {exp}"
+
+  # Booking status pills. Short.
+  bookingStatus:
+    failed: "Gagal dimulai"
+    abandoned: "Ditinggalkan"
+    timedOut: "Waktu habis"
+    inCheckout: "Dalam Checkout"
+    declined: "Ditolak"
+    captured: "Dana ditarik"
+    partlyCaptured: "Sebagian ditarik"
+    authorized: "Diotorisasi"
+    processing: "Diproses"
+    paid: "Dibayar"
+    cardSaved: "Kartu tersimpan"
+    completed: "Checkout selesai"
+
+  # Hold explanation under the status, when money is authorized but not captured yet.
+  holdPending: "Diotorisasi: jumlah ditahan pada kartu, menunggu penarikan dana."
+  holdCaptureSent: "Permintaan penarikan dana terkirim; Flywire memprosesnya secara asinkron. Perbarui status untuk melihat penyelesaiannya."
+
+  # Same payment-status explanations as the activity drawer, shorter, for the back office.
+  paymentStatusText:
+    NO_PAYMENTS: "Tidak ada pembayaran."
+    SOME_IN_PROGRESS: "Pembayaran masih diproses."
+    ALL_UNSUCCESSFUL: "Semua upaya pembayaran gagal."
+    FULLY_PAID: "Jumlah penuh telah dibayar atau diotorisasi."
+    PARTIALLY_PAID: "Hanya sebagian jumlah yang dibayar."
+    OVERPAID: "Jumlah yang dibayar melebihi jumlah yang diminta."
+
+  actionsTitle: "Tindakan"
+  actionsSubtitle: "Panggilan API Flywire, dilakukan melalui server demo ini"
+  # Shown on an action button while its request is in flight.
+  working: "Memproses…"
+  # {label} is the action name, e.g. "Capture payment".
+  unavailableTitle: "{label} tidak tersedia untuk pemesanan ini. "
+  # Link to the Flywire sample page. The arrow means "opens in a new tab".
+  openPlayground: "Buka di playground ↗"
+  sendRequest: "Kirim permintaan {method}"
+  sending: "Mengirim…"
+  requestFormat: "Format permintaan"
+  # Tab label. "curl" is a command-line tool. [do not translate]
+  curl: "curl"
+  nodeFetch: "Node fetch"
+  requestTitle: "Permintaan ke Flywire"
+  fillFields: "Isi kolom di atas."
+  requestFootnote: "Server demo ini mengirimkannya dengan kunci API demo Anda sebagai X-Authentication-Key. Kunci tidak pernah ditampilkan di sini."
+  # {when} is the booking’s creation date and time.
+  created: "Dibuat {when}"
+  activity: "Aktivitas"
+  request: "Permintaan"
+  requestBody: "Isi permintaan"
+  response: "Respons"
+  showData: "Tampilkan data"
+  payment: "Pembayaran"
+  # {currency} is an ISO code.
+  amountLabel: "Jumlah ({currency})"
+  amountPositive: "Masukkan jumlah yang lebih besar dari nol."
+  amountMinimum: "Jumlah minimal {amount}."
+  whatForOffice: "Keperluan (disimpan di back office)"
+  # Do not translate external_reference. It is a field name.
+  externalReference: "external_reference"
+  needReference: "Tambahkan external_reference untuk tagihan ini, misalnya nomor pemesanan."
+  tokenFromReport: "Dari tokenization_report sesi. Edit jika perlu."
+  tokenMissing: "Token kartu tidak ada dalam laporan sesi. Perbarui status terlebih dahulu, atau tempel detail token dari portal Flywire."
+  # Do not translate these three field names.
+  paymentMethodToken: "payment_method_token"
+  mandateId: "mandate_id"
+  payorId: "payor_id"
+  resumeNote: "Setelah Flywire merespons, Checkout terbuka di halaman ini dengan run_id dan run_token baru."
+  # {amount} is the current hold. Holds can be raised, never lowered.
+  extendMinimum: "Minimal {amount}: penahanan dana hanya dapat dinaikkan."
+  currencyUnavailable: "Mata uang tidak tersedia"
+  # {code} is USD. {name} is "US Dollar". {symbol} is " ($)" or empty.
+  currencyValue: "{code} · {name}{symbol}"
+  currencyUsd: "Penerima ini menagih dalam USD, sehingga harga kamar tetap dalam dolar."
+  # {rate} is a number. {code} is the currency. {date} is " · 2026-10-06" or empty.
+  currencyRate: "1 USD = {rate} {code}{date}. Harga kamar dan jumlah Checkout menggunakan kurs ini."
+  # {who} is the recipient name and id. {detail} is the rest of the sentence.
+  currencyLine: "{who}. {detail}"
+
+  # Preset reasons when charging a saved card. Staff pick one from a menu.
+  charges:
+    minibar: "Minibar"
+    spa: "Perawatan spa"
+    lateCheckout: "Late check-out"
+    transfer: "Antar-jemput bandara"
+    dive: "Sewa peralatan selam"
+    noShow: "Biaya no-show"
+
+  # The five staff actions. "help" is the paragraph. "reason" / "fix" show when the action cannot run.
+  action:
+    refresh: "Perbarui status"
+    refreshHelp: "Membaca sesi dari Flywire: laporan sesi, pembayaran, dan tokenisasi."
+    resume: "Lanjutkan sesi"
+    resumeHelp: "Mendapatkan kredensial proses baru untuk sesi ini, lalu membuka kembali Checkout dengan kredensial tersebut di titik terakhir tamu berhenti, misalnya untuk mengirim tautan pembayaran."
+    resumeOldReason: "Pemesanan ini dibuat sebelum fitur lanjutkan sesi tersedia."
+    resumeOldFix: "Buat pemesanan baru."
+    capture: "Tarik dana"
+    captureHelp: "Menarik dana yang ditahan, seluruhnya atau sebagian (misalnya saat check-in). Jumlah yang tidak ditarik akan dilepaskan kembali ke tamu."
+    extend: "Perpanjang penahanan dana"
+    extendHelp: "Mengatur ulang penahanan dana menjadi 7 hari sejak hari ini dan dapat menaikkan jumlah yang diotorisasi (hanya kenaikan)."
+    charge: "Tagih kartu tersimpan"
+    chargeHelp: "Menagih kartu yang disimpan saat Checkout tanpa kehadiran tamu, misalnya minibar atau biaya no-show."
+    noSessionReason: "Pemesanan ini menggunakan sesi anonim, sehingga tidak ada sesi yang dapat dicari atau dilanjutkan di server."
+    noSessionFix: "Gunakan sesi terautentikasi (panel pengaturan, Sesi) untuk pemesanan baru."
+    # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
+    notHoldReason: "Flywire hanya dapat menarik atau memperpanjang pembayaran yang telah dipra-otorisasi (penahanan dana). Pemesanan ini menggunakan “{flow}”, {how}."
+    chargedImmediately: "yang langsung menagih tamu"
+    savedOnly: "yang hanya menyimpan kartu tanpa menagih atau menahan dana apa pun"
+    notHoldFix: "Untuk mendemonstrasikannya, buat pemesanan dengan alur penahanan dana: Reservasi & tahan dana, Tahan dana & simpan kartu, Tahan dana (tamu dapat menyimpan kartu), atau Tahan dana & kartu tersimpan."
+    noPaymentReason: "Belum ada ID pembayaran pada pemesanan ini."
+    noPaymentFixRefresh: "Klik Perbarui status setelah tamu menyelesaikan Checkout."
+    noPaymentFixGuest: "Tamu belum menyelesaikan Checkout."
+    # {amount} is money. {when} is a date and time.
+    holdEndedReason: "{amount} ditarik pada {when}, sehingga penahanan dana berakhir: jumlah yang tidak ditarik telah dilepaskan kembali ke tamu."
+    holdEndedFixCard: "Untuk biaya tambahan, gunakan Tagih kartu tersimpan: pemesanan ini memiliki kartu tersimpan."
+    holdEndedFixNew: "Untuk mendemonstrasikannya lagi, buat pemesanan baru dengan alur penahanan dana."
+    noCardReason: "Tidak ada kartu yang disimpan pada pemesanan ini."
+    noCardFix: "Buat pemesanan dengan alur kartu tersimpan, misalnya Simpan kartu, tagih nanti atau Bayar sekarang & simpan kartu."
+    fallbackFlow: "sebuah alur"
+
+  # History lines written after an action. {status} is a Flywire status code (do not translate the code).
+  history:
+    statusRefreshed: "Status diperbarui"
+    statusRefreshedWith: "Status diperbarui · {status}"
+    statusFailed: "Gagal memperbarui status"
+    resumed: "Sesi dilanjutkan · Checkout dibuka kembali"
+    resumeFailed: "Gagal melanjutkan sesi"
+    # {amount} is money. {status} is " · received" or empty.
+    captured: "Ditarik {amount}{status}"
+    holdRaised: "Penahanan dana dinaikkan menjadi {amount} dan diperpanjang 7 hari"
+    holdExtended: "Penahanan dana diperpanjang 7 hari"
+    # {amount} {what} {reference} are filled by the form. {status} is empty or " · " plus a Flywire status code.
+    charged: "Ditagih {amount} · {what} · {reference}{status}"
+    # When an action fails, the history line is rewritten. {what} is the text before the first " · ". {error} is the API message.
+    failedLine: "{what} gagal · {error}"
+    failedSuffix: "gagal"
+    checkoutAfterResume: "Checkout selesai setelah sesi dilanjutkan"
+    checkoutAfterResumeStatus: "Checkout selesai setelah sesi dilanjutkan · {status}"
+    guestClosedAgain: "Tamu kembali menutup Checkout"
+    checkoutTimedOut: "Checkout kehabisan waktu"
+    # {type} is an error code. Keep on_error.
+    onError: "on_error('{type}')"
+    couldNotStart: "Checkout tidak dapat dimulai: {detail}"
+
+# -----------------------------------------------------------------------------
+# Card brands and payment methods, shown next to a payment result.
+# Brand names are trademarks. [do not translate] the brand names.
+# "Card" / "Direct debit" / "Bank transfer" / "Online payment" are generic and should be translated.
+# -----------------------------------------------------------------------------
+cards:
+  card: "Kartu"
+  directDebit: "Debit langsung"
+  bankTransfer: "Transfer bank"
+  online: "Pembayaran online"
+  visa: "Visa"
+  mastercard: "Mastercard"
+  amex: "American Express"
+  discover: "Discover"
+  jcb: "JCB"
+  diners: "Diners Club"
+  unionpay: "UnionPay"
+  maestro: "Maestro"
+
+# -----------------------------------------------------------------------------
+# Errors thrown in the browser before checkout opens. Shown in a notice or the activity log.
+# -----------------------------------------------------------------------------
+sdk:
+  # Shown if the Flywire script never arrives. "connect.js" is a file name. [do not translate] the file name.
+  sdkMissing: "SDK Flywire Checkout V2 tidak termuat. Apakah connect.js sudah disertakan di halaman?"
+  sessionCreateFailed: "Gagal membuat sesi"
+  sessionLookupFailed: "Pencarian sesi gagal"
+  # {message} is one of the two lines above. {status} is an HTTP status number.
+  requestFailed: "{message} ({status})"
+  # Recipient currency could not be read. Shown on the back office.
+  currencyUnreadable: "Tidak dapat membaca mata uang penerima."
+  currencyUnreachable: "Tidak dapat menjangkau server demo ini untuk membaca mata uang penerima."
+
+# -----------------------------------------------------------------------------
+# Sentences the demo server returns and the back office displays.
+# They are listed so translators can prepare them. The page language is saved
+# in this browser, but the server still sends the English text. Do not translate
+# URLs, header names, or field names inside these
+# sentences when they are written as code.
+# -----------------------------------------------------------------------------
+server:
+  # Returned with HTTP 401 when an action is attempted before an API key is saved.
+  # "/dashboard" is the back-office path. You may keep the path in parentheses.
+  missingCredentials: "Tambahkan kredensial demo Flywire Anda di back office hotel (/dashboard) terlebih dahulu."
+  invalidSession: "ID sesi tidak valid."
+  invalidPayment: "ID pembayaran tidak valid."
+  amountMinor: "amount harus berupa bilangan bulat positif dalam satuan terkecil (sen)."
+  chargeFields: "payment_method_token, mandate_id, payor_id, recipient_code, dan external_reference wajib diisi."
+  noApiKey: "Belum ada kunci API yang dimasukkan."
+  # {detail} is Flywire’s own rejection text, already ending with a period.
+  keyRejected: "{detail} Hanya kunci demo Flywire yang berfungsi di sini; kunci produksi akan ditolak."
+  keyRejectedFallback: "Kunci API ditolak."
+  keyAccepted: "API demo menerima kunci ini."
+  # {status} is an HTTP status number.
+  apiAnswered: "API demo merespons {status}."
+  apiUnreachable: "Tidak dapat menjangkau API demo Flywire."
+  needClientId: "Masukkan ID Klien sebelum mata uang dapat dicari."
+  needRecipient: "Masukkan kode penerima sebelum mata uang dapat dicari."
+  currencyFailed: "Tidak dapat membaca mata uang penerima."
+  flywireUnreachable: "Tidak dapat menjangkau API Flywire"

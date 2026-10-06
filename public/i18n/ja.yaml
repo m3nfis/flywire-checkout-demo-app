@@ -1,0 +1,1288 @@
+# =============================================================================
+# The Caldera House — English source strings
+# Locale: ja
+#
+# This file is the source the translation team edits. The page reads it at
+# runtime (see public/i18n.js). Comments are for translators and are not shown.
+#
+# How to read a key
+# - The comment directly above a key says where it appears and any constraint.
+# - Nested keys become dotted names in the app, e.g. rooms.hero.title.
+#
+# Rules
+# - Keep every {placeholder} exactly, including the braces. The app fills them
+#   in. Example: "{amount} paid in full." — translate the words, leave {amount}.
+# - Keys that end in _one, _other, _two, _few, _many or _zero are plural forms.
+#   {count} is the number. English only needs _one (exactly 1) and _other
+#   (everything else). Add the other suffixes if your language needs them
+#   (Polish, Arabic, Russian, and others). If a form is missing, the app uses
+#   _other.
+# - [html] means the value contains tags such as <br>, <strong>, <em>, <a> or
+#   <code>. Translate the words. Leave tags, hrefs and class names unchanged.
+# - [do not translate] means the value is a proper noun, brand, code or
+#   endonym and must stay as written.
+# - Tone: sections under "guest" voice speak to the hotel guest (warm, luxury,
+#   second person). Sections marked "presenter" speak to the person running
+#   the demo or the hotel back office (plain instructions).
+# - Keep button and stepper labels short. Where length matters, the comment says so.
+# - Do not translate API field names, URLs, currency codes, portal codes, or
+#   the sample code in the integration preview. Those are not in this file.
+#
+# Not in this file
+# - Developer documentation under public/full-docs and public/minimal-docs.
+# - Code comments, console messages, and the generated checkout payload.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Shared words used on more than one screen
+# -----------------------------------------------------------------------------
+common:
+  # Booking total row. Short label, paired with a money amount.
+  total: "合計"
+  # Date the guest arrives. Short label in a summary list.
+  checkIn: "チェックイン"
+  # Date the guest leaves. Short label in a summary list.
+  checkOut: "チェックアウト"
+  # How many people are staying. Short label in a summary list.
+  guests: "ご宿泊人数"
+  # The room that was booked. Short label.
+  suite: "スイート"
+  # Closes a popover or drawer. Button.
+  done: "完了"
+  # Restores the previous dates and guest counts. Text button in the date popover.
+  reset: "リセット"
+  # Copies text to the clipboard. Small button. Restored after "Copied".
+  copy: "コピー"
+  # Shown for about a second after a copy succeeds. Same button as "Copy".
+  copied: "コピー完了"
+  # Shown for about a second when the browser blocks clipboard access.
+  copyFailed: "コピー失敗"
+  # Reveals a secret field (the API key). Small button. Opposite of "Hide".
+  show: "表示"
+  # Masks a secret field. Small button. Opposite of "Show".
+  hide: "非表示"
+  # Fallback when the guest has not given a name yet. Used in greetings.
+  guest: "ゲスト"
+  # Empty value in a definition list, e.g. a credential that has not been entered.
+  notSet: "未設定"
+  # Word before the last item of a list: "Client ID, recipient code and API key".
+  and: "および"
+  # Placeholder when a value is unknown. A single em dash. [do not translate]
+  dash: "—"
+
+# -----------------------------------------------------------------------------
+# Browser tab titles
+# -----------------------------------------------------------------------------
+meta:
+  # Browser tab title for the public booking site.
+  # "The Caldera House" is the hotel name. "Oia" and "Santorini" are place names.
+  # [do not translate] the hotel name and the place names. The em dash can stay.
+  bookingTitle: "The Caldera House — Oia, Santorini"
+  # Browser tab title for the hotel back office (staff page, not the guest page).
+  # [do not translate] "The Caldera House".
+  backOfficeTitle: "バックオフィス — The Caldera House"
+
+# -----------------------------------------------------------------------------
+# Top bar of the booking site
+# -----------------------------------------------------------------------------
+nav:
+  # Logo text. Hotel name. [do not translate]
+  logo: "The Caldera House"
+  # Small location label next to the logo. Place names. [do not translate]
+  location: "Oia, Santorini"
+  # Tooltip and screen-reader name for the heartbeat icon. Opens a presenter drawer
+  # that lists what the payment checkout returned. Not part of the guest story.
+  checkoutActivity: "Checkout アクティビティ"
+  # Tooltip and screen-reader name for the grid icon. Opens the staff back office.
+  backOffice: "ホテルのバックオフィス"
+  # Tooltip and screen-reader name for the gear icon. Opens presenter checkout settings.
+  # {flow} is the name of the selected payment flow, e.g. "Pay in full".
+  checkoutSettings: "Checkout 設定"
+  checkoutSettingsWithFlow: "Checkout 設定 · {flow}"
+
+# -----------------------------------------------------------------------------
+# Three-step progress bar under the header. Keep each label short.
+# -----------------------------------------------------------------------------
+stepper:
+  # Step 1. Guest is choosing a room.
+  selectRoom: "お部屋の選択"
+  # Step 2. Guest is entering name, email and address.
+  guestDetails: "お客様情報"
+  # Step 3. Guest is about to pay.
+  payment: "お支払い"
+
+# -----------------------------------------------------------------------------
+# Page 1 — room selection. Guest voice.
+# -----------------------------------------------------------------------------
+rooms:
+  # Decorative photo behind the headline. Describe the picture, not the hotel brand.
+  heroAlt: "Aegean の海を見下ろす Santorini の青いドーム屋根"
+  # Small line above the headline. Hotel name and place. [do not translate]
+  eyebrow: "The Caldera House · Oia, Santorini"
+  # Main headline on the room list.
+  title: "スイートをお選びください"
+  # Tooltip, screen-reader text, and the date popover name. Opens the date and guest picker.
+  changeDates: "日程と人数の変更"
+  # Price suffix when the hotel bills in US dollars. Keep the leading slash.
+  perNight: "/泊"
+  # Price suffix when the hotel bills in another currency.
+  # {currency} is an ISO code such as EUR or GBP. Do not translate the code.
+  perNightWithCurrency: "/泊 · {currency}"
+  # Button on every room card. Keep it short enough for a card footer.
+  selectSuite: "このスイートを選択"
+
+  # Hero line under the headline, built in script.
+  # {range} is the dates, e.g. "June 12 – 15, 2026".
+  # {nights} and {guests} are already-translated phrases such as "3 Nights" and "2 Guests".
+  staySummary: "{range} · {nights} · {guests}"
+
+  cards:
+    royal-caldera:
+      # Marketing name of the featured suite. "Caldera" is the volcanic bay at Santorini;
+      # keep it. "Royal" and "Suite" may be translated.
+      name: "Caldera ロイヤルスイート"
+      # Alt text for the suite photo. Same name guests see on the card.
+      alt: "Caldera ロイヤルスイート"
+      # Ribbon on the photo. One word if possible.
+      badge: "おすすめ"
+      # Facts line under the name. Middle dots separate three facts. "m²" is square metres.
+      specs: "120 m² · Caldera ビュー · プライベート インフィニティプール"
+      # Size only, reused in the booking summary. Keep "m²".
+      size: "120 m²"
+      # View only, reused in the booking summary.
+      view: "Caldera ビュー"
+      # Paragraph on the card. Warm, descriptive.
+      description: "The Caldera House を代表する至高のスイートです。床から天井まで広がる窓が caldera の景色を描き出す広々とした空間に、プライベート インフィニティプール、そして世界で最も名高い夕日をご覧いただくためにしつらえたテラスを備えています。"
+      # Short amenity chips. Keep each to one or two words.
+      tagPool: "プライベートプール"
+      tagButler: "バトラーサービス"
+      tagTerrace: "テラス"
+      tagKitchen: "シェフズキッチン"
+
+    sunset-villa:
+      # Marketing name. "Sunset" and "Honeymoon" may be translated. "Villa" may be translated.
+      name: "サンセット ハネムーンヴィラ"
+      alt: "サンセット ハネムーンヴィラ"
+      specs: "95 m² · サンセットビュー · 屋外バス"
+      size: "95 m²"
+      view: "サンセットビュー"
+      description: "ブーゲンビリアに包まれた、隠れ家のようなヴィラです。プライベートな中庭と屋外の銅製バスタブを備え、Oia の名高い夕日を遮るものなくご覧いただけます。"
+      tagBath: "屋外バス"
+      tagCourtyard: "中庭"
+      tagSunset: "サンセットビュー"
+
+    captains-quarters:
+      # Marketing name. Nautical theme. The apostrophe is the hotel’s name for the room.
+      name: "キャプテンズ・クォーターズ"
+      alt: "キャプテンズ・クォーターズ"
+      specs: "65 m² · ハーバービュー · プランジプール"
+      size: "65 m²"
+      view: "ハーバービュー"
+      description: "Santorini の海とともに歩んできた歴史に着想を得たお部屋です。白く塗られたヴォールト天井、厳選されたアンティーク家具、プランジプール付きのプライベートな中庭を備えています。"
+      tagPlunge: "プランジプール"
+      tagVaulted: "ヴォールト天井"
+      tagCourtyard: "中庭"
+
+    aegean-studio:
+      # Marketing name. "Aegean" is the sea; keep it. "Cliff" and "Studio" may be translated.
+      name: "Aegean クリフスタジオ"
+      alt: "Aegean クリフスタジオ"
+      specs: "45 m² · シービュー · プライベートバルコニー"
+      size: "45 m²"
+      view: "シービュー"
+      description: "火山の断崖に佇む、洗練された隠れ家です。Aegean の海の上に張り出したプライベートバルコニーを備え、建築家が手がけたこのスタジオでは、すっきりとした直線と自然石が調和しています。"
+      tagSea: "シービュー"
+      tagBalcony: "バルコニー"
+      tagShower: "レインシャワー"
+
+# -----------------------------------------------------------------------------
+# Date and guest popover. Guest voice. Opened from "Change dates and guests".
+# -----------------------------------------------------------------------------
+stay:
+  # Plural of nights, lowercase, used inside sentences and the price breakdown.
+  # {count} is a number. See the plural rules at the top of this file.
+  night_one: "{count}泊"
+  night_other: "{count}泊"
+  # Same idea, title case, used in the hero summary ("3 Nights").
+  nightTitle_one: "{count}泊"
+  nightTitle_other: "{count}泊"
+  # Title case, hero summary ("2 Guests").
+  guestTitle_one: "{count}名様"
+  guestTitle_other: "{count}名様"
+  # Guest count in the summary panel ("2 Adults").
+  adult_one: "大人{count}名"
+  adult_other: "大人{count}名"
+  # Guest count when there are children. English "Child" / "Children" is irregular.
+  child_one: "お子さま{count}名"
+  child_other: "お子さま{count}名"
+  # Extra people beyond the two guests included in the rate. Lowercase, mid-sentence.
+  extraGuest_one: "追加{count}名様"
+  extraGuest_other: "追加{count}名様"
+  # Bookings count on the back office list.
+  booking_one: "予約サイトでの予約 {count}件"
+  booking_other: "予約サイトでの予約 {count}件"
+  # Nights column in the back office table.
+  nightShort_one: "{count}泊"
+  nightShort_other: "{count}泊"
+  # Relative time in the back office. {count} is minutes or hours.
+  minutesAgo_one: "{count}分前"
+  minutesAgo_other: "{count}分前"
+  hoursAgo_one: "{count}時間前"
+  hoursAgo_other: "{count}時間前"
+  # Less than a minute ago.
+  justNow: "たった今"
+
+  # Popover heading while the guest still needs to pick the departure date.
+  selectCheckout: "チェックアウト日をお選びください"
+  # Subtitle before a departure date is chosen.
+  # {checkIn} is a short date such as "Fri, Jun 12, 2026". {max} is a number (30).
+  checkoutHint: "チェックイン {checkIn} · 最長{max}泊"
+  # Screen-reader name for the previous-month arrow.
+  previousMonth: "前の月"
+  # Screen-reader name for the next-month arrow.
+  nextMonth: "次の月"
+  # Stepper label. Adults are ages 13+.
+  adults: "大人"
+  # Hint under "Adults".
+  adultsHint: "13歳以上"
+  # Stepper label.
+  children: "お子さま"
+  # Hint under "Children". An en dash between the ages.
+  childrenHint: "2～12歳"
+  # Note under the steppers. {guests} is a number (2). {amount} is a money amount.
+  extraGuestFee: "料金には{guests}名様分が含まれております。追加のお客様1名につき、1泊あたり{amount}を申し受けます。"
+  # Screen-reader name for the minus button. {who} is "adults" or "children", lowercase.
+  removeGuests: "{who}の人数を減らす"
+  # Screen-reader name for the plus button. {who} is "adults" or "children", lowercase.
+  addGuests: "{who}の人数を増やす"
+  # Lowercase plural used only inside the screen-reader phrases above.
+  adultsLower: "大人"
+  childrenLower: "お子さま"
+
+  # Column headers of the month grid, Sunday through Saturday, in that order.
+  # The grid starts on Sunday. Do not reorder these seven keys.
+  # Keep them very short (about 2 letters in English).
+  weekdaySu: "日"
+  weekdayMo: "月"
+  weekdayTu: "火"
+  weekdayWe: "水"
+  weekdayTh: "木"
+  weekdayFr: "金"
+  weekdaySa: "土"
+
+# -----------------------------------------------------------------------------
+# Page 2 — guest details form. Guest voice.
+# -----------------------------------------------------------------------------
+guest:
+  # Form heading.
+  title: "お客様情報"
+  # Line under the heading.
+  subtitle: "ご予約にあたり、お客様の情報をご確認ください"
+  # Form labels. Each sits above an empty text field.
+  firstName: "名"
+  lastName: "姓"
+  email: "メールアドレス"
+  phone: "電話番号"
+  address: "住所"
+  city: "市区町村"
+  # Postal code. "ZIP" is the US term; "Postal" covers other countries. Keep both ideas.
+  zip: "郵便番号"
+  country: "国"
+  # First option in the country menu, shown before a country is chosen.
+  countryPlaceholder: "お選びください…"
+  # Returns to the room list. The arrow is part of the label; you may use your language’s back arrow.
+  backToRooms: "← お部屋の選択に戻る"
+  # Submits the form and opens the payment step. Button.
+  continueToPayment: "お支払いへ進む"
+  # Heading of the side panel that repeats the chosen room.
+  yourSelection: "ご選択内容"
+
+  # Country menu. The stored value is the two-letter code; only the name is translated.
+  # Use the country’s usual name in your language.
+  countries:
+    ES: "スペイン"
+    GR: "ギリシャ"
+    IT: "イタリア"
+    FR: "フランス"
+    DE: "ドイツ"
+    GB: "イギリス"
+    US: "アメリカ合衆国"
+    PT: "ポルトガル"
+    NL: "オランダ"
+    CH: "スイス"
+    AT: "オーストリア"
+    BE: "ベルギー"
+    SE: "スウェーデン"
+    NO: "ノルウェー"
+    DK: "デンマーク"
+    AU: "オーストラリア"
+    CA: "カナダ"
+    JP: "日本"
+
+# -----------------------------------------------------------------------------
+# Page 3 — payment. Guest voice, plus a few presenter warnings.
+# -----------------------------------------------------------------------------
+booking:
+  # Large photo on the payment page.
+  heroAlt: "夕暮れの Santorini から望む caldera の景色"
+  # Three gallery captions under the payment-page photos.
+  gallerySuiteAlt: "ロイヤルスイートの室内"
+  gallerySuite: "ロイヤルスイート"
+  galleryPoolAlt: "インフィニティプール"
+  galleryPool: "インフィニティプール"
+  galleryDiningAlt: "上質なダイニング"
+  galleryDining: "プライベートダイニング"
+  # Property story heading.
+  sanctuaryTitle: "海を見下ろす安らぎの場所"
+  # First paragraph of the property story. Place names stay.
+  sanctuaryBody1: "Oia の火山の断崖に佇む The Caldera House は、Aegean の海と空が出会う場所です。すべてのスイートから caldera を遮るものなく一望でき、手彫りの石造りの室内、プライベートプランジプール、そして世界で最も名高い夕日をご覧いただくためのテラスを備えています。"
+  # Second paragraph.
+  sanctuaryBody2: "専属シェフがご用意するキャンドルライトディナーから、断崖の上での夜明けのヨガまで、細部に至るまで心を配り、お客様がただ穏やかなひとときに身を委ねていただけるよう努めております。"
+  # Amenity list. Short phrases.
+  amenityPool: "プライベート インフィニティプール"
+  amenityChef: "お部屋でのシェフサービス"
+  amenityTerrace: "Caldera ビューテラス"
+  amenitySpa: "スパ＆ウェルネス"
+  amenitySailing: "サンセット セーリングツアー"
+  amenityAirport: "空港コンシェルジュ"
+  # Returns to the guest form. Arrow may be mirrored in RTL languages.
+  backToGuest: "← お客様情報に戻る"
+  # Side panel heading on the payment step.
+  yourStay: "ご宿泊内容"
+  # Heading above the payment choice.
+  payment: "お支払い"
+  # Security reassurance under the pay button.
+  secured: "すべてのお取引は暗号化され、安全に保護されています。"
+  # Line under that reassurance. {name} is the guest’s full name.
+  guestLine: "ご宿泊者：{name}様"
+  # Tooltip on the pay button while Flywire demo credentials are missing.
+  # Presenter voice — the person clicking has to open the back office first.
+  credentialsFirst: "先にホテルのバックオフィスで Flywire デモ認証情報を追加してください"
+  # Notice when checkout rejects the configuration. {detail} is a technical field list from Flywire.
+  # Presenter voice.
+  configRejected: "Checkout がこの設定を拒否しました：{detail}"
+  # Notice when checkout fails to open. {detail} is the error text.
+  couldNotStart: "Checkout を開始できませんでした：{detail}"
+  # Shown in the activity log when a card is saved and no money is taken.
+  noAmount: "金額なし（カード保存のみ）"
+  # Activity log value. Presenter voice. Checkout drawn on top of the page.
+  displayOverlay: "全画面オーバーレイ"
+  # Activity log value. Checkout placed inside the booking panel.
+  displayEmbedded: "ページに埋め込み"
+
+  # Price breakdown lines. {nights} is "3 nights". {amount} is the nightly rate.
+  nightlyCalc: "{nights} × {amount}"
+  # {extras} is "1 extra guest" or "2 extra guests". {amount} is the fee. {nights} is "3 nights".
+  extraCalc: "{extras} × {amount} × {nights}"
+
+# -----------------------------------------------------------------------------
+# Guest-facing names for the payment flow the presenter picked.
+# These replace the "Payment" card title, description and the pay button.
+# {amount} is a money amount such as "$7,350" or "€6.800".
+# -----------------------------------------------------------------------------
+flows:
+  pay_full:
+    # Guest sees this as the payment option title.
+    guestTitle: "全額のお支払い"
+    guestDesc: "{amount}を一括でお支払い"
+    # Pay button. {amount} is included.
+    cta: "{amount}のお支払い"
+    # Presenter sees this in the settings drawer, as the flow name.
+    title: "全額支払い"
+    # Presenter. One sentence under the flow name.
+    pitch: "事前払い料金、直前予約のツアーや体験に適しています。"
+    # Link to a matching sample. Presenter.
+    playground: "共通フィールドを使った支払い"
+
+  reserve_hold:
+    guestTitle: "カードの仮押さえ"
+    guestDesc: "本日{amount}の与信を確保し、チェックイン時にご請求いたします"
+    cta: "与信確保で予約"
+    title: "予約・与信確保"
+    # "Pre-authorize" means a card hold, not a charge. "API" is the Flywire programming interface; you may keep "API".
+    pitch: "予約時に与信を確保し、チェックイン時に売上を確定します。与信は API で延長・増額できます。"
+    playground: "与信確保（プリオーソリ）を使った支払い"
+
+  moto:
+    # MOTO means Mail Order / Telephone Order: staff take the card, the guest is not on the website.
+    # You may spell that out if the abbreviation is unknown, but keep it short (it is a menu title).
+    guestTitle: "予約デスクでのお支払い"
+    guestDesc: "スタッフによる{amount}のお支払い手続き"
+    cta: "{amount}の決済"
+    title: "電話・メールでの予約（MOTO）"
+    pitch: "電話またはメールで予約されたお客様のお支払いを、予約担当スタッフが受け付けます。"
+    playground: "MOTO 決済"
+
+  save_card:
+    guestTitle: "カードによるご予約の保証"
+    guestDesc: "お客様のカードでご予約を保証いたします。本日のご請求はございません。"
+    cta: "カードを保存して予約"
+    title: "カード保存・後日請求"
+    pitch: "カード情報を保管して予約を保証します。デポジット、残金、ノーショー料金をトークンで後日請求できます。"
+    playground: "金額なしのトークン化"
+
+  pay_save:
+    guestTitle: "お支払いとカードの保存"
+    guestDesc: "{amount}を今お支払いいただき、追加料金のためにカード情報を保管いたします"
+    cta: "{amount}のお支払いとカード保存"
+    title: "即時支払い・カード保存"
+    pitch: "今すぐ請求し、ダイビング器材、スパ、ツアー、残金などの追加料金のためにカードを保管します。"
+    playground: "金額ありのトークン化"
+
+  hold_save:
+    guestTitle: "与信確保とカードの保存"
+    guestDesc: "{amount}の与信を確保し、最終のご精算のためにカード情報を保管いたします"
+    cta: "与信確保で予約"
+    title: "与信確保・カード保存"
+    pitch: "宿泊料金の与信を確保し、最終精算や付帯料金のためにカードを保管します。"
+    playground: "与信確保ありのトークン化"
+
+  optional:
+    guestTitle: "全額のお支払い"
+    guestDesc: "{amount}を一括でお支払い（カード情報の保存もお選びいただけます）"
+    cta: "{amount}のお支払い"
+    title: "支払い・カード保存はお客様が選択"
+    pitch: "次回のご旅行に向けてカードを保存するかどうかを、お客様が選択します。リピーターのお客様に最適です。"
+    playground: "任意のトークン化"
+
+  optional_hold:
+    guestTitle: "ご予約と与信確保"
+    guestDesc: "{amount}の与信を確保いたします（カード情報の保存もお選びいただけます）"
+    cta: "与信確保で予約"
+    title: "与信確保・カード保存はお客様が選択"
+    pitch: "宿泊料金の与信を確保します。カード情報の保管は、お客様が任意で選択できます。"
+    playground: "与信確保ありの任意のトークン化"
+
+  implicit:
+    guestTitle: "全額のお支払い"
+    guestDesc: "{amount}を一括でお支払い。ご滞在中はカード情報を保管いたします"
+    cta: "{amount}のお支払い"
+    title: "支払い・カード自動保管"
+    pitch: "支払い方法が対応している場合、カードは自動的に保管されます。残金のお支払いや分割払いプランに最適です。"
+    playground: "暗黙的トークン化"
+
+  implicit_hold:
+    guestTitle: "ご予約と与信確保"
+    guestDesc: "{amount}の与信を確保し、ご滞在中はカード情報を保管いたします"
+    cta: "与信確保で予約"
+    title: "与信確保・カード自動保管"
+    pitch: "宿泊料金の与信を確保し、後日の請求のためにカードを自動的に保管します。"
+    playground: "与信確保ありの暗黙的トークン化"
+
+  # Extra sentence under the payment option when part of the money goes to partners.
+  # {parts} is a list such as "sunset catamaran excursion ($350) and couples spa ritual ($250)".
+  splitNote: "{parts}が含まれており、提携先との間で直接精算されます。"
+  # Joiner used inside {parts} before the last partner. Same role as common.and, kept here
+  # because it sits inside a guest sentence.
+  splitAnd: "および"
+  # Extra sentence when the hotel absorbs the card fee.
+  noSurcharge: "カード手数料はかかりません。"
+
+  # Presenter. Group headings in the flow list.
+  groups:
+    payment: "支払い"
+    tokenization: "カード情報の保管"
+    # Grey hint after the group name. Technical term for saving a card.
+    tokenizationHint: "トークン化"
+    optional: "お客様がカード保存を選択"
+    optionalHint: "任意のトークン化"
+    implicit: "カードを自動保存"
+    implicitHint: "暗黙的トークン化"
+  # Presenter. Badge when a flow cannot be selected until an API key is saved.
+  needsApiKey: "APIキーが必要"
+  # Presenter. Appended to the technical summary when the flow does not charge now.
+  noAmountTech: "金額なし"
+
+  # Presenter. Extra sample links that appear when the matching setting is on.
+  playground:
+    authenticated: "認証済みセッションでの支払い"
+    embedded: "埋め込み型の支払い"
+    split: "分配ありの支払い"
+    waive: "手数料免除の支払い"
+    offerRules: "オファールールを使った支払い"
+    styles: "カスタムスタイルを使った支払い"
+    timeout: "タイムアウトを設定した支払い"
+    docs: "Checkout V2 設定ガイド"
+
+# -----------------------------------------------------------------------------
+# Confirmation page after a successful checkout. Guest voice.
+# -----------------------------------------------------------------------------
+success:
+  # Photo behind the confirmation.
+  backgroundAlt: "Santorini の夕日"
+  # Small line above the confirmation headline. Changes with the kind of payment.
+  eyebrowPaid: "ご予約確定"
+  eyebrowHold: "ご予約確保済み"
+  eyebrowCard: "ご予約保証済み"
+  # Headline. The <br> is a deliberate line break. [html]
+  title: "Santorini での休日が<br>お客様をお待ちしております"
+  # {name} is the guest’s first and last name.
+  welcome: "{name}様、ようこそ"
+  # {amount} is the money amount.
+  notePaid: "{amount}を全額お支払いいただきました。"
+  noteHold: "お客様のカードに{amount}の与信を確保いたしました。チェックイン時にご請求いたします。"
+  noteCard: "お客様のカードは安全に保存されました。本日のご請求はございません。"
+  noteMoto: "当ホテルの予約担当が{amount}のお支払いを承りました。"
+  # Appended after the note when the card was also stored. Leading space is intentional.
+  cardSaved: "ご滞在中の追加料金のため、お客様のカードを保存しております。"
+  cardSavedIfChosen: "保存をお選びいただいた場合、お客様のカードは保存されております。"
+  cardKeptWhereSupported: "対応しているお支払い方法の場合、カード情報を保管しております。"
+  # Heading above a short list of stay highlights.
+  awaits: "ご滞在のお楽しみ"
+  highlightPool: "caldera を見下ろすプライベート インフィニティプール"
+  highlightDinner: "シェフがご用意する、テラスでのサンセットディナー"
+  highlightSailing: "夕暮れどきの特別なカタマランセーリング"
+  highlightSpa: "カップル向けスパトリートメントのご招待"
+  # Presenter-only box under the confirmation. Not guest marketing.
+  returnedBy: "Flywire からの返却値 · デモ"
+  viewActivity: "Checkout アクティビティを表示 →"
+  openDashboard: "ホテルのダッシュボードで開く →"
+  # Reloads the site so the presenter can run the booking again.
+  bookAnother: "新しいご予約"
+  # Labels in the presenter result list. The values next to them are ids and status codes.
+  resultBooking: "予約"
+  resultFlow: "フロー"
+  resultSession: "セッション"
+  resultSessionStatus: "セッションステータス"
+  resultPaymentStatus: "支払いステータス"
+  resultMethod: "支払い方法"
+
+# -----------------------------------------------------------------------------
+# Failure page. Guest voice, slightly playful on the card decline.
+# -----------------------------------------------------------------------------
+error:
+  # Decline headline. Playful, not a formal banking error. Short.
+  declinedTitle: "申し訳ございません"
+  declinedSubtitle: "お支払いが承認されませんでした"
+  # [html] <br> is a line break.
+  declinedMessage: "お支払いを処理できませんでした。<br>恐れ入りますが、別のカードでもう一度お試しください。"
+  # Checkout timer ran out. The presenter enabled a countdown.
+  timeoutTitle: "制限時間を過ぎました"
+  timeoutSubtitle: "お支払い手続きの有効期限が切れました"
+  # [html]
+  timeoutMessage: "できる限りスイートをお取り置きしておりましたが、時間切れとなりました。<br>ご予約を完了するには、恐れ入りますがもう一度お手続きをお願いいたします。"
+  # Returns the guest to the payment step.
+  tryAgain: "再試行"
+  viewActivity: "Checkout アクティビティを表示 →"
+
+# -----------------------------------------------------------------------------
+# Warnings shown when Flywire demo credentials have not been entered.
+# Presenter voice. {missing} is a list such as "API key" or "Client ID and recipient code".
+# -----------------------------------------------------------------------------
+credentials:
+  # Field names used inside {missing}. "Client ID" and "API key" are product terms;
+  # translate them consistently everywhere in this file.
+  fields:
+    client_id: "クライアントID"
+    code: "受取人コード"
+    api_key: "APIキー"
+  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "クライアントID、受取人コード、APIキー"
+  # Payment step. Bold first line.
+  paymentTitle: "Checkout には Flywire デモ認証情報が必要です。"
+  # [html] Payment step, the sentence after the title. Keep the <a> and its href.
+  paymentBody: "<a href=\"/dashboard/#credentials\">ホテルのバックオフィス</a>で{missing}を追加してから、こちらに戻ってお支払いください。"
+  # Settings drawer and activity drawer. Bold first line.
+  drawerTitle: "開始するには Flywire デモ認証情報を追加してください"
+  # Drawer paragraph. {missing} is the same list as above.
+  drawerBody: "このデモには認証情報が含まれていません。ホテルのバックオフィスで{missing}を入力してください。入力内容はこのブラウザに保存され、Flywire デモ環境でのみ使用できます。"
+  # Button in the drawer.
+  add: "認証情報を追加"
+  # Back office banner. Bold first line, includes the period.
+  officeTitle: "開始するには Flywire デモ認証情報を追加してください。"
+  # Back office banner body. {missing} is the list. "Save & test connection" is the submit button; use the same translation as dashboard.saveAndTest.
+  officeBody: "このデモには認証情報が含まれていません。Flywire デモアカウントの{missing}を入力し、「保存して接続をテスト」を押してください。それまでは、予約サイトの Checkout は無効のままです。"
+
+# -----------------------------------------------------------------------------
+# Checkout settings drawer (gear icon). Presenter voice throughout.
+# Technical tokens in <code> or in the "hint" strings are API names. Do not translate those tokens.
+# -----------------------------------------------------------------------------
+demo:
+  # Small label above the drawer title. Product name. [do not translate] "Flywire". "Checkout V2" is the product version.
+  overline: "Flywire Checkout V2"
+  title: "Checkout 設定"
+  # Subtitle under the title.
+  subtitle: "表示する内容を選択してください。設定は次回 Checkout を開いたときに適用され、このブラウザに保存されます。"
+  # Screen-reader name for the language icon in this header. The names in the menu (English, Español, …) are each language’s own name and are not in this file.
+  pageLanguage: "ページの言語"
+  # Screen-reader name for the X button.
+  close: "Checkout 設定を閉じる"
+  # Numbered section titles. The number is drawn separately; translate only the word.
+  sectionFlow: "フロー"
+  sectionDisplay: "表示方法"
+  sectionPages: "ページとゲスト体験"
+  sectionOptions: "支払いオプション"
+  sectionMethods: "支払い方法と通貨"
+  sectionBrand: "ブランディングと言語"
+  sectionSession: "セッション"
+  sectionCredentials: "Flywire デモ認証情報"
+
+  # Display choices.
+  displayOverlay: "全画面オーバーレイ"
+  displayEmbedded: "Checkout をページに埋め込む"
+  # [html] Keep <code>config.embed_to</code> unchanged.
+  displayHelp: "埋め込みでは、<code>config.embed_to</code> を使用して予約パネル内に Checkout を表示します。パネルにはすでにホテル名と合計金額が表示されているため、埋め込む場合は下の設定で Checkout のヘッダーと金額を非表示にしてください。"
+
+  # [html] The hint in the label is the API field. Do not translate show_payer_form.
+  payerFormLabel: "支払者情報ページ <span class=\"fw-label-hint\">show_payer_form</span>"
+  # [html] Do not translate show_recipient_form.
+  recipientFormLabel: "カスタムフィールドページ <span class=\"fw-label-hint\">show_recipient_form</span>"
+  # Three-way choice used for both pages above.
+  pageAuto: "自動"
+  pageAlways: "常に表示"
+  pageHide: "非表示"
+  # Help under those choices. Changes with the selection.
+  pagesNoteAuto: "「自動」では、ページ上の項目がすべて入力済みの場合にそのページをスキップします。事前入力されたお客様情報がこれに該当します。"
+  pagesNoteHidePayer: "支払者ページを非表示にできるのは、Checkout が必要な支払者情報をすべて取得済みの場合のみです。お客様情報フォームの内容が事前入力されます。"
+  # [html] Do not translate disabled_fields.
+  readOnlyLabel: "読み取り専用の支払者フィールド <span class=\"fw-label-hint\">disabled_fields</span>"
+  readOnlyNote: "お客様にはこれらのフィールドが表示されますが、変更はできません（例：予約時のメールアドレス）。"
+  readOnlyNoteHidden: "これらは支払者ページにのみ表示されますが、情報が事前入力されている場合、「自動」ではこのページがスキップされます。デモで表示するには、支払者ページを「常に表示」に設定してください。"
+  # Payer field chips. Short. These match the guest form, but they are presenter labels.
+  fieldFirstName: "名"
+  fieldLastName: "姓"
+  fieldEmail: "メール"
+  fieldPhone: "電話"
+  fieldAddress: "住所"
+  fieldCity: "市区町村"
+  fieldZip: "郵便番号"
+  fieldCountry: "国"
+
+  # Toggle titles are the bold line. Hints in <span class="fw-label-hint"> are code. Descriptions are the second line.
+  # [html] on every *Label key. Do not translate the code inside the hint span.
+  hideCloseLabel: "<strong>閉じるボタンを非表示</strong> <span class=\"fw-label-hint\">close_button: 'hidden'</span>"
+  hideCloseHelp: "お客様は Checkout を閉じられないため、手続きを完了するか、タイムアウトで終了します。埋め込み表示での使用をおすすめします。"
+  hideHeaderLabel: "<strong>Checkout のヘッダーを非表示</strong> <span class=\"fw-label-hint\">header: 'hidden'</span>"
+  hideHeaderHelp: "予約ページにはすでにホテル名が表示されています。オーバーレイ・埋め込みのいずれでも、Checkout 独自のヘッダーを表示しません。"
+  hideAmountLabel: "<strong>金額を非表示</strong> <span class=\"fw-label-hint\">show_amount_info: false</span>"
+  hideAmountHelp: "予約パネルにはすでに合計金額が表示されています。Checkout の金額概要を省略します。初期設定では表示されます。"
+  disableEmailsLabel: "<strong>支払者にメールを送信しない</strong> <span class=\"fw-label-hint\">disable_payer_emails</span>"
+  disableEmailsHelp: "Flywire は支払いステータスのメールを送信しないため、ホテル独自のブランドで確認メールを送信できます。"
+
+  # [html]
+  splitLabel: "<strong>パートナーと分配</strong> <span class=\"fw-label-hint\">transaction.details.split</span>"
+  splitHelp: "支払いの一部をパートナーのポータル（ツアー、スパ、ダイビングボート）へ直接送金します。残りはホテルに入金されます。"
+  waiveLabel: "<strong>カード手数料を免除</strong>"
+  waiveHelp: "ポータルの設定を変更せずに、この予約に限り手数料をホテルが負担します。"
+  # [html]
+  timeoutLabel: "<strong>Checkout のタイムアウト</strong> <span class=\"fw-label-hint\">config.timeout</span>"
+  timeoutHelp: "カウントダウンを表示し、時間切れになると Checkout を閉じます（例：確保していた客室を解放する場合）。"
+  timeoutCountdown: "カウントダウン"
+  timeoutWhole: "Checkout 全体"
+  timeoutEachAttempt: "支払いの試行ごと"
+  timeoutDuration: "時間"
+  # {count} is 3, 5, 10 or 15. Keep short; it is a menu item.
+  minutes_one: "{count}分"
+  minutes_other: "{count}分"
+
+  # [html] Do not translate config.offer_rules.
+  methodsHelp: "<code>config.offer_rules</code> を使用して、お客様に表示するオファーとその順序を制御します。"
+  # Screen-reader name for the method chips.
+  methodsGroup: "表示する支払い方法"
+  methodCards: "カード"
+  methodDebit: "口座振替"
+  methodOnline: "現地のオンライン決済"
+  methodTransfer: "銀行振込"
+  hideAmex: "American Express を非表示"
+  # [html] Do not translate filters.currency.
+  currenciesLabel: "提示する通貨 <span class=\"fw-label-hint\">filters.currency</span>"
+  currencyAll: "利用可能なすべての通貨"
+  currencyPayer: "お客様の自国通貨のみ"
+  currencyOtherThanPayer: "お客様の通貨以外"
+  currencyHotel: "ホテルの通貨のみ"
+  currencyOtherThanHotel: "ホテルの通貨以外"
+  currencyBoth: "お客様とホテルの通貨"
+  # [html] "sort · currency" is an API hint. Do not translate "sort" or "currency" inside the hint.
+  currencySortLabel: "通貨別のオファー順 <span class=\"fw-label-hint\">sort · currency</span>"
+  sortDefault: "Checkout の初期設定"
+  sortPayerFirst: "お客様の通貨を優先"
+  sortHotelFirst: "ホテルの通貨を優先"
+  sortOtherFirst: "その他の通貨を優先"
+  # [html]
+  methodSortLabel: "支払い方法別のオファー順 <span class=\"fw-label-hint\">sort · method</span>"
+  sortCardsFirst: "カードを優先"
+  sortOnlineFirst: "現地のオンライン決済を優先"
+  sortDebitFirst: "口座振替を優先"
+  sortTransferFirst: "銀行振込を優先"
+
+  # [html] Do not translate styles.
+  brandLabel: "<strong>クライアントのブランドに合わせる</strong>"
+  brandHelp: "<code>styles</code> で Checkout の色、フォント、文字サイズ、余白を設定します。"
+  brandColor: "メインカラー"
+  brandFont: "フォント"
+  # Menu item that reveals a free-text font field. "Google Font" is a product name; you may keep it.
+  brandFontCustom: "カスタム Google Font"
+  # [html] Do not translate fonts.googleapis.com.
+  brandFontCustomLabel: "Google Font <span class=\"fw-label-hint\">fonts.googleapis.com</span>"
+  # Example text inside the empty font field.
+  brandFontPlaceholder: "Libre Baskerville、または CSS リンクを貼り付け"
+  # Shown when the font name is accepted. {family} is the font name the user typed.
+  brandFontOk: "Checkout は fonts.googleapis.com から「{family}」を読み込みます。"
+  brandFontEmpty: "Libre Baskerville などのフォント名を入力するか、fonts.googleapis.com の CSS リンクを貼り付けてください。"
+  brandFontBadUrl: "このリンクは有効な URL ではありません。"
+  brandFontOrigin: "Checkout は https://fonts.googleapis.com からのみフォントを読み込みます。"
+  brandFontFamily: "リンクには、英数字とスペースで構成されたフォント名が必要です。"
+  brandFontChars: "英数字とスペースのみを使用してください。Checkout はフォント名に含まれるその他の文字を受け付けません。"
+  # [html] Do not translate base_font_size. The sizes below keep the pixel value.
+  brandSizeLabel: "文字サイズ <span class=\"fw-label-hint\">base_font_size</span>"
+  brandSizeSmall: "小 · 14px"
+  brandSizeRegular: "標準 · 16px"
+  brandSizeLarge: "大 · 18px"
+  brandSizeXl: "特大 · 20px"
+  # [html] Do not translate base_space. Keep the rem values.
+  brandSpaceLabel: "余白 <span class=\"fw-label-hint\">base_space</span>"
+  brandSpaceCompact: "狭め · 0.75rem"
+  brandSpaceStandard: "標準 · 1rem"
+  brandSpaceRoomy: "広め · 1.25rem"
+  checkoutLanguage: "Checkout の言語"
+
+  # Session choice. "Authenticated" means the hotel server creates the payment session.
+  sessionAuthenticated: "認証済み"
+  sessionAnonymous: "匿名"
+  sessionAuthenticatedNote: "推奨。貴社サーバーがセッションを作成し、結果を確認します。"
+  sessionAnonymousNote: "ブラウザのみで完結する、単発の支払い向けです。サーバー側でのステータス確認はできません。"
+
+  # Help under the credential summary.
+  credentialsHelp: "ホテルのバックオフィスでブラウザごとに一度入力すると、すべての Checkout および支払い操作に使用されます。Flywire デモ環境専用です。"
+  credentialsChange: "バックオフィスで認証情報を変更"
+  # Labels in the credential summary. Values are what the user typed.
+  clientName: "クライアント名"
+  clientId: "クライアントID"
+  recipientCode: "受取人コード"
+  apiKey: "APIキー"
+
+  # Collapsed section that shows the code sent to checkout.
+  integrationCode: "連携コード"
+  # [html] Do not translate cpx_core.start().
+  integrationHelp: "このページが <code>cpx_core.start()</code> に送信する内容"
+  playgroundIntro: "対応するプレイグラウンドのサンプル："
+
+  reset: "リセット"
+  done: "完了"
+
+  # Why a control is disabled. Presenter voice.
+  unavailable:
+    needsAmount: "金額が必要です。カードの保存のみの場合は利用できません。"
+    noForcePage: "カードの保存のみの場合、Checkout ではこのページを強制表示できません。"
+    cardOnFileNeedsSession: "カード情報を保管するフローには、常に認証済みセッションが必要です。"
+    needsApiKey: "先にホテルのバックオフィスでデモ用APIキーを追加してください。"
+
+  # Partner split editor.
+  split:
+    # Column headers.
+    portalCode: "ポータルコード"
+    # {currency} is an ISO code such as USD.
+    amount: "金額（{currency}）"
+    description: "説明"
+    # Placeholders inside the row. {n} is 1, 2, 3…
+    codePlaceholder: "コード"
+    codeLabel: "パートナー{n}のポータルコード"
+    # Placeholder when the currency has no cents.
+    amountPlaceholderWhole: "0"
+    amountPlaceholderCents: "0.00"
+    amountLabel: "パートナー{n}の金額（{currency}）"
+    whatFor: "用途"
+    descriptionLabel: "パートナー{n}の説明"
+    # Screen-reader name for the remove button. {n} is the row number.
+    remove: "パートナー{n}を削除"
+    add: "+ パートナーを追加"
+    useDefaults: "既定のパートナーを使用"
+    # {partners} and {hotel} and {total} are money amounts.
+    # The example note is added only before a room has been chosen.
+    summary: "パートナー {partners} · ホテル取り分 {hotel}（合計 {total}）"
+    summaryExample: "パートナー {partners} · ホテル取り分 {hotel}（合計 {total}・例）"
+    # Validation. {row} is "Partner 1". {code} is a portal code such as ABC.
+    needCode: "{row}：ポータルコードを入力してください。"
+    badCode: "{row}：ポータルコードは英字3文字（ABC）、または英字で始まる5文字（ABC1D）です。"
+    ownPortal: "{row}：ホテル自身のポータル（{code}）は指定できません。"
+    duplicate: "{row}：{code} が重複しています。"
+    needAmount: "{row}：金額を入力してください。"
+    # {partners} and {total} are money amounts.
+    overTotal: "パートナーへの分配額 {partners} が、予約合計額 {total} を超えています。"
+    rowLabel: "パートナー{n}"
+
+  # Default descriptions for the two sample partners. Guest may see these in the payment note.
+  partners:
+    excursion: "サンセット カタマランツアー"
+    spa: "カップル向けスパトリートメント"
+
+  # Checkout language menu.
+  # Names match the checkout language list. Endonyms stay untranslated.
+  locales:
+    en: "English"
+    en-GB: "English (UK)"
+    es-ES: "Español"
+    es-419: "Español (Latin America)"
+    fr-FR: "Français"
+    fr-CA: "Français (CA)"
+    pt-PT: "Português"
+    pt-BR: "Português (BR)"
+    pl: "Polski"
+    it: "Italiano"
+    ko: "한국어"
+    zh: "中文"
+    ja: "日本語"
+    de: "Deutsch"
+    id: "Bahasa Indonesia"
+    vi: "Tiếng Việt"
+
+# -----------------------------------------------------------------------------
+# Checkout activity drawer (heartbeat icon). Presenter voice.
+# Status codes such as FULLY_PAID stay in English in the UI; only the explanations are here.
+# -----------------------------------------------------------------------------
+activity:
+  title: "Checkout アクティビティ"
+  subtitle: "Checkout から返される内容をリアルタイムで表示します。セッション、すべてのコールバック、貴社サーバーから取得した最終結果が含まれます。消去するまでこのブラウザに保存されます。"
+  close: "Checkout アクティビティを閉じる"
+  clear: "消去"
+  # Copies the whole log. Restored after "Copied".
+  copyLog: "ログをコピー"
+  done: "完了"
+  emptyTitle: "Checkout のアクティビティはまだありません"
+  emptyBody: "お支払いステップから Checkout を開いてください。返される内容はすべて、リアルタイムでここに表示されます。"
+  earlierRuns: "以前の実行"
+  # {n} is the run number. {time} is a clock time.
+  runMeta: "実行 #{n} · {time}"
+  # Collapsed row. {n} is the run number. {flow} is the flow name.
+  runSummary: "実行 #{n} · {flow}"
+  # {status} is a translated status. {time} is a clock time.
+  runSummaryStatus: "{status} · {time}"
+  # {count} is how many events were recorded.
+  events_one: "{count}件のイベント"
+  events_other: "{count}件のイベント"
+  timeline: "タイムライン"
+  outcome: "結果"
+  # Fact labels in the latest-run summary. Values next to them come from the checkout that just ran.
+  flow: "フロー"
+  transaction: "取引"
+  amount: "金額"
+  session: "セッション"
+  display: "表示方法"
+  # While the server is still creating the session.
+  authenticatedCreating: "認証済み（作成中…）"
+  anonymous: "匿名"
+  timeInCheckout: "Checkout の所要時間"
+  # "on_error" is the name of a callback. Do not translate on_error.
+  onErrorCalls: "on_error の呼び出し"
+  # Do not translate on_end.
+  onEndReason: "on_end の理由"
+  sessionStatus: "セッションステータス"
+  paymentStatus: "支払いステータス"
+  reportedAmount: "報告金額"
+  report: "レポート"
+  reportPending: "まだ利用できません。"
+  # {amount} is the minor-unit number. {currency} is an ISO code. "subunits" means cents or the local equivalent.
+  subunits: "{amount} {currency}（最小通貨単位）"
+  paymentId: "支払いID"
+  method: "支払い方法"
+  card: "カード"
+  expires: "有効期限"
+  canceledHelp: "支払者が Checkout を閉じました。キャンセルされた実行については、何も報告されません。"
+  # Do not translate config.timeout.
+  timeoutHelp: "config.timeout の期限が切れ、Checkout が自動的に閉じました。"
+  refresh: "ステータスを更新"
+  # Shown on the refresh button while the request is in flight.
+  refreshing: "更新中…"
+  refreshHelp: "貴社サーバーからセッションを再取得します（例：銀行振込の処理待ちの場合）。"
+  # Do not translate on_end.
+  anonymousReport: "匿名セッション：このレポートは on_end のペイロードとしてブラウザに届きました。"
+  showData: "データを表示"
+  # {elapsed} is a duration such as "1.2s" already formatted by the app.
+  elapsed: "+{elapsed}"
+
+  # Status pill on a run.
+  status:
+    # Shown for the moment between clicking pay and checkout actually opening.
+    starting: "開始中"
+    open: "Checkout 表示中"
+    completed: "完了"
+    declined: "拒否"
+    canceled: "支払者がキャンセル"
+    timeout: "タイムアウト"
+    failed: "開始失敗"
+    interrupted: "再読み込みにより中断"
+
+  # Plain-language meaning of Flywire session status codes. The code itself stays in English next to this sentence.
+  sessionStatusText:
+    ACTIVE: "セッションは有効です。支払者は引き続き操作できます。"
+    PARTIALLY_COMPLETED: "リクエストされた操作の一部が完了しました。"
+    COMPLETED: "セッションでリクエストされた操作はすべて完了しました。"
+    ARCHIVED: "セッションは終了しており、読み取り専用です。"
+
+  # Plain-language meaning of Flywire payment status codes.
+  paymentStatusText:
+    NO_PAYMENTS: "支払いは行われていません（例：カードの保存のみ）。"
+    SOME_IN_PROGRESS: "支払いを処理中です（例：銀行振込の処理待ち）。"
+    # Used instead of the generic line when the payment is a card hold waiting for the hotel to capture it.
+    SOME_IN_PROGRESS_HOLD: "与信確保済み：金額はカード上で確保され、売上確定を待っています（ホテルのバックオフィス）。"
+    ALL_UNSUCCESSFUL: "すべての支払い試行が失敗しました。"
+    FULLY_PAID: "全額が支払われました。"
+    PARTIALLY_PAID: "金額の一部のみが支払われました。"
+    OVERPAID: "リクエスト額を超える金額が支払われました。"
+
+  # Timeline event titles. Callback names (on_error, on_end, cpx_core.start) stay in English.
+  events:
+    requested: "Checkout をリクエスト"
+    sessionCreated: "貴社サーバーがセッションを作成"
+    sessionCreatedText: "POST /commercial_payex/v2/session が、initFields.session に渡す認証情報を返しました。"
+    sessionResumed: "貴社サーバーがセッションを再開"
+    sessionResumedText: "POST /commercial_payex/v2/session/{id} が、既存セッションの新しい実行用認証情報を返しました。"
+    # [do not translate] This is the function the page calls. Shown as a timeline title.
+    startTitle: "cpx_core.start(initFields)"
+    startText: "このペイロードで Checkout を開きました。"
+    # {type} is an error code such as init_fields. The on_error('…') wrapper stays.
+    onErrorTitle: "on_error('{type}')"
+    onErrorRetry: "支払者が再試行できるよう、Checkout は開いたままです。"
+    # {reason} is completed, canceled or timeout.
+    onEndTitle: "on_end('{reason}')"
+    onEndPayload: "ブラウザに返されたペイロード（匿名セッション）。"
+    onEndNoPayload: "認証済みセッションではペイロードはありません。結果は貴社サーバーに問い合わせてください。"
+    refreshed: "貴社サーバーからステータスを更新"
+    outcomeFromServer: "貴社サーバーから取得したセッション結果"
+    lookupFailed: "セッションの照会に失敗しました"
+    launchFailed: "Checkout を開始できませんでした"
+
+# -----------------------------------------------------------------------------
+# Hotel back office (/dashboard). Presenter / staff voice.
+# -----------------------------------------------------------------------------
+dashboard:
+  # Header tag next to the hotel name.
+  backOffice: "バックオフィス"
+  # [html] Keep <strong> around the words that should stay bold. "Flywire" is the company name.
+  demoTag: "Flywire <strong>デモ環境専用</strong> · データはこのブラウザに保存されます"
+  backToBooking: "← 予約サイト"
+  # Card heading. [html] "DEMO only" is a warning badge; keep the <span>.
+  connectionTitle: "Flywire 接続 <span class=\"db-env-badge\">DEMO 専用</span>"
+  # [html] The <code> wraps the API host, which is filled in by the app. Do not translate the host.
+  connectionIntro: "予約サイトおよびこのページのすべての操作で使用される、Flywire <strong>デモ</strong>アカウントの認証情報です。リクエストは常に Flywire デモ API（<code>{host}</code>）に送信され、本番環境の認証情報は拒否されます。"
+  # Screen-reader name for the book icon. {count} is added when clients exist.
+  savedClients: "保存済みクライアント"
+  savedClientsCount: "保存済みクライアント（{count}件）"
+  connectionNotChecked: "未確認"
+  # Form labels.
+  clientName: "クライアント名"
+  clientNamePlaceholder: "例：Mykonos Hotel"
+  clientId: "クライアントID"
+  clientIdPlaceholder: "Flywire デモアカウントの UUID"
+  recipientCode: "受取人コード"
+  recipientCodePlaceholder: "例：ABC"
+  savedCodesLabel: "このクライアントIDの保存済みコード"
+  savedCodes: "保存済みコード"
+  noSavedCodes: "保存済みコードはありません"
+  # Short label used when a pasted API key is cleaned. "API key" only; the header name stays in apiKeyLabel.
+  apiKey: "APIキー"
+  # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
+  apiKeyLabel: "APIキー <span class=\"db-hint\">X-Authentication-Key</span>"
+  apiKeyPlaceholder: "デモ用APIキーを貼り付けてください"
+  # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
+  saveAndTest: "保存して接続をテスト"
+  clearCredentials: "認証情報を消去"
+  recipientCurrency: "受取人の通貨"
+  # Fine print at the bottom of the credentials card.
+  credentialsFootnote: "デモ専用：認証情報はこのブラウザに保存されます。APIキーはリクエストごとにこのデモのサーバーへ送信され、そこから Flywire デモ API に転送されます。実際の連携では、APIキーは貴社サーバー上で保持されます。"
+  bookings: "予約"
+  clearAll: "すべて消去"
+  # Confirm dialog before deleting every booking in this browser.
+  confirmClearBookings: "このブラウザからすべてのデモ予約を削除しますか？"
+  # Confirm dialog before forgetting the credentials currently in use.
+  confirmClearCredentials: "これらの認証情報の使用を停止しますか？保存済みクライアントはこのブラウザに残り、再度読み込むことができます。"
+  # {id} is the booking reference, such as a short id.
+  confirmDeleteBooking: "予約 {id} を削除しますか？"
+
+  saved:
+    title: "保存済みクライアント"
+    intro: "APIキーはクライアントIDごとに1つです。そのクライアントで保存した受取人コードは、各カードに表示されます。"
+    close: "保存済みクライアントを閉じる"
+    empty: "保存済みクライアントはまだありません。「保存して接続をテスト」を実行すると、ここに保存されます。"
+    load: "読み込み"
+    noneYet: "まだありません"
+    unnamed: "名称未設定のクライアント"
+    inUse: "使用中"
+    clientId: "クライアントID"
+    apiKey: "APIキー"
+    recipientCodes: "受取人コード"
+
+  # Connection status pill. Keep these short.
+  status:
+    notSet: "未設定"
+    checking: "確認中…"
+    keyRejected: "キー拒否"
+    incomplete: "入力不足"
+    checkFields: "接続済み · 項目を確認"
+    connected: "接続済み · デモ API"
+    unreachable: "サーバーに接続不可"
+  # {detail} is the reason from the server.
+  keyRejectedDetail: "{detail} 文字の欠落がないか確認するか、キーを再度貼り付けてください。"
+  # {missing} is the list of fields still empty.
+  keyWorksMissing: "APIキーはデモ API で有効です。未入力の項目：{missing}。"
+  # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
+  savedInBrowser: "{name}{id}{code} をこのブラウザに保存しました。"
+  demoKeyAccepted: "デモ API がこのキーを承認しました。"
+  # Format warnings, shown before the API is called.
+  clientIdFormat: "クライアントIDが UUID の形式（8-4-4-4-12 文字）になっていません。"
+  recipientFormat: "受取人コードは英字3文字（ABC）、または英字で始まる5文字（ABC1D）です。"
+  # {label} is Client ID, Recipient code or API key. {fixes} is a list of what was removed.
+  cleanedPaste: "貼り付けた内容を整えました。{fixes}"
+  cleanedField: "{label}：{fixes}を削除しました。"
+  # What paste-cleanup removed. Used inside {fixes}. Lowercase, mid-sentence.
+  fix:
+    invisible: "不可視文字"
+    nbsp: "改行なしスペース"
+    quotes: "前後の引用符"
+    fieldName: "先頭のフィールド名"
+    bearer: "先頭の「Bearer」"
+    punctuation: "末尾の句読点"
+    spacesInKey: "キー内の改行またはスペース"
+    spaces: "スペース"
+    lowercase: "小文字"
+
+  # Empty bookings table.
+  emptyTitle: "予約はまだありません"
+  emptyBody: "予約サイトで予約を行ってください。開始したすべての Checkout がここに表示されます。"
+  emptyAction: "予約サイトへ移動"
+  # Table headers.
+  colBooking: "予約"
+  colGuest: "宿泊者"
+  colStay: "宿泊"
+  colAmount: "金額"
+  colStatus: "ステータス"
+  # Shown in the detail pane before a row is chosen.
+  selectBooking: "予約を選択すると、支払いと操作が表示されます。"
+  deleteBooking: "予約を削除"
+  # Fact labels in the detail pane.
+  factGuest: "宿泊者"
+  factStay: "宿泊"
+  factCheckout: "Checkout"
+  factTotal: "予約合計"
+  factAuthorized: "与信確保額"
+  factCaptured: "売上確定額"
+  factCharged: "保存済みカードへの請求"
+  factSession: "セッション"
+  anonymousSession: "匿名（ブラウザのみ）"
+  factSessionStatus: "セッションステータス"
+  factPaymentStatus: "支払いステータス"
+  factTokenization: "トークン化"
+  factLastChecked: "最終確認"
+  payments: "支払い"
+  colPaymentId: "支払いID"
+  colMethod: "支払い方法"
+  colCaptured: "売上確定"
+  chargesTitle: "保存済みカードへの請求"
+  colWhatFor: "用途"
+  colFlywirePayment: "Flywire 支払い"
+  colResult: "結果"
+  # “guest paid” is the label Flywire uses for the amount in the guest’s currency. You may keep the quotes.
+  chargesNote: "「金額」はホテルが請求した額、「お客様支払額」は Flywire がお客様の通貨でお客様に請求した額です（charge_info）。"
+  # Secondary line under a charge amount. {amount} is money in the guest’s currency. Lowercase, mid-sentence.
+  guestPaid: "お客様支払額 {amount}"
+  savedCard: "保存済みカード"
+  factCard: "カード"
+  factMethod: "支払い方法"
+  # Card line. {brand} is Visa, Mastercard, etc. {last4} is four digits. {exp} is MM/YY.
+  cardLine: "{brand} •••• {last4}"
+  cardExpiry: "· 有効期限 {exp}"
+
+  # Booking status pills. Short.
+  bookingStatus:
+    failed: "開始失敗"
+    abandoned: "離脱"
+    timedOut: "タイムアウト"
+    inCheckout: "Checkout 中"
+    declined: "拒否"
+    captured: "売上確定"
+    partlyCaptured: "一部売上確定"
+    authorized: "与信確保"
+    processing: "処理中"
+    paid: "支払い済み"
+    cardSaved: "カード保存済み"
+    completed: "Checkout 完了"
+
+  # Hold explanation under the status, when money is authorized but not captured yet.
+  holdPending: "与信確保済み：金額はカード上で確保され、売上確定を待っています。"
+  holdCaptureSent: "売上確定を送信しました。Flywire が非同期で処理します。ステータスを更新して、反映をご確認ください。"
+
+  # Same payment-status explanations as the activity drawer, shorter, for the back office.
+  paymentStatusText:
+    NO_PAYMENTS: "支払いは行われていません。"
+    SOME_IN_PROGRESS: "支払いを処理中です。"
+    ALL_UNSUCCESSFUL: "すべての支払い試行が失敗しました。"
+    FULLY_PAID: "全額が支払われたか、与信確保されました。"
+    PARTIALLY_PAID: "金額の一部のみが支払われました。"
+    OVERPAID: "リクエスト額を超える金額が支払われました。"
+
+  actionsTitle: "操作"
+  actionsSubtitle: "このデモのサーバー経由で行う Flywire API 呼び出し"
+  # Shown on an action button while its request is in flight.
+  working: "処理中…"
+  # {label} is the action name, e.g. "Capture payment".
+  unavailableTitle: "この予約では{label}を利用できません。 "
+  # Link to the Flywire sample page. The arrow means "opens in a new tab".
+  openPlayground: "プレイグラウンドで開く ↗"
+  sendRequest: "{method} リクエストを送信"
+  sending: "送信中…"
+  requestFormat: "リクエスト形式"
+  # Tab label. "curl" is a command-line tool. [do not translate]
+  curl: "curl"
+  nodeFetch: "Node fetch"
+  requestTitle: "Flywire へのリクエスト"
+  fillFields: "上の項目を入力してください。"
+  requestFootnote: "このデモのサーバーが、デモ用APIキーを X-Authentication-Key として付与して送信します。キーがここに表示されることはありません。"
+  # {when} is the booking’s creation date and time.
+  created: "作成日時：{when}"
+  activity: "アクティビティ"
+  request: "リクエスト"
+  requestBody: "リクエスト本文"
+  response: "レスポンス"
+  showData: "データを表示"
+  payment: "支払い"
+  # {currency} is an ISO code.
+  amountLabel: "金額（{currency}）"
+  amountPositive: "0より大きい金額を入力してください。"
+  amountMinimum: "金額は{amount}以上である必要があります。"
+  whatForOffice: "用途（バックオフィスで管理）"
+  # Do not translate external_reference. It is a field name.
+  externalReference: "external_reference"
+  needReference: "この請求の external_reference（例：予約番号）を入力してください。"
+  tokenFromReport: "セッションの tokenization_report から取得しました。必要に応じて編集してください。"
+  tokenMissing: "セッションレポートにカードトークンが含まれていませんでした。先にステータスを更新するか、Flywire ポータルからトークン情報を貼り付けてください。"
+  # Do not translate these three field names.
+  paymentMethodToken: "payment_method_token"
+  mandateId: "mandate_id"
+  payorId: "payor_id"
+  resumeNote: "Flywire から応答があると、新しい run_id と run_token を使用して、このページで Checkout が開きます。"
+  # {amount} is the current hold. Holds can be raised, never lowered.
+  extendMinimum: "最低{amount}：与信額は増額のみ可能です。"
+  currencyUnavailable: "通貨を取得できません"
+  # {code} is USD. {name} is "US Dollar". {symbol} is " ($)" or empty.
+  currencyValue: "{code} · {name}{symbol}"
+  currencyUsd: "この受取人は USD で請求するため、客室料金は米ドルのままです。"
+  # {rate} is a number. {code} is the currency. {date} is " · 2026-10-06" or empty.
+  currencyRate: "1 USD = {rate} {code}{date}。客室料金と Checkout の金額にはこのレートが適用されます。"
+  # {who} is the recipient name and id. {detail} is the rest of the sentence.
+  currencyLine: "{who}。{detail}"
+
+  # Preset reasons when charging a saved card. Staff pick one from a menu.
+  charges:
+    minibar: "ミニバー"
+    spa: "スパトリートメント"
+    lateCheckout: "レイトチェックアウト"
+    transfer: "空港送迎"
+    dive: "ダイビング器材レンタル"
+    noShow: "ノーショー料金"
+
+  # The five staff actions. "help" is the paragraph. "reason" / "fix" show when the action cannot run.
+  action:
+    refresh: "ステータスを更新"
+    refreshHelp: "Flywire からセッションを取得します：セッション、支払い、トークン化の各レポート。"
+    resume: "セッションを再開"
+    resumeHelp: "このセッションの新しい実行用認証情報を取得し、お客様が中断した箇所から Checkout を再度開きます（例：支払いリンクを送信する場合）。"
+    resumeOldReason: "この予約は、再開機能の導入前に作成されました。"
+    resumeOldFix: "新しい予約を作成してください。"
+    capture: "売上確定"
+    captureHelp: "確保済みの資金を全額または一部回収します（例：チェックイン時）。売上確定されなかった金額はお客様に解放されます。"
+    extend: "与信を延長"
+    extendHelp: "与信の期限を本日から7日間にリセットし、与信額を増額できます（増額のみ）。"
+    charge: "保存済みカードに請求"
+    chargeHelp: "Checkout で保存したカードに、お客様の立ち会いなしで請求します（例：ミニバーやノーショー料金）。"
+    noSessionReason: "この予約は匿名セッションを使用したため、サーバー上で照会または再開できるセッションがありません。"
+    noSessionFix: "新しい予約では、認証済みセッション（設定ドロワーの「セッション」）を使用してください。"
+    # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
+    notHoldReason: "Flywire が売上確定または延長できるのは、与信確保された支払い（ホールド）のみです。この予約は「{flow}」を使用しており、{how}。"
+    chargedImmediately: "お客様に即時請求するフローです"
+    savedOnly: "請求も与信確保も行わずにカードを保存するフローです"
+    notHoldFix: "デモで確認するには、与信確保のフローで予約してください：「予約・与信確保」「与信確保・カード保存」「与信確保・カード保存はお客様が選択」「与信確保・カード自動保管」。"
+    noPaymentReason: "この予約にはまだ支払いIDがありません。"
+    noPaymentFixRefresh: "お客様が Checkout を完了した後、「ステータスを更新」をクリックしてください。"
+    noPaymentFixGuest: "お客様はまだ Checkout を完了していません。"
+    # {amount} is money. {when} is a date and time.
+    holdEndedReason: "{when}に{amount}が売上確定され、与信は終了しました。売上確定されなかった金額は、お客様に解放されています。"
+    holdEndedFixCard: "追加料金には「保存済みカードに請求」をご利用ください。この予約にはカード情報が保管されています。"
+    holdEndedFixNew: "再度デモで確認するには、与信確保のフローで新しい予約を作成してください。"
+    noCardReason: "この予約にはカードが保存されていません。"
+    noCardFix: "カード情報を保管するフローで予約してください（例：「カード保存・後日請求」または「即時支払い・カード保存」）。"
+    fallbackFlow: "不明なフロー"
+
+  # History lines written after an action. {status} is a Flywire status code (do not translate the code).
+  history:
+    statusRefreshed: "ステータスを更新しました"
+    statusRefreshedWith: "ステータスを更新しました · {status}"
+    statusFailed: "ステータスの更新に失敗しました"
+    resumed: "セッション再開 · Checkout を再表示"
+    resumeFailed: "再開に失敗しました"
+    # {amount} is money. {status} is " · received" or empty.
+    captured: "売上確定 {amount}{status}"
+    holdRaised: "与信額を{amount}に増額し、7日間延長"
+    holdExtended: "与信を7日間延長"
+    # {amount} {what} {reference} are filled by the form. {status} is empty or " · " plus a Flywire status code.
+    charged: "請求 {amount} · {what} · {reference}{status}"
+    # When an action fails, the history line is rewritten. {what} is the text before the first " · ". {error} is the API message.
+    failedLine: "{what}（失敗） · {error}"
+    failedSuffix: "失敗"
+    checkoutAfterResume: "再開後に Checkout が完了"
+    checkoutAfterResumeStatus: "再開後に Checkout が完了 · {status}"
+    guestClosedAgain: "お客様が再度 Checkout を閉じました"
+    checkoutTimedOut: "Checkout がタイムアウトしました"
+    # {type} is an error code. Keep on_error.
+    onError: "on_error('{type}')"
+    couldNotStart: "Checkout を開始できませんでした：{detail}"
+
+# -----------------------------------------------------------------------------
+# Card brands and payment methods, shown next to a payment result.
+# Brand names are trademarks. [do not translate] the brand names.
+# "Card" / "Direct debit" / "Bank transfer" / "Online payment" are generic and should be translated.
+# -----------------------------------------------------------------------------
+cards:
+  card: "カード"
+  directDebit: "口座振替"
+  bankTransfer: "銀行振込"
+  online: "オンライン決済"
+  visa: "Visa"
+  mastercard: "Mastercard"
+  amex: "American Express"
+  discover: "Discover"
+  jcb: "JCB"
+  diners: "Diners Club"
+  unionpay: "UnionPay"
+  maestro: "Maestro"
+
+# -----------------------------------------------------------------------------
+# Errors thrown in the browser before checkout opens. Shown in a notice or the activity log.
+# -----------------------------------------------------------------------------
+sdk:
+  # Shown if the Flywire script never arrives. "connect.js" is a file name. [do not translate] the file name.
+  sdkMissing: "Flywire Checkout V2 SDK が読み込まれませんでした。ページに connect.js が含まれているかご確認ください。"
+  sessionCreateFailed: "セッションの作成に失敗しました"
+  sessionLookupFailed: "セッションの照会に失敗しました"
+  # {message} is one of the two lines above. {status} is an HTTP status number.
+  requestFailed: "{message}（{status}）"
+  # Recipient currency could not be read. Shown on the back office.
+  currencyUnreadable: "受取人の通貨を読み取れませんでした。"
+  currencyUnreachable: "このデモサーバーに接続できず、受取人の通貨を読み取れませんでした。"
+
+# -----------------------------------------------------------------------------
+# Sentences the demo server returns and the back office displays.
+# They are listed so translators can prepare them. The page language is saved
+# in this browser, but the server still sends the English text. Do not translate
+# URLs, header names, or field names inside these
+# sentences when they are written as code.
+# -----------------------------------------------------------------------------
+server:
+  # Returned with HTTP 401 when an action is attempted before an API key is saved.
+  # "/dashboard" is the back-office path. You may keep the path in parentheses.
+  missingCredentials: "先にホテルのバックオフィス（/dashboard）で Flywire デモ認証情報を追加してください。"
+  invalidSession: "セッションIDが無効です。"
+  invalidPayment: "支払いIDが無効です。"
+  amountMinor: "amount は最小通貨単位（セント）の正の整数で指定してください。"
+  chargeFields: "payment_method_token、mandate_id、payor_id、recipient_code、external_reference は必須です。"
+  noApiKey: "APIキーがまだ入力されていません。"
+  # {detail} is Flywire’s own rejection text, already ending with a period.
+  keyRejected: "{detail} ここで使用できるのは Flywire のデモ用キーのみです。本番用キーは拒否されます。"
+  keyRejectedFallback: "APIキーが拒否されました。"
+  keyAccepted: "デモ API がこのキーを承認しました。"
+  # {status} is an HTTP status number.
+  apiAnswered: "デモ API の応答：{status}。"
+  apiUnreachable: "Flywire デモ API に接続できませんでした。"
+  needClientId: "通貨を照会する前に、クライアントIDを入力してください。"
+  needRecipient: "通貨を照会する前に、受取人コードを入力してください。"
+  currencyFailed: "受取人の通貨を読み取れませんでした。"
+  flywireUnreachable: "Flywire API に接続できませんでした"

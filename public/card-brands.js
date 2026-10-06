@@ -71,9 +71,23 @@
         return ALIASES[key] || 'card';
     }
 
+    const BRAND_KEYS = {
+        visa: 'cards.visa',
+        mastercard: 'cards.mastercard',
+        amex: 'cards.amex',
+        discover: 'cards.discover',
+        jcb: 'cards.jcb',
+        diners: 'cards.diners',
+        unionpay: 'cards.unionpay',
+        maestro: 'cards.maestro',
+        card: 'cards.card',
+    };
+
     function label(brand) {
         const key = normalize(brand);
-        return key === 'card' && brand ? String(brand) : BRANDS[key].label;
+        if (key === 'card' && brand) return String(brand);
+        const i18nKey = BRAND_KEYS[key];
+        return global.I18n?.has(i18nKey) ? global.I18n.t(i18nKey) : BRANDS[key].label;
     }
 
     function icon(brand) {
@@ -102,19 +116,33 @@
         const isCard = isCardPayment(payment);
 
         if (!isCard) {
-            wrap.textContent = METHOD_LABELS[payment.payment_method] || payment.payment_method || '—';
+            wrap.textContent = methodLabel(payment.payment_method) || payment.payment_method || '—';
             return wrap;
         }
 
-        const parts = [label(payment.brand)];
-        if (payment.last_four) parts.push(`•••• ${payment.last_four}`);
+        const brandName = label(payment.brand);
+        let text = payment.last_four
+            ? global.I18n.t('dashboard.cardLine', { brand: brandName, last4: payment.last_four })
+            : brandName;
         const exp = withExpiry && expiry(payment);
-        if (exp) parts.push(`· exp ${exp}`);
+        if (exp) text += ` ${global.I18n.t('dashboard.cardExpiry', { exp })}`;
 
         const textNode = document.createElement('span');
-        textNode.textContent = parts.join(' ');
+        textNode.textContent = text;
         wrap.append(icon(payment.brand), textNode);
         return wrap;
+    }
+
+    function methodLabel(method) {
+        const key = {
+            credit_card: 'cards.card',
+            card: 'cards.card',
+            direct_debit: 'cards.directDebit',
+            bank_transfer: 'cards.bankTransfer',
+            online: 'cards.online',
+        }[method];
+        if (key && global.I18n?.has(key)) return global.I18n.t(key);
+        return METHOD_LABELS[method] || method;
     }
 
     function isCardPayment(payment) {
@@ -133,6 +161,6 @@
 
     global.CardBrands = {
         normalize, label, icon, expiry, describe, isCardPayment, withSavedCard,
-        methodLabel: (m) => METHOD_LABELS[m] || m,
+        methodLabel,
     };
 })(window);

@@ -9,32 +9,26 @@
 (function (global) {
     'use strict';
 
-    const SESSION_STATUS = {
-        ACTIVE: 'Session is open; the payer can still act on it.',
-        PARTIALLY_COMPLETED: 'Some of the requested operations finished.',
-        COMPLETED: 'Everything requested in the session is done.',
-        ARCHIVED: 'Session is closed and read-only.',
-    };
+    const t = (key, vars) => global.I18n.t(key, vars);
 
-    const PAYMENT_STATUS = {
-        NO_PAYMENTS: 'No payment was made (for example, a card was only saved).',
-        SOME_IN_PROGRESS: 'A payment is still processing (for example, a pending bank transfer).',
-        ALL_UNSUCCESSFUL: 'Every payment attempt failed.',
-        FULLY_PAID: 'The full amount was paid.',
-        PARTIALLY_PAID: 'Only part of the amount was paid.',
-        OVERPAID: 'More than the requested amount was paid.',
-    };
+    const SESSION_STATUS = ['ACTIVE', 'PARTIALLY_COMPLETED', 'COMPLETED', 'ARCHIVED'];
+    const PAYMENT_STATUS = ['NO_PAYMENTS', 'SOME_IN_PROGRESS', 'ALL_UNSUCCESSFUL', 'FULLY_PAID', 'PARTIALLY_PAID', 'OVERPAID'];
 
-    const STATUS_LABEL = {
-        starting: 'Starting',
-        open: 'Checkout open',
-        completed: 'Completed',
-        declined: 'Declined',
-        canceled: 'Canceled by payer',
-        timeout: 'Timed out',
-        failed: 'Failed to start',
-        interrupted: 'Interrupted by reload',
-    };
+    function sessionStatusText(status) {
+        const key = `activity.sessionStatusText.${status}`;
+        return global.I18n.has(key) ? t(key) : '';
+    }
+
+    function paymentStatusText(status, held) {
+        if (held && status === 'SOME_IN_PROGRESS') return t('activity.paymentStatusText.SOME_IN_PROGRESS_HOLD');
+        const key = `activity.paymentStatusText.${status}`;
+        return global.I18n.has(key) ? t(key) : '';
+    }
+
+    function statusLabel(status) {
+        const key = `activity.status.${status}`;
+        return global.I18n.has(key) ? t(key) : status;
+    }
 
     const STORAGE_KEY = 'caldera.checkoutActivity.v1';
     const MAX_RUNS = 20;
@@ -115,7 +109,7 @@
     async function refreshStatus(run) {
         const btn = $('activity-refresh');
         btn.disabled = true;
-        btn.textContent = 'Refreshing…';
+        btn.textContent = t('activity.refreshing');
         try {
             const report = await global.FlywireCheckout.getSession(run.sessionId);
             recordOn(run, 'session_report', { sessionId: run.sessionId, report, manual: true });
@@ -184,8 +178,8 @@
         if (!runs.length) {
             const empty = el('div', 'fw-activity-empty');
             empty.append(
-                el('p', 'fw-activity-empty-title', 'No checkout activity yet'),
-                el('p', 'fw-help', 'Open checkout from the payment step. Everything it returns will show up here as it happens.')
+                el('p', 'fw-activity-empty-title', t('activity.emptyTitle')),
+                el('p', 'fw-help', t('activity.emptyBody'))
             );
             body.replaceChildren(empty);
             return;
@@ -194,7 +188,7 @@
         const [latest, ...previous] = runs;
         const children = [renderStatus(latest), renderOutcome(latest), renderTimeline(latest, true)];
         if (previous.length) {
-            children.push(el('h3', 'fw-section-title fw-activity-previous', 'Earlier runs'));
+            children.push(el('h3', 'fw-section-title fw-activity-previous', t('activity.earlierRuns')));
             previous.forEach((run) => children.push(renderTimeline(run, false)));
         }
         body.replaceChildren(...children.filter(Boolean));
@@ -203,18 +197,18 @@
     function renderStatus(run) {
         const card = el('section', 'fw-activity-status');
         const top = el('div', 'fw-activity-status-top');
-        top.append(pill(run.status), el('span', 'fw-muted', `Run #${run.number} · ${time(run.startedAt)}`));
+        top.append(pill(run.status), el('span', 'fw-muted', t('activity.runMeta', { n: run.number, time: time(run.startedAt) })));
 
         const facts = el('dl', 'fw-facts');
-        addFact(facts, 'Flow', run.meta.flow);
-        addFact(facts, 'Transaction', run.meta.transaction);
-        addFact(facts, 'Amount', run.meta.amount);
-        addFact(facts, 'Session', run.meta.session === 'authenticated'
-            ? (run.sessionId ? code(run.sessionId) : 'Authenticated (creating…)')
-            : 'Anonymous');
-        addFact(facts, 'Display', run.meta.display);
-        if (run.endedAt) addFact(facts, 'Time in checkout', duration(run.endedAt - run.startedAt));
-        if (run.errors) addFact(facts, 'on_error calls', String(run.errors));
+        addFact(facts, t('activity.flow'), run.meta.flow);
+        addFact(facts, t('activity.transaction'), run.meta.transaction);
+        addFact(facts, t('activity.amount'), run.meta.amount);
+        addFact(facts, t('activity.session'), run.meta.session === 'authenticated'
+            ? (run.sessionId ? code(run.sessionId) : t('activity.authenticatedCreating'))
+            : t('activity.anonymous'));
+        addFact(facts, t('activity.display'), run.meta.display);
+        if (run.endedAt) addFact(facts, t('activity.timeInCheckout'), duration(run.endedAt - run.startedAt));
+        if (run.errors) addFact(facts, t('activity.onErrorCalls'), String(run.errors));
 
         card.append(top, facts);
         return card;
@@ -224,23 +218,21 @@
         if (!run.reason) return null;
 
         const card = el('section', 'fw-activity-outcome');
-        card.append(el('h3', 'fw-section-title', 'Outcome'));
+        card.append(el('h3', 'fw-section-title', t('activity.outcome')));
 
         const facts = el('dl', 'fw-facts');
-        addFact(facts, 'on_end reason', code(`'${run.reason}'`));
+        addFact(facts, t('activity.onEndReason'), code(`'${run.reason}'`));
 
         const session = run.report?.session_report;
         const payment = run.report?.payment_report;
-        if (session?.status) addFact(facts, 'Session status', statusValue(session.status, SESSION_STATUS));
+        if (session?.status) addFact(facts, t('activity.sessionStatus'), statusValue(session.status, sessionStatusText(session.status)));
         if (payment?.status) {
             const held = run.meta.transaction?.includes('preauth') && payment.status === 'SOME_IN_PROGRESS';
-            addFact(facts, 'Payment status', statusValue(payment.status, held
-                ? { SOME_IN_PROGRESS: 'Authorized: the amount is held on the card, waiting for capture (hotel back office).' }
-                : PAYMENT_STATUS));
+            addFact(facts, t('activity.paymentStatus'), statusValue(payment.status, paymentStatusText(payment.status, held)));
         }
-        if (payment?.amount !== undefined) addFact(facts, 'Reported amount', reportedAmount(payment));
+        if (payment?.amount !== undefined) addFact(facts, t('activity.reportedAmount'), reportedAmount(payment));
         if (run.reason === 'completed' && !run.report) {
-            addFact(facts, 'Report', 'Not available yet.');
+            addFact(facts, t('activity.report'), t('activity.reportPending'));
         }
         card.append(facts);
 
@@ -249,7 +241,7 @@
             const showExpiry = payments.some((p) => global.CardBrands.expiry(p));
             const table = el('table', 'fw-activity-table');
             const head = el('tr');
-            ['Payment ID', 'Method', 'Card', ...(showExpiry ? ['Expires'] : [])].forEach((h) => head.append(el('th', null, h)));
+            [t('activity.paymentId'), t('activity.method'), t('activity.card'), ...(showExpiry ? [t('activity.expires')] : [])].forEach((h) => head.append(el('th', null, h)));
             table.append(head);
             payments.map((p) => global.CardBrands.withSavedCard(p, run.report)).forEach((p) => {
                 const row = el('tr');
@@ -266,19 +258,19 @@
         }
 
         if (run.reason === 'canceled') {
-            card.append(el('p', 'fw-help', 'The payer closed checkout. Nothing is reported for canceled runs.'));
+            card.append(el('p', 'fw-help', t('activity.canceledHelp')));
         } else if (run.reason === 'timeout') {
-            card.append(el('p', 'fw-help', 'config.timeout expired and checkout closed itself.'));
+            card.append(el('p', 'fw-help', t('activity.timeoutHelp')));
         } else if (run.sessionId) {
             const actions = el('div', 'fw-activity-actions');
-            const refresh = el('button', 'fw-btn fw-btn-secondary', 'Refresh status');
+            const refresh = el('button', 'fw-btn fw-btn-secondary', t('activity.refresh'));
             refresh.type = 'button';
             refresh.id = 'activity-refresh';
             refresh.addEventListener('click', () => refreshStatus(run));
-            actions.append(refresh, el('span', 'fw-help', 'Reads the session again from your server, e.g. while a bank transfer is pending.'));
+            actions.append(refresh, el('span', 'fw-help', t('activity.refreshHelp')));
             card.append(actions);
         } else {
-            card.append(el('p', 'fw-help', 'Anonymous session: this report arrived in the browser as the on_end payload.'));
+            card.append(el('p', 'fw-help', t('activity.anonymousReport')));
         }
         return card;
     }
@@ -288,8 +280,10 @@
         wrap.open = expanded;
         const summary = el('summary', 'fw-activity-run-summary');
         summary.append(
-            el('span', null, expanded ? 'Timeline' : `Run #${run.number} · ${run.meta.flow}`),
-            el('span', 'fw-muted', expanded ? `${run.events.length} events` : `${STATUS_LABEL[run.status]} · ${time(run.startedAt)}`)
+            el('span', null, expanded ? t('activity.timeline') : t('activity.runSummary', { n: run.number, flow: run.meta.flow })),
+            el('span', 'fw-muted', expanded
+                ? t('activity.events', { count: run.events.length })
+                : t('activity.runSummaryStatus', { status: statusLabel(run.status), time: time(run.startedAt) }))
         );
         wrap.append(summary);
 
@@ -303,7 +297,7 @@
         const { title, text, tone, data } = describe(event);
         const item = el('li', `fw-timeline-item fw-tone-${tone}`);
         const head = el('div', 'fw-timeline-head');
-        head.append(el('span', 'fw-timeline-title', title), el('span', 'fw-timeline-time', `+${duration(event.at - run.startedAt)}`));
+        head.append(el('span', 'fw-timeline-title', title), el('span', 'fw-timeline-time', t('activity.elapsed', { elapsed: duration(event.at - run.startedAt) })));
         item.append(head);
         if (text) item.append(el('p', 'fw-timeline-text', text));
         if (data !== undefined) {
@@ -313,7 +307,7 @@
                 if (details.open) expandedData.add(key);
                 else expandedData.delete(key);
             });
-            details.append(el('summary', null, 'Show data'));
+            details.append(el('summary', null, t('activity.showData')));
             const pre = el('pre');
             pre.append(el('code', null, json(data)));
             details.append(pre);
@@ -325,37 +319,37 @@
     function describe({ name, detail }) {
         switch (name) {
             case 'run_started':
-                return { title: 'Checkout requested', text: `${detail.flow} · ${detail.amount} · ${detail.display}`, tone: 'neutral' };
+                return { title: t('activity.events.requested'), text: `${detail.flow} · ${detail.amount} · ${detail.display}`, tone: 'neutral' };
             case 'session_created':
                 return {
-                    title: 'Session created by your server',
-                    text: 'POST /commercial_payex/v2/session returned the credentials passed to initFields.session.',
+                    title: t('activity.events.sessionCreated'),
+                    text: t('activity.events.sessionCreatedText'),
                     tone: 'info',
                     data: detail.session,
                 };
             case 'session_resumed':
                 return {
-                    title: 'Session resumed by your server',
-                    text: 'POST /commercial_payex/v2/session/{id} returned new run credentials for the existing session.',
+                    title: t('activity.events.sessionResumed'),
+                    text: t('activity.events.sessionResumedText'),
                     tone: 'info',
                     data: detail.session,
                 };
             case 'start':
-                return { title: 'cpx_core.start(initFields)', text: 'Checkout opened with this payload.', tone: 'info', data: detail.initFields };
+                return { title: t('activity.events.startTitle'), text: t('activity.events.startText'), tone: 'info', data: detail.initFields };
             case 'on_error':
                 return {
-                    title: `on_error('${detail.type}')`,
-                    text: typeof detail.payload === 'string' ? detail.payload : 'Checkout stays open so the payer can retry.',
+                    title: t('activity.events.onErrorTitle', { type: detail.type }),
+                    text: typeof detail.payload === 'string' ? detail.payload : t('activity.events.onErrorRetry'),
                     tone: 'warn',
                     data: detail.payload,
                 };
             case 'on_end':
                 return {
-                    title: `on_end('${detail.reason}')`,
+                    title: t('activity.events.onEndTitle', { reason: detail.reason }),
                     text: detail.payload
-                        ? 'Payload returned in the browser (anonymous session).'
+                        ? t('activity.events.onEndPayload')
                         : detail.reason === 'completed'
-                            ? 'No payload for authenticated sessions; ask your server for the outcome.'
+                            ? t('activity.events.onEndNoPayload')
                             : null,
                     tone: detail.reason === 'completed' ? 'success' : detail.reason === 'timeout' ? 'warn' : 'neutral',
                     data: detail.payload,
@@ -364,16 +358,16 @@
                 const s = detail.report?.session_report?.status;
                 const p = detail.report?.payment_report?.status;
                 return {
-                    title: detail.manual ? 'Status refreshed from your server' : 'Session outcome from your server',
+                    title: detail.manual ? t('activity.events.refreshed') : t('activity.events.outcomeFromServer'),
                     text: [`GET /commercial_payex/v2/session/{id}`, s && `session ${s}`, p && `payment ${p}`].filter(Boolean).join(' · '),
                     tone: p === 'ALL_UNSUCCESSFUL' ? 'error' : 'success',
                     data: detail.report,
                 };
             }
             case 'session_report_failed':
-                return { title: 'Session lookup failed', text: detail.error, tone: 'error' };
+                return { title: t('activity.events.lookupFailed'), text: detail.error, tone: 'error' };
             case 'launch_failed':
-                return { title: 'Checkout could not start', text: detail.error, tone: 'error' };
+                return { title: t('activity.events.launchFailed'), text: detail.error, tone: 'error' };
             default:
                 return { title: name, tone: 'neutral', data: detail };
         }
@@ -389,11 +383,11 @@
         }));
         try {
             await navigator.clipboard.writeText(json(log));
-            btn.textContent = 'Copied';
+            btn.textContent = t('common.copied');
         } catch {
-            btn.textContent = 'Copy failed';
+            btn.textContent = t('common.copyFailed');
         }
-        setTimeout(() => { btn.textContent = 'Copy log'; }, 1500);
+        setTimeout(() => { btn.textContent = t('activity.copyLog'); }, 1500);
     }
 
     // ── Helpers ──
@@ -419,18 +413,18 @@
         } catch {
             // unknown currency code: fall back to the raw value
         }
-        wrap.append(el('span', null, formatted), el('span', 'fw-muted', `${amount} ${currency || ''} in subunits`.trim()));
+        wrap.append(el('span', null, formatted), el('span', 'fw-muted', t('activity.subunits', { amount, currency: currency || '' }).trim()));
         return wrap;
     }
 
     function pill(status) {
-        return el('span', `fw-status fw-status-${status}`, STATUS_LABEL[status]);
+        return el('span', `fw-status fw-status-${status}`, statusLabel(status));
     }
 
-    function statusValue(status, explanations) {
+    function statusValue(status, explanation) {
         const wrap = el('span', 'fw-status-value');
         wrap.append(code(status));
-        if (explanations[status]) wrap.append(el('span', 'fw-muted', explanations[status]));
+        if (explanation) wrap.append(el('span', 'fw-muted', explanation));
         return wrap;
     }
 

@@ -12,5 +12,3 @@ services:
         sync: false
       - key: CPX_SPLIT_RECIPIENTS
         sync: false
-      - key: CPX_PREVIEW_FEATURES
-        sync: false

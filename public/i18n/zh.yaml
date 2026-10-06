@@ -1,0 +1,1288 @@
+# =============================================================================
+# The Caldera House — English source strings
+# Locale: zh
+#
+# This file is the source the translation team edits. The page reads it at
+# runtime (see public/i18n.js). Comments are for translators and are not shown.
+#
+# How to read a key
+# - The comment directly above a key says where it appears and any constraint.
+# - Nested keys become dotted names in the app, e.g. rooms.hero.title.
+#
+# Rules
+# - Keep every {placeholder} exactly, including the braces. The app fills them
+#   in. Example: "{amount} paid in full." — translate the words, leave {amount}.
+# - Keys that end in _one, _other, _two, _few, _many or _zero are plural forms.
+#   {count} is the number. English only needs _one (exactly 1) and _other
+#   (everything else). Add the other suffixes if your language needs them
+#   (Polish, Arabic, Russian, and others). If a form is missing, the app uses
+#   _other.
+# - [html] means the value contains tags such as <br>, <strong>, <em>, <a> or
+#   <code>. Translate the words. Leave tags, hrefs and class names unchanged.
+# - [do not translate] means the value is a proper noun, brand, code or
+#   endonym and must stay as written.
+# - Tone: sections under "guest" voice speak to the hotel guest (warm, luxury,
+#   second person). Sections marked "presenter" speak to the person running
+#   the demo or the hotel back office (plain instructions).
+# - Keep button and stepper labels short. Where length matters, the comment says so.
+# - Do not translate API field names, URLs, currency codes, portal codes, or
+#   the sample code in the integration preview. Those are not in this file.
+#
+# Not in this file
+# - Developer documentation under public/full-docs and public/minimal-docs.
+# - Code comments, console messages, and the generated checkout payload.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Shared words used on more than one screen
+# -----------------------------------------------------------------------------
+common:
+  # Booking total row. Short label, paired with a money amount.
+  total: "总计"
+  # Date the guest arrives. Short label in a summary list.
+  checkIn: "入住"
+  # Date the guest leaves. Short label in a summary list.
+  checkOut: "退房"
+  # How many people are staying. Short label in a summary list.
+  guests: "住客"
+  # The room that was booked. Short label.
+  suite: "套房"
+  # Closes a popover or drawer. Button.
+  done: "完成"
+  # Restores the previous dates and guest counts. Text button in the date popover.
+  reset: "重置"
+  # Copies text to the clipboard. Small button. Restored after "Copied".
+  copy: "复制"
+  # Shown for about a second after a copy succeeds. Same button as "Copy".
+  copied: "已复制"
+  # Shown for about a second when the browser blocks clipboard access.
+  copyFailed: "复制失败"
+  # Reveals a secret field (the API key). Small button. Opposite of "Hide".
+  show: "显示"
+  # Masks a secret field. Small button. Opposite of "Show".
+  hide: "隐藏"
+  # Fallback when the guest has not given a name yet. Used in greetings.
+  guest: "贵宾"
+  # Empty value in a definition list, e.g. a credential that has not been entered.
+  notSet: "未设置"
+  # Word before the last item of a list: "Client ID, recipient code and API key".
+  and: "和"
+  # Placeholder when a value is unknown. A single em dash. [do not translate]
+  dash: "—"
+
+# -----------------------------------------------------------------------------
+# Browser tab titles
+# -----------------------------------------------------------------------------
+meta:
+  # Browser tab title for the public booking site.
+  # "The Caldera House" is the hotel name. "Oia" and "Santorini" are place names.
+  # [do not translate] the hotel name and the place names. The em dash can stay.
+  bookingTitle: "The Caldera House — Oia, Santorini"
+  # Browser tab title for the hotel back office (staff page, not the guest page).
+  # [do not translate] "The Caldera House".
+  backOfficeTitle: "酒店后台 — The Caldera House"
+
+# -----------------------------------------------------------------------------
+# Top bar of the booking site
+# -----------------------------------------------------------------------------
+nav:
+  # Logo text. Hotel name. [do not translate]
+  logo: "The Caldera House"
+  # Small location label next to the logo. Place names. [do not translate]
+  location: "Oia, Santorini"
+  # Tooltip and screen-reader name for the heartbeat icon. Opens a presenter drawer
+  # that lists what the payment checkout returned. Not part of the guest story.
+  checkoutActivity: "Checkout 活动记录"
+  # Tooltip and screen-reader name for the grid icon. Opens the staff back office.
+  backOffice: "酒店后台"
+  # Tooltip and screen-reader name for the gear icon. Opens presenter checkout settings.
+  # {flow} is the name of the selected payment flow, e.g. "Pay in full".
+  checkoutSettings: "Checkout 设置"
+  checkoutSettingsWithFlow: "Checkout 设置 · {flow}"
+
+# -----------------------------------------------------------------------------
+# Three-step progress bar under the header. Keep each label short.
+# -----------------------------------------------------------------------------
+stepper:
+  # Step 1. Guest is choosing a room.
+  selectRoom: "选择客房"
+  # Step 2. Guest is entering name, email and address.
+  guestDetails: "住客信息"
+  # Step 3. Guest is about to pay.
+  payment: "付款"
+
+# -----------------------------------------------------------------------------
+# Page 1 — room selection. Guest voice.
+# -----------------------------------------------------------------------------
+rooms:
+  # Decorative photo behind the headline. Describe the picture, not the hotel brand.
+  heroAlt: "Santorini 的蓝色圆顶，俯瞰 Aegean 海"
+  # Small line above the headline. Hotel name and place. [do not translate]
+  eyebrow: "The Caldera House · Oia, Santorini"
+  # Main headline on the room list.
+  title: "选择您的套房"
+  # Tooltip, screen-reader text, and the date popover name. Opens the date and guest picker.
+  changeDates: "更改日期和住客人数"
+  # Price suffix when the hotel bills in US dollars. Keep the leading slash.
+  perNight: "/晚"
+  # Price suffix when the hotel bills in another currency.
+  # {currency} is an ISO code such as EUR or GBP. Do not translate the code.
+  perNightWithCurrency: "/晚 · {currency}"
+  # Button on every room card. Keep it short enough for a card footer.
+  selectSuite: "选择此套房"
+
+  # Hero line under the headline, built in script.
+  # {range} is the dates, e.g. "June 12 – 15, 2026".
+  # {nights} and {guests} are already-translated phrases such as "3 Nights" and "2 Guests".
+  staySummary: "{range} · {nights} · {guests}"
+
+  cards:
+    royal-caldera:
+      # Marketing name of the featured suite. "Caldera" is the volcanic bay at Santorini;
+      # keep it. "Royal" and "Suite" may be translated.
+      name: "皇家 Caldera 套房"
+      # Alt text for the suite photo. Same name guests see on the card.
+      alt: "皇家 Caldera 套房"
+      # Ribbon on the photo. One word if possible.
+      badge: "推荐"
+      # Facts line under the name. Middle dots separate three facts. "m²" is square metres.
+      specs: "120 m² · Caldera 景观 · 私人无边泳池"
+      # Size only, reused in the booking summary. Keep "m²".
+      size: "120 m²"
+      # View only, reused in the booking summary.
+      view: "Caldera 景观"
+      # Paragraph on the card. Warm, descriptive.
+      description: "The Caldera House 的瑰宝之作。宽敞静谧的私享空间配有落地窗，将 Caldera 美景尽收眼底，另设私人无边泳池，以及专为欣赏世界上最负盛名的日落而设计的露台。"
+      # Short amenity chips. Keep each to one or two words.
+      tagPool: "私人泳池"
+      tagButler: "管家服务"
+      tagTerrace: "露台"
+      tagKitchen: "主厨厨房"
+
+    sunset-villa:
+      # Marketing name. "Sunset" and "Honeymoon" may be translated. "Villa" may be translated.
+      name: "日落蜜月别墅"
+      alt: "日落蜜月别墅"
+      specs: "95 m² · 日落景观 · 户外浴缸"
+      size: "95 m²"
+      view: "日落景观"
+      description: "一座掩映于九重葛花丛中的私密别墅，拥有私人庭院和户外铜制浴缸，可一览无余地欣赏 Oia 传奇般的日落。"
+      tagBath: "户外浴缸"
+      tagCourtyard: "庭院"
+      tagSunset: "日落景观"
+
+    captains-quarters:
+      # Marketing name. Nautical theme. The apostrophe is the hotel’s name for the room.
+      name: "船长居所"
+      alt: "船长居所"
+      specs: "65 m² · 港湾景观 · 浸泡泳池"
+      size: "65 m²"
+      view: "港湾景观"
+      description: "灵感源自 Santorini 的航海传统，设有白色拱顶天花板、精心挑选的古董家具，以及带浸泡泳池的私人庭院。"
+      tagPlunge: "浸泡泳池"
+      tagVaulted: "拱形天花板"
+      tagCourtyard: "庭院"
+
+    aegean-studio:
+      # Marketing name. "Aegean" is the sea; keep it. "Cliff" and "Studio" may be translated.
+      name: "Aegean 崖畔开间套房"
+      alt: "Aegean 崖畔开间套房"
+      specs: "45 m² · 海景 · 私人阳台"
+      size: "45 m²"
+      view: "海景"
+      description: "一处依火山悬崖而建的精致居所，私人阳台悬于 Aegean 海之上。在这间由建筑师设计的开间套房中，简洁线条与天然石材交相辉映。"
+      tagSea: "海景"
+      tagBalcony: "阳台"
+      tagShower: "雨淋花洒"
+
+# -----------------------------------------------------------------------------
+# Date and guest popover. Guest voice. Opened from "Change dates and guests".
+# -----------------------------------------------------------------------------
+stay:
+  # Plural of nights, lowercase, used inside sentences and the price breakdown.
+  # {count} is a number. See the plural rules at the top of this file.
+  night_one: "{count} 晚"
+  night_other: "{count} 晚"
+  # Same idea, title case, used in the hero summary ("3 Nights").
+  nightTitle_one: "{count} 晚"
+  nightTitle_other: "{count} 晚"
+  # Title case, hero summary ("2 Guests").
+  guestTitle_one: "{count} 位住客"
+  guestTitle_other: "{count} 位住客"
+  # Guest count in the summary panel ("2 Adults").
+  adult_one: "{count} 位成人"
+  adult_other: "{count} 位成人"
+  # Guest count when there are children. English "Child" / "Children" is irregular.
+  child_one: "{count} 位儿童"
+  child_other: "{count} 位儿童"
+  # Extra people beyond the two guests included in the rate. Lowercase, mid-sentence.
+  extraGuest_one: "{count} 位额外住客"
+  extraGuest_other: "{count} 位额外住客"
+  # Bookings count on the back office list.
+  booking_one: "预订网站上共有 {count} 笔预订"
+  booking_other: "预订网站上共有 {count} 笔预订"
+  # Nights column in the back office table.
+  nightShort_one: "{count} 晚"
+  nightShort_other: "{count} 晚"
+  # Relative time in the back office. {count} is minutes or hours.
+  minutesAgo_one: "{count} 分钟前"
+  minutesAgo_other: "{count} 分钟前"
+  hoursAgo_one: "{count} 小时前"
+  hoursAgo_other: "{count} 小时前"
+  # Less than a minute ago.
+  justNow: "刚刚"
+
+  # Popover heading while the guest still needs to pick the departure date.
+  selectCheckout: "请选择退房日期"
+  # Subtitle before a departure date is chosen.
+  # {checkIn} is a short date such as "Fri, Jun 12, 2026". {max} is a number (30).
+  checkoutHint: "入住 {checkIn} · 最多 {max} 晚"
+  # Screen-reader name for the previous-month arrow.
+  previousMonth: "上个月"
+  # Screen-reader name for the next-month arrow.
+  nextMonth: "下个月"
+  # Stepper label. Adults are ages 13+.
+  adults: "成人"
+  # Hint under "Adults".
+  adultsHint: "13 岁及以上"
+  # Stepper label.
+  children: "儿童"
+  # Hint under "Children". An en dash between the ages.
+  childrenHint: "2–12 岁"
+  # Note under the steppers. {guests} is a number (2). {amount} is a money amount.
+  extraGuestFee: "房价包含 {guests} 位住客。每位额外住客每晚收费 {amount}。"
+  # Screen-reader name for the minus button. {who} is "adults" or "children", lowercase.
+  removeGuests: "减少{who}人数"
+  # Screen-reader name for the plus button. {who} is "adults" or "children", lowercase.
+  addGuests: "增加{who}人数"
+  # Lowercase plural used only inside the screen-reader phrases above.
+  adultsLower: "成人"
+  childrenLower: "儿童"
+
+  # Column headers of the month grid, Sunday through Saturday, in that order.
+  # The grid starts on Sunday. Do not reorder these seven keys.
+  # Keep them very short (about 2 letters in English).
+  weekdaySu: "日"
+  weekdayMo: "一"
+  weekdayTu: "二"
+  weekdayWe: "三"
+  weekdayTh: "四"
+  weekdayFr: "五"
+  weekdaySa: "六"
+
+# -----------------------------------------------------------------------------
+# Page 2 — guest details form. Guest voice.
+# -----------------------------------------------------------------------------
+guest:
+  # Form heading.
+  title: "住客信息"
+  # Line under the heading.
+  subtitle: "请确认您的预订信息"
+  # Form labels. Each sits above an empty text field.
+  firstName: "名"
+  lastName: "姓"
+  email: "电子邮箱"
+  phone: "电话号码"
+  address: "街道地址"
+  city: "城市"
+  # Postal code. "ZIP" is the US term; "Postal" covers other countries. Keep both ideas.
+  zip: "邮政编码"
+  country: "国家/地区"
+  # First option in the country menu, shown before a country is chosen.
+  countryPlaceholder: "请选择…"
+  # Returns to the room list. The arrow is part of the label; you may use your language’s back arrow.
+  backToRooms: "← 返回客房列表"
+  # Submits the form and opens the payment step. Button.
+  continueToPayment: "继续付款"
+  # Heading of the side panel that repeats the chosen room.
+  yourSelection: "您的选择"
+
+  # Country menu. The stored value is the two-letter code; only the name is translated.
+  # Use the country’s usual name in your language.
+  countries:
+    ES: "西班牙"
+    GR: "希腊"
+    IT: "意大利"
+    FR: "法国"
+    DE: "德国"
+    GB: "英国"
+    US: "美国"
+    PT: "葡萄牙"
+    NL: "荷兰"
+    CH: "瑞士"
+    AT: "奥地利"
+    BE: "比利时"
+    SE: "瑞典"
+    NO: "挪威"
+    DK: "丹麦"
+    AU: "澳大利亚"
+    CA: "加拿大"
+    JP: "日本"
+
+# -----------------------------------------------------------------------------
+# Page 3 — payment. Guest voice, plus a few presenter warnings.
+# -----------------------------------------------------------------------------
+booking:
+  # Large photo on the payment page.
+  heroAlt: "日落时分的 Santorini Caldera 景色"
+  # Three gallery captions under the payment-page photos.
+  gallerySuiteAlt: "皇家套房内景"
+  gallerySuite: "皇家套房"
+  galleryPoolAlt: "无边泳池"
+  galleryPool: "无边泳池"
+  galleryDiningAlt: "精致餐饮"
+  galleryDining: "私人餐饮"
+  # Property story heading.
+  sanctuaryTitle: "临海之上的静谧之所"
+  # First paragraph of the property story. Place names stay.
+  sanctuaryBody1: "The Caldera House 坐落于 Oia 的火山悬崖之上，是 Aegean 海与天空交汇之处。每间套房均可尽览 Caldera 的壮阔景致，配有手工雕琢的石砌内饰、私人浸泡泳池，以及专为欣赏世界上最负盛名的日落而设计的露台。"
+  # Second paragraph.
+  sanctuaryBody2: "从驻店主厨精心烹制的烛光晚餐，到崖顶的晨曦瑜伽，每一处细节都经过悉心考量，让您尽情享受当下。"
+  # Amenity list. Short phrases.
+  amenityPool: "私人无边泳池"
+  amenityChef: "套房内主厨服务"
+  amenityTerrace: "Caldera 景观露台"
+  amenitySpa: "水疗与健康"
+  amenitySailing: "日落帆船之旅"
+  amenityAirport: "机场礼宾服务"
+  # Returns to the guest form. Arrow may be mirrored in RTL languages.
+  backToGuest: "← 返回住客信息"
+  # Side panel heading on the payment step.
+  yourStay: "您的住宿"
+  # Heading above the payment choice.
+  payment: "付款"
+  # Security reassurance under the pay button.
+  secured: "所有交易均经过安全加密。"
+  # Line under that reassurance. {name} is the guest’s full name.
+  guestLine: "住客：{name}"
+  # Tooltip on the pay button while Flywire demo credentials are missing.
+  # Presenter voice — the person clicking has to open the back office first.
+  credentialsFirst: "请先在酒店后台添加您的 Flywire 演示凭据"
+  # Notice when checkout rejects the configuration. {detail} is a technical field list from Flywire.
+  # Presenter voice.
+  configRejected: "Checkout 拒绝了此配置：{detail}"
+  # Notice when checkout fails to open. {detail} is the error text.
+  couldNotStart: "Checkout 无法启动：{detail}"
+  # Shown in the activity log when a card is saved and no money is taken.
+  noAmount: "无金额（仅保存银行卡）"
+  # Activity log value. Presenter voice. Checkout drawn on top of the page.
+  displayOverlay: "全屏浮层"
+  # Activity log value. Checkout placed inside the booking panel.
+  displayEmbedded: "嵌入页面"
+
+  # Price breakdown lines. {nights} is "3 nights". {amount} is the nightly rate.
+  nightlyCalc: "{nights} × {amount}"
+  # {extras} is "1 extra guest" or "2 extra guests". {amount} is the fee. {nights} is "3 nights".
+  extraCalc: "{extras} × {amount} × {nights}"
+
+# -----------------------------------------------------------------------------
+# Guest-facing names for the payment flow the presenter picked.
+# These replace the "Payment" card title, description and the pay button.
+# {amount} is a money amount such as "$7,350" or "€6.800".
+# -----------------------------------------------------------------------------
+flows:
+  pay_full:
+    # Guest sees this as the payment option title.
+    guestTitle: "全额付款"
+    guestDesc: "一次性支付 {amount}"
+    # Pay button. {amount} is included.
+    cta: "支付 {amount}"
+    # Presenter sees this in the settings drawer, as the flow name.
+    title: "全额付款"
+    # Presenter. One sentence under the flow name.
+    pitch: "适用于预付房价，以及临时预订的游览和体验项目。"
+    # Link to a matching sample. Presenter.
+    playground: "含常用字段的付款"
+
+  reserve_hold:
+    guestTitle: "预订并预授权"
+    guestDesc: "今日预授权 {amount}，入住时扣款"
+    cta: "以预授权方式预订"
+    title: "预订并预授权"
+    # "Pre-authorize" means a card hold, not a charge. "API" is the Flywire programming interface; you may keep "API".
+    pitch: "预订时预授权，入住时请款。预授权可通过 API 延期或提高金额。"
+    playground: "预授权付款"
+
+  moto:
+    # MOTO means Mail Order / Telephone Order: staff take the card, the guest is not on the website.
+    # You may spell that out if the abbreviation is unknown, but keep it short (it is a menu title).
+    guestTitle: "预订部代收付款"
+    guestDesc: "由工作人员协助支付 {amount}"
+    cta: "收取 {amount}"
+    title: "电话和邮件预订（MOTO）"
+    pitch: "预订部员工为通过电话或邮件预订的住客代收付款。"
+    playground: "MOTO 付款"
+
+  save_card:
+    guestTitle: "银行卡担保"
+    guestDesc: "您的银行卡将用于担保此预订，今日不会扣款。"
+    cta: "保存银行卡并预订"
+    title: "保存银行卡，稍后扣款"
+    pitch: "以留存银行卡作担保。之后可凭令牌收取订金、尾款或未入住费用。"
+    playground: "无金额令牌化"
+
+  pay_save:
+    guestTitle: "付款并保存银行卡"
+    guestDesc: "立即支付 {amount}；银行卡将留存用于额外消费"
+    cta: "支付 {amount} 并保存银行卡"
+    title: "立即付款并保存银行卡"
+    pitch: "立即扣款并留存银行卡，用于额外消费：潜水装备、水疗、短途游览、尾款。"
+    playground: "含金额令牌化"
+
+  hold_save:
+    guestTitle: "预授权并保存银行卡"
+    guestDesc: "预授权 {amount}；银行卡将留存用于您的最终账单"
+    cta: "以预授权方式预订"
+    title: "预授权并保存银行卡"
+    pitch: "预授权住宿费用，并留存银行卡用于最终账单和杂费。"
+    playground: "预授权令牌化"
+
+  optional:
+    guestTitle: "全额付款"
+    guestDesc: "一次性支付 {amount}，可选择保存您的银行卡"
+    cta: "支付 {amount}"
+    title: "付款，住客可选择保存银行卡"
+    pitch: "由住客决定是否为下次旅行保存银行卡。非常适合回头客。"
+    playground: "可选令牌化"
+
+  optional_hold:
+    guestTitle: "预订并预授权"
+    guestDesc: "预授权 {amount}，可选择保存您的银行卡"
+    cta: "以预授权方式预订"
+    title: "预授权，住客可选择保存银行卡"
+    pitch: "预授权住宿费用；住客可自行选择是否留存银行卡。"
+    playground: "可选预授权令牌化"
+
+  implicit:
+    guestTitle: "全额付款"
+    guestDesc: "一次性支付 {amount}；银行卡将在您入住期间留存"
+    cta: "支付 {amount}"
+    title: "付款并留存银行卡"
+    pitch: "当支付方式支持时，银行卡将自动保存。非常适合尾款支付和分期付款计划。"
+    playground: "隐式令牌化"
+
+  implicit_hold:
+    guestTitle: "预订并预授权"
+    guestDesc: "预授权 {amount}；银行卡将在您入住期间留存"
+    cta: "以预授权方式预订"
+    title: "预授权并留存银行卡"
+    pitch: "预授权住宿费用，并自动保存银行卡以便后续扣款。"
+    playground: "隐式预授权令牌化"
+
+  # Extra sentence under the payment option when part of the money goes to partners.
+  # {parts} is a list such as "sunset catamaran excursion ($350) and couples spa ritual ($250)".
+  splitNote: "包含 {parts}，将由我们的合作伙伴直接结算。"
+  # Joiner used inside {parts} before the last partner. Same role as common.and, kept here
+  # because it sits inside a guest sentence.
+  splitAnd: "和"
+  # Extra sentence when the hotel absorbs the card fee.
+  noSurcharge: "无银行卡附加费。"
+
+  # Presenter. Group headings in the flow list.
+  groups:
+    payment: "付款"
+    tokenization: "留存银行卡"
+    # Grey hint after the group name. Technical term for saving a card.
+    tokenizationHint: "令牌化"
+    optional: "住客选择保存银行卡"
+    optionalHint: "可选令牌化"
+    implicit: "自动保存银行卡"
+    implicitHint: "隐式令牌化"
+  # Presenter. Badge when a flow cannot be selected until an API key is saved.
+  needsApiKey: "需要 API 密钥"
+  # Presenter. Appended to the technical summary when the flow does not charge now.
+  noAmountTech: "无金额"
+
+  # Presenter. Extra sample links that appear when the matching setting is on.
+  playground:
+    authenticated: "已认证会话付款"
+    embedded: "嵌入式付款"
+    split: "分账付款"
+    waive: "免附加费付款"
+    offerRules: "使用支付选项规则的付款"
+    styles: "自定义样式付款"
+    timeout: "带超时设置的付款"
+    docs: "Checkout V2 配置指南"
+
+# -----------------------------------------------------------------------------
+# Confirmation page after a successful checkout. Guest voice.
+# -----------------------------------------------------------------------------
+success:
+  # Photo behind the confirmation.
+  backgroundAlt: "Santorini 日落"
+  # Small line above the confirmation headline. Changes with the kind of payment.
+  eyebrowPaid: "预订已确认"
+  eyebrowHold: "预订已保留"
+  eyebrowCard: "预订已担保"
+  # Headline. The <br> is a deliberate line break. [html]
+  title: "Santorini 美好假期<br>静候您的光临"
+  # {name} is the guest’s first and last name.
+  welcome: "欢迎您，{name}"
+  # {amount} is the money amount.
+  notePaid: "已全额支付 {amount}。"
+  noteHold: "您的银行卡已预授权 {amount}，将于入住时扣款。"
+  noteCard: "您的银行卡已安全保存，今日未产生任何扣款。"
+  noteMoto: "我们的预订团队已收取 {amount}。"
+  # Appended after the note when the card was also stored. Leading space is intentional.
+  cardSaved: " 您的银行卡已保存，可用于住宿期间的额外消费。"
+  cardSavedIfChosen: " 如您选择保留银行卡，该卡已为您保存。"
+  cardKeptWhereSupported: " 在支付方式支持的情况下，您的银行卡已留存。"
+  # Heading above a short list of stay highlights.
+  awaits: "为您准备的精彩体验"
+  highlightPool: "俯瞰 Caldera 的私人无边泳池"
+  highlightDinner: "由我们的主厨在您的露台上精心准备的日落晚餐"
+  highlightSailing: "黄金时刻的专属双体船巡游"
+  highlightSpa: "免费双人水疗护理"
+  # Presenter-only box under the confirmation. Not guest marketing.
+  returnedBy: "由 Flywire 返回 · 演示"
+  viewActivity: "查看 Checkout 活动记录 →"
+  openDashboard: "在酒店后台中打开 →"
+  # Reloads the site so the presenter can run the booking again.
+  bookAnother: "预订其他住宿"
+  # Labels in the presenter result list. The values next to them are ids and status codes.
+  resultBooking: "预订"
+  resultFlow: "流程"
+  resultSession: "会话"
+  resultSessionStatus: "会话状态"
+  resultPaymentStatus: "付款状态"
+  resultMethod: "支付方式"
+
+# -----------------------------------------------------------------------------
+# Failure page. Guest voice, slightly playful on the card decline.
+# -----------------------------------------------------------------------------
+error:
+  # Decline headline. Playful, not a formal banking error. Short.
+  declinedTitle: "很抱歉"
+  declinedSubtitle: "付款未获批准"
+  # [html] <br> is a line break.
+  declinedMessage: "您的付款未能完成处理。<br>请尝试使用其他银行卡。"
+  # Checkout timer ran out. The presenter enabled a countdown.
+  timeoutTitle: "时间已到"
+  timeoutSubtitle: "您的付款页面已超时"
+  # [html]
+  timeoutMessage: "我们已尽可能为您保留套房。<br>请重新开始以完成预订。"
+  # Returns the guest to the payment step.
+  tryAgain: "重试"
+  viewActivity: "查看 Checkout 活动记录 →"
+
+# -----------------------------------------------------------------------------
+# Warnings shown when Flywire demo credentials have not been entered.
+# Presenter voice. {missing} is a list such as "API key" or "Client ID and recipient code".
+# -----------------------------------------------------------------------------
+credentials:
+  # Field names used inside {missing}. "Client ID" and "API key" are product terms;
+  # translate them consistently everywhere in this file.
+  fields:
+    client_id: "客户 ID"
+    code: "收款方代码"
+    api_key: "API 密钥"
+  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "客户 ID、收款方代码和 API 密钥"
+  # Payment step. Bold first line.
+  paymentTitle: "Checkout 需要 Flywire 演示凭据。"
+  # [html] Payment step, the sentence after the title. Keep the <a> and its href.
+  paymentBody: "请在<a href=\"/dashboard/#credentials\">酒店后台</a>添加您的 {missing}，然后返回付款。"
+  # Settings drawer and activity drawer. Bold first line.
+  drawerTitle: "请添加您的 Flywire 演示凭据以开始"
+  # Drawer paragraph. {missing} is the same list as above.
+  drawerBody: "此演示未附带凭据。请在酒店后台输入您的 {missing}。凭据将保存在此浏览器中，且仅适用于 Flywire 演示环境。"
+  # Button in the drawer.
+  add: "添加凭据"
+  # Back office banner. Bold first line, includes the period.
+  officeTitle: "请添加您的 Flywire 演示凭据以开始。"
+  # Back office banner body. {missing} is the list. "Save & test connection" is the submit button; use the same translation as dashboard.saveAndTest.
+  officeBody: "此演示未附带凭据。请输入 Flywire 演示账户的 {missing}，然后点击“保存并测试连接”。在此之前，预订网站上的 Checkout 将保持禁用状态。"
+
+# -----------------------------------------------------------------------------
+# Checkout settings drawer (gear icon). Presenter voice throughout.
+# Technical tokens in <code> or in the "hint" strings are API names. Do not translate those tokens.
+# -----------------------------------------------------------------------------
+demo:
+  # Small label above the drawer title. Product name. [do not translate] "Flywire". "Checkout V2" is the product version.
+  overline: "Flywire Checkout V2"
+  title: "Checkout 设置"
+  # Subtitle under the title.
+  subtitle: "请选择要显示的内容。设置将在下次打开 Checkout 时生效，并保存在此浏览器中。"
+  # Screen-reader name for the language icon in this header. The names in the menu (English, Español, …) are each language’s own name and are not in this file.
+  pageLanguage: "页面语言"
+  # Screen-reader name for the X button.
+  close: "关闭 Checkout 设置"
+  # Numbered section titles. The number is drawn separately; translate only the word.
+  sectionFlow: "流程"
+  sectionDisplay: "显示方式"
+  sectionPages: "页面与住客体验"
+  sectionOptions: "付款选项"
+  sectionMethods: "支付方式与币种"
+  sectionBrand: "品牌与语言"
+  sectionSession: "会话"
+  sectionCredentials: "Flywire 演示凭据"
+
+  # Display choices.
+  displayOverlay: "全屏浮层"
+  displayEmbedded: "将 Checkout 嵌入页面"
+  # [html] Keep <code>config.embed_to</code> unchanged.
+  displayHelp: "嵌入模式通过 <code>config.embed_to</code> 将 Checkout 加载到预订面板中。面板已显示酒店名称和总额，因此嵌入时请在下方隐藏 Checkout 的标题栏和金额。"
+
+  # [html] The hint in the label is the API field. Do not translate show_payer_form.
+  payerFormLabel: "付款人信息页面 <span class=\"fw-label-hint\">show_payer_form</span>"
+  # [html] Do not translate show_recipient_form.
+  recipientFormLabel: "自定义字段页面 <span class=\"fw-label-hint\">show_recipient_form</span>"
+  # Three-way choice used for both pages above.
+  pageAuto: "自动"
+  pageAlways: "始终显示"
+  pageHide: "隐藏"
+  # Help under those choices. Changes with the selection.
+  pagesNoteAuto: "当页面上的所有内容均已填写时，“自动”会跳过该页面；预填的住客信息即属此类情况。"
+  pagesNoteHidePayer: "仅当 Checkout 已获得所有必填付款人信息时，才能隐藏付款人页面。住客表单会预先填写这些信息。"
+  # [html] Do not translate disabled_fields.
+  readOnlyLabel: "只读付款人字段 <span class=\"fw-label-hint\">disabled_fields</span>"
+  readOnlyNote: "住客可以看到这些字段，但无法更改，例如预订时使用的电子邮箱。"
+  readOnlyNoteHidden: "住客只能在付款人页面上看到这些字段，而信息已预填时，“自动”会跳过该页面。如需演示，请将付款人页面设置为“始终显示”。"
+  # Payer field chips. Short. These match the guest form, but they are presenter labels.
+  fieldFirstName: "名"
+  fieldLastName: "姓"
+  fieldEmail: "电子邮箱"
+  fieldPhone: "电话"
+  fieldAddress: "地址"
+  fieldCity: "城市"
+  fieldZip: "邮编"
+  fieldCountry: "国家/地区"
+
+  # Toggle titles are the bold line. Hints in <span class="fw-label-hint"> are code. Descriptions are the second line.
+  # [html] on every *Label key. Do not translate the code inside the hint span.
+  hideCloseLabel: "<strong>隐藏关闭按钮</strong> <span class=\"fw-label-hint\">close_button: 'hidden'</span>"
+  hideCloseHelp: "住客无法关闭 Checkout，只能完成付款或等待超时结束。最适合与嵌入式显示搭配使用。"
+  hideHeaderLabel: "<strong>隐藏 Checkout 标题栏</strong> <span class=\"fw-label-hint\">header: 'hidden'</span>"
+  hideHeaderHelp: "预订页面已显示酒店名称。无论是浮层还是嵌入模式，Checkout 都将省略自身的标题栏。"
+  hideAmountLabel: "<strong>隐藏金额</strong> <span class=\"fw-label-hint\">show_amount_info: false</span>"
+  hideAmountHelp: "预订面板已显示总额。Checkout 将跳过其金额摘要。默认显示。"
+  disableEmailsLabel: "<strong>不向付款人发送电子邮件</strong> <span class=\"fw-label-hint\">disable_payer_emails</span>"
+  disableEmailsHelp: "Flywire 将不会发送付款状态邮件，以便酒店发送自有品牌的确认邮件。"
+
+  # [html]
+  splitLabel: "<strong>与合作伙伴分账</strong> <span class=\"fw-label-hint\">transaction.details.split</span>"
+  splitHelp: "将部分付款直接转入合作伙伴门户（短途游览、水疗、潜水船）。其余款项归酒店所有。"
+  waiveLabel: "<strong>免除银行卡附加费</strong>"
+  waiveHelp: "仅针对此预订承担附加费，无需更改门户设置。"
+  # [html]
+  timeoutLabel: "<strong>Checkout 超时</strong> <span class=\"fw-label-hint\">config.timeout</span>"
+  timeoutHelp: "显示倒计时，并在到期时关闭 Checkout，例如用于释放保留的客房。"
+  timeoutCountdown: "倒计时"
+  timeoutWhole: "整个 Checkout 流程"
+  timeoutEachAttempt: "每次付款尝试"
+  timeoutDuration: "时长"
+  # {count} is 3, 5, 10 or 15. Keep short; it is a menu item.
+  minutes_one: "{count} 分钟"
+  minutes_other: "{count} 分钟"
+
+  # [html] Do not translate config.offer_rules.
+  methodsHelp: "通过 <code>config.offer_rules</code> 控制住客可见的支付选项及其显示顺序。"
+  # Screen-reader name for the method chips.
+  methodsGroup: "要显示的支付方式"
+  methodCards: "银行卡"
+  methodDebit: "直接借记"
+  methodOnline: "本地在线支付方式"
+  methodTransfer: "银行转账"
+  hideAmex: "隐藏 American Express"
+  # [html] Do not translate filters.currency.
+  currenciesLabel: "提供的币种 <span class=\"fw-label-hint\">filters.currency</span>"
+  currencyAll: "所有可用币种"
+  currencyPayer: "仅限住客本国币种"
+  currencyOtherThanPayer: "住客币种以外的币种"
+  currencyHotel: "仅限酒店币种"
+  currencyOtherThanHotel: "酒店币种以外的币种"
+  currencyBoth: "住客及酒店币种"
+  # [html] "sort · currency" is an API hint. Do not translate "sort" or "currency" inside the hint.
+  currencySortLabel: "按币种排序支付选项 <span class=\"fw-label-hint\">sort · currency</span>"
+  sortDefault: "Checkout 默认"
+  sortPayerFirst: "住客币种优先"
+  sortHotelFirst: "酒店币种优先"
+  sortOtherFirst: "其他币种优先"
+  # [html]
+  methodSortLabel: "按支付方式排序支付选项 <span class=\"fw-label-hint\">sort · method</span>"
+  sortCardsFirst: "银行卡优先"
+  sortOnlineFirst: "本地在线支付方式优先"
+  sortDebitFirst: "直接借记优先"
+  sortTransferFirst: "银行转账优先"
+
+  # [html] Do not translate styles.
+  brandLabel: "<strong>匹配客户品牌</strong>"
+  brandHelp: "通过 <code>styles</code> 设置 Checkout 的颜色、字体、文字大小和间距。"
+  brandColor: "主色"
+  brandFont: "字体"
+  # Menu item that reveals a free-text font field. "Google Font" is a product name; you may keep it.
+  brandFontCustom: "自定义 Google Font"
+  # [html] Do not translate fonts.googleapis.com.
+  brandFontCustomLabel: "Google Font <span class=\"fw-label-hint\">fonts.googleapis.com</span>"
+  # Example text inside the empty font field.
+  brandFontPlaceholder: "Libre Baskerville，或粘贴 CSS 链接"
+  # Shown when the font name is accepted. {family} is the font name the user typed.
+  brandFontOk: "Checkout 将从 fonts.googleapis.com 加载“{family}”。"
+  brandFontEmpty: "请输入字体名称（例如 Libre Baskerville），或粘贴 fonts.googleapis.com 的 CSS 链接。"
+  brandFontBadUrl: "该链接不是有效的 URL。"
+  brandFontOrigin: "Checkout 仅从 https://fonts.googleapis.com 加载字体。"
+  brandFontFamily: "链接中需要包含由字母、数字和空格组成的字体名称。"
+  brandFontChars: "请仅使用字母、数字和空格。Checkout 会拒绝字体名称中的其他字符。"
+  # [html] Do not translate base_font_size. The sizes below keep the pixel value.
+  brandSizeLabel: "文字大小 <span class=\"fw-label-hint\">base_font_size</span>"
+  brandSizeSmall: "小 · 14px"
+  brandSizeRegular: "常规 · 16px"
+  brandSizeLarge: "大 · 18px"
+  brandSizeXl: "特大 · 20px"
+  # [html] Do not translate base_space. Keep the rem values.
+  brandSpaceLabel: "间距 <span class=\"fw-label-hint\">base_space</span>"
+  brandSpaceCompact: "紧凑 · 0.75rem"
+  brandSpaceStandard: "标准 · 1rem"
+  brandSpaceRoomy: "宽松 · 1.25rem"
+  checkoutLanguage: "Checkout 语言"
+
+  # Session choice. "Authenticated" means the hotel server creates the payment session.
+  sessionAuthenticated: "已认证"
+  sessionAnonymous: "匿名"
+  sessionAuthenticatedNote: "推荐。由您的服务器创建会话并确认结果。"
+  sessionAnonymousNote: "仅限浏览器，适用于一次性付款。不支持服务器端状态查询。"
+
+  # Help under the credential summary.
+  credentialsHelp: "每个浏览器只需在酒店后台输入一次，即可用于所有 Checkout 和付款操作。仅限 Flywire 演示环境。"
+  credentialsChange: "在后台更改凭据"
+  # Labels in the credential summary. Values are what the user typed.
+  clientName: "客户名称"
+  clientId: "客户 ID"
+  recipientCode: "收款方代码"
+  apiKey: "API 密钥"
+
+  # Collapsed section that shows the code sent to checkout.
+  integrationCode: "集成代码"
+  # [html] Do not translate cpx_core.start().
+  integrationHelp: "此页面发送给 <code>cpx_core.start()</code> 的内容"
+  playgroundIntro: "对应的 Playground 示例："
+
+  reset: "重置"
+  done: "完成"
+
+  # Why a control is disabled. Presenter voice.
+  unavailable:
+    needsAmount: "需要金额；仅保存银行卡时不可用。"
+    noForcePage: "仅保存银行卡时，Checkout 不允许强制显示此页面。"
+    cardOnFileNeedsSession: "留存银行卡流程始终需要已认证的会话。"
+    needsApiKey: "请先在酒店后台添加您的演示 API 密钥。"
+
+  # Partner split editor.
+  split:
+    # Column headers.
+    portalCode: "门户代码"
+    # {currency} is an ISO code such as USD.
+    amount: "金额（{currency}）"
+    description: "说明"
+    # Placeholders inside the row. {n} is 1, 2, 3…
+    codePlaceholder: "代码"
+    codeLabel: "合作伙伴 {n} 的门户代码"
+    # Placeholder when the currency has no cents.
+    amountPlaceholderWhole: "0"
+    amountPlaceholderCents: "0.00"
+    amountLabel: "合作伙伴 {n} 的金额（{currency}）"
+    whatFor: "用途"
+    descriptionLabel: "合作伙伴 {n} 的说明"
+    # Screen-reader name for the remove button. {n} is the row number.
+    remove: "移除合作伙伴 {n}"
+    add: "+ 添加合作伙伴"
+    useDefaults: "使用默认合作伙伴"
+    # {partners} and {hotel} and {total} are money amounts.
+    # The example note is added only before a room has been chosen.
+    summary: "合作伙伴 {partners} · 酒店保留 {total} 中的 {hotel}"
+    summaryExample: "合作伙伴 {partners} · 酒店保留 {total} 中的 {hotel}（示例总额）"
+    # Validation. {row} is "Partner 1". {code} is a portal code such as ABC.
+    needCode: "{row}：请添加门户代码。"
+    badCode: "{row}：门户代码为 3 个字母（ABC），或以字母开头的 5 个字符（ABC1D）。"
+    ownPortal: "{row}：不能是酒店自己的门户（{code}）。"
+    duplicate: "{row}：{code} 重复列出。"
+    needAmount: "{row}：请输入金额。"
+    # {partners} and {total} are money amounts.
+    overTotal: "合作伙伴获得 {partners}，超过了预订总额 {total}。"
+    rowLabel: "合作伙伴 {n}"
+
+  # Default descriptions for the two sample partners. Guest may see these in the payment note.
+  partners:
+    excursion: "日落双体船之旅"
+    spa: "双人水疗护理"
+
+  # Checkout language menu.
+  # Names match the checkout language list. Endonyms stay untranslated.
+  locales:
+    en: "English"
+    en-GB: "English (UK)"
+    es-ES: "Español"
+    es-419: "Español (Latin America)"
+    fr-FR: "Français"
+    fr-CA: "Français (CA)"
+    pt-PT: "Português"
+    pt-BR: "Português (BR)"
+    pl: "Polski"
+    it: "Italiano"
+    ko: "한국어"
+    zh: "中文"
+    ja: "日本語"
+    de: "Deutsch"
+    id: "Bahasa Indonesia"
+    vi: "Tiếng Việt"
+
+# -----------------------------------------------------------------------------
+# Checkout activity drawer (heartbeat icon). Presenter voice.
+# Status codes such as FULLY_PAID stay in English in the UI; only the explanations are here.
+# -----------------------------------------------------------------------------
+activity:
+  title: "Checkout 活动记录"
+  subtitle: "实时显示 Checkout 返回的内容：会话、每次回调，以及从您的服务器读取的最终结果。记录将保存在此浏览器中，直至您清除。"
+  close: "关闭 Checkout 活动记录"
+  clear: "清除"
+  # Copies the whole log. Restored after "Copied".
+  copyLog: "复制日志"
+  done: "完成"
+  emptyTitle: "暂无 Checkout 活动"
+  emptyBody: "请在付款步骤中打开 Checkout。其返回的所有内容都将实时显示在此处。"
+  earlierRuns: "之前的运行记录"
+  # {n} is the run number. {time} is a clock time.
+  runMeta: "运行 #{n} · {time}"
+  # Collapsed row. {n} is the run number. {flow} is the flow name.
+  runSummary: "运行 #{n} · {flow}"
+  # {status} is a translated status. {time} is a clock time.
+  runSummaryStatus: "{status} · {time}"
+  # {count} is how many events were recorded.
+  events_one: "{count} 个事件"
+  events_other: "{count} 个事件"
+  timeline: "时间线"
+  outcome: "结果"
+  # Fact labels in the latest-run summary. Values next to them come from the checkout that just ran.
+  flow: "流程"
+  transaction: "交易"
+  amount: "金额"
+  session: "会话"
+  display: "显示方式"
+  # While the server is still creating the session.
+  authenticatedCreating: "已认证（创建中…）"
+  anonymous: "匿名"
+  timeInCheckout: "Checkout 停留时长"
+  # "on_error" is the name of a callback. Do not translate on_error.
+  onErrorCalls: "on_error 调用次数"
+  # Do not translate on_end.
+  onEndReason: "on_end 原因"
+  sessionStatus: "会话状态"
+  paymentStatus: "付款状态"
+  reportedAmount: "报告金额"
+  report: "报告"
+  reportPending: "暂不可用。"
+  # {amount} is the minor-unit number. {currency} is an ISO code. "subunits" means cents or the local equivalent.
+  subunits: "{amount} {currency}（最小货币单位）"
+  paymentId: "付款 ID"
+  method: "支付方式"
+  card: "银行卡"
+  expires: "有效期至"
+  canceledHelp: "付款人关闭了 Checkout。已取消的运行不会生成报告。"
+  # Do not translate config.timeout.
+  timeoutHelp: "config.timeout 已到期，Checkout 已自动关闭。"
+  refresh: "刷新状态"
+  # Shown on the refresh button while the request is in flight.
+  refreshing: "正在刷新…"
+  refreshHelp: "从您的服务器重新读取会话，例如在银行转账待处理期间。"
+  # Do not translate on_end.
+  anonymousReport: "匿名会话：此报告以 on_end 负载的形式在浏览器中返回。"
+  showData: "显示数据"
+  # {elapsed} is a duration such as "1.2s" already formatted by the app.
+  elapsed: "+{elapsed}"
+
+  # Status pill on a run.
+  status:
+    # Shown for the moment between clicking pay and checkout actually opening.
+    starting: "正在启动"
+    open: "Checkout 已打开"
+    completed: "已完成"
+    declined: "已拒绝"
+    canceled: "付款人已取消"
+    timeout: "已超时"
+    failed: "启动失败"
+    interrupted: "因页面重新加载而中断"
+
+  # Plain-language meaning of Flywire session status codes. The code itself stays in English next to this sentence.
+  sessionStatusText:
+    ACTIVE: "会话处于开启状态；付款人仍可进行操作。"
+    PARTIALLY_COMPLETED: "部分请求的操作已完成。"
+    COMPLETED: "会话中请求的所有操作均已完成。"
+    ARCHIVED: "会话已关闭，仅供查看。"
+
+  # Plain-language meaning of Flywire payment status codes.
+  paymentStatusText:
+    NO_PAYMENTS: "未进行付款（例如，仅保存了银行卡）。"
+    SOME_IN_PROGRESS: "有付款仍在处理中（例如，银行转账待处理）。"
+    # Used instead of the generic line when the payment is a card hold waiting for the hotel to capture it.
+    SOME_IN_PROGRESS_HOLD: "已授权：金额已在银行卡上冻结，等待请款（酒店后台）。"
+    ALL_UNSUCCESSFUL: "所有付款尝试均失败。"
+    FULLY_PAID: "已全额付款。"
+    PARTIALLY_PAID: "仅支付了部分金额。"
+    OVERPAID: "付款金额超过了请求金额。"
+
+  # Timeline event titles. Callback names (on_error, on_end, cpx_core.start) stay in English.
+  events:
+    requested: "已请求 Checkout"
+    sessionCreated: "您的服务器已创建会话"
+    sessionCreatedText: "POST /commercial_payex/v2/session 返回了传递给 initFields.session 的凭据。"
+    sessionResumed: "您的服务器已恢复会话"
+    sessionResumedText: "POST /commercial_payex/v2/session/{id} 为现有会话返回了新的运行凭据。"
+    # [do not translate] This is the function the page calls. Shown as a timeline title.
+    startTitle: "cpx_core.start(initFields)"
+    startText: "Checkout 已使用此负载打开。"
+    # {type} is an error code such as init_fields. The on_error('…') wrapper stays.
+    onErrorTitle: "on_error('{type}')"
+    onErrorRetry: "Checkout 保持打开状态，以便付款人重试。"
+    # {reason} is completed, canceled or timeout.
+    onEndTitle: "on_end('{reason}')"
+    onEndPayload: "在浏览器中返回的负载（匿名会话）。"
+    onEndNoPayload: "已认证会话不返回负载；请向您的服务器查询结果。"
+    refreshed: "已从您的服务器刷新状态"
+    outcomeFromServer: "来自您服务器的会话结果"
+    lookupFailed: "会话查询失败"
+    launchFailed: "Checkout 无法启动"
+
+# -----------------------------------------------------------------------------
+# Hotel back office (/dashboard). Presenter / staff voice.
+# -----------------------------------------------------------------------------
+dashboard:
+  # Header tag next to the hotel name.
+  backOffice: "后台"
+  # [html] Keep <strong> around the words that should stay bold. "Flywire" is the company name.
+  demoTag: "Flywire <strong>仅限演示环境</strong> · 数据保存在此浏览器中"
+  backToBooking: "← 预订网站"
+  # Card heading. [html] "DEMO only" is a warning badge; keep the <span>.
+  connectionTitle: "Flywire 连接 <span class=\"db-env-badge\">仅限 DEMO</span>"
+  # [html] The <code> wraps the API host, which is filled in by the app. Do not translate the host.
+  connectionIntro: "您的 Flywire <strong>演示</strong>账户凭据，供预订网站及此页面上的所有操作使用。请求始终发送至 Flywire 演示 API（<code>{host}</code>）；生产环境凭据将被拒绝。"
+  # Screen-reader name for the book icon. {count} is added when clients exist.
+  savedClients: "已保存的客户"
+  savedClientsCount: "已保存的客户，共 {count} 个"
+  connectionNotChecked: "未检查"
+  # Form labels.
+  clientName: "客户名称"
+  clientNamePlaceholder: "例如 Mykonos Hotel"
+  clientId: "客户 ID"
+  clientIdPlaceholder: "您的 Flywire 演示账户中的 UUID"
+  recipientCode: "收款方代码"
+  recipientCodePlaceholder: "例如 ABC"
+  savedCodesLabel: "此客户 ID 已保存的代码"
+  savedCodes: "已保存的代码"
+  noSavedCodes: "无已保存的代码"
+  # Short label used when a pasted API key is cleaned. "API key" only; the header name stays in apiKeyLabel.
+  apiKey: "API 密钥"
+  # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
+  apiKeyLabel: "API 密钥 <span class=\"db-hint\">X-Authentication-Key</span>"
+  apiKeyPlaceholder: "请粘贴您的演示 API 密钥"
+  # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
+  saveAndTest: "保存并测试连接"
+  clearCredentials: "清除凭据"
+  recipientCurrency: "收款方币种"
+  # Fine print at the bottom of the credentials card.
+  credentialsFootnote: "仅限演示：凭据存储在此浏览器中，每次请求时 API 密钥都会发送至本演示的服务器，再由其转发至 Flywire 演示 API。在实际集成中，您的 API 密钥应始终保留在您的服务器上。"
+  bookings: "预订"
+  clearAll: "全部清除"
+  # Confirm dialog before deleting every booking in this browser.
+  confirmClearBookings: "确定要从此浏览器中删除所有演示预订吗？"
+  # Confirm dialog before forgetting the credentials currently in use.
+  confirmClearCredentials: "确定停止使用这些凭据吗？已保存的客户仍保留在此浏览器中，可再次加载。"
+  # {id} is the booking reference, such as a short id.
+  confirmDeleteBooking: "确定要删除预订 {id} 吗？"
+
+  saved:
+    title: "已保存的客户"
+    intro: "每个客户 ID 对应一个 API 密钥。与该客户一同保存的收款方代码会列在其卡片上。"
+    close: "关闭已保存的客户"
+    empty: "暂无已保存的客户。保存并测试连接后，即可在此处保留。"
+    load: "加载"
+    noneYet: "暂无"
+    unnamed: "未命名客户"
+    inUse: "使用中"
+    clientId: "客户 ID"
+    apiKey: "API 密钥"
+    recipientCodes: "收款方代码"
+
+  # Connection status pill. Keep these short.
+  status:
+    notSet: "未设置"
+    checking: "正在检查…"
+    keyRejected: "密钥被拒绝"
+    incomplete: "不完整"
+    checkFields: "已连接 · 请检查字段"
+    connected: "已连接 · 演示 API"
+    unreachable: "无法连接服务器"
+  # {detail} is the reason from the server.
+  keyRejectedDetail: "{detail} 请检查是否缺少字符，或重新粘贴密钥。"
+  # {missing} is the list of fields still empty.
+  keyWorksMissing: "API 密钥在演示 API 上可用。仍缺少：{missing}。"
+  # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
+  savedInBrowser: " 已在此浏览器中保存 {name}{id}{code}。"
+  demoKeyAccepted: "演示 API 已接受此密钥。"
+  # Format warnings, shown before the API is called.
+  clientIdFormat: "客户 ID 看起来不是 UUID 格式（8-4-4-4-12 个字符）。"
+  recipientFormat: "收款方代码为 3 个字母（ABC），或以字母开头的 5 个字符（ABC1D）。"
+  # {label} is Client ID, Recipient code or API key. {fixes} is a list of what was removed.
+  cleanedPaste: "已清理粘贴的内容。{fixes}"
+  cleanedField: "{label}：已移除 {fixes}。"
+  # What paste-cleanup removed. Used inside {fixes}. Lowercase, mid-sentence.
+  fix:
+    invisible: "不可见字符"
+    nbsp: "不间断空格"
+    quotes: "两侧的引号"
+    fieldName: "前面的字段名称"
+    bearer: "\"Bearer\" 前缀"
+    punctuation: "末尾的标点符号"
+    spacesInKey: "密钥中的换行符或空格"
+    spaces: "空格"
+    lowercase: "小写字母"
+
+  # Empty bookings table.
+  emptyTitle: "暂无预订"
+  emptyBody: "请在预订网站上进行预订。您发起的每次 Checkout 都会显示在此处。"
+  emptyAction: "前往预订网站"
+  # Table headers.
+  colBooking: "预订"
+  colGuest: "住客"
+  colStay: "住宿"
+  colAmount: "金额"
+  colStatus: "状态"
+  # Shown in the detail pane before a row is chosen.
+  selectBooking: "请选择一个预订以查看其付款和操作。"
+  deleteBooking: "删除预订"
+  # Fact labels in the detail pane.
+  factGuest: "住客"
+  factStay: "住宿"
+  factCheckout: "Checkout"
+  factTotal: "预订总额"
+  factAuthorized: "已授权"
+  factCaptured: "已请款"
+  factCharged: "已从保存的银行卡扣款"
+  factSession: "会话"
+  anonymousSession: "匿名（仅限浏览器）"
+  factSessionStatus: "会话状态"
+  factPaymentStatus: "付款状态"
+  factTokenization: "令牌化"
+  factLastChecked: "上次检查"
+  payments: "付款"
+  colPaymentId: "付款 ID"
+  colMethod: "支付方式"
+  colCaptured: "已请款"
+  chargesTitle: "保存的银行卡扣款记录"
+  colWhatFor: "用途"
+  colFlywirePayment: "Flywire 付款"
+  colResult: "结果"
+  # “guest paid” is the label Flywire uses for the amount in the guest’s currency. You may keep the quotes.
+  chargesNote: "“金额”是酒店收取的费用；“住客支付”是 Flywire 以住客本国币种向其收取的金额（charge_info）。"
+  # Secondary line under a charge amount. {amount} is money in the guest’s currency. Lowercase, mid-sentence.
+  guestPaid: "住客支付 {amount}"
+  savedCard: "已保存的银行卡"
+  factCard: "银行卡"
+  factMethod: "支付方式"
+  # Card line. {brand} is Visa, Mastercard, etc. {last4} is four digits. {exp} is MM/YY.
+  cardLine: "{brand} •••• {last4}"
+  cardExpiry: "· 有效期 {exp}"
+
+  # Booking status pills. Short.
+  bookingStatus:
+    failed: "启动失败"
+    abandoned: "已放弃"
+    timedOut: "已超时"
+    inCheckout: "Checkout 中"
+    declined: "已拒绝"
+    captured: "已请款"
+    partlyCaptured: "部分请款"
+    authorized: "已授权"
+    processing: "处理中"
+    paid: "已付款"
+    cardSaved: "银行卡已保存"
+    completed: "Checkout 已完成"
+
+  # Hold explanation under the status, when money is authorized but not captured yet.
+  holdPending: "已授权：金额已在银行卡上冻结，等待请款。"
+  holdCaptureSent: "请款请求已发送；Flywire 将异步处理。请刷新状态查看结算情况。"
+
+  # Same payment-status explanations as the activity drawer, shorter, for the back office.
+  paymentStatusText:
+    NO_PAYMENTS: "未进行付款。"
+    SOME_IN_PROGRESS: "有付款仍在处理中。"
+    ALL_UNSUCCESSFUL: "所有付款尝试均失败。"
+    FULLY_PAID: "已全额付款或授权。"
+    PARTIALLY_PAID: "仅支付了部分金额。"
+    OVERPAID: "付款金额超过了请求金额。"
+
+  actionsTitle: "操作"
+  actionsSubtitle: "通过本演示的服务器发起的 Flywire API 调用"
+  # Shown on an action button while its request is in flight.
+  working: "处理中…"
+  # {label} is the action name, e.g. "Capture payment".
+  unavailableTitle: "此预订无法使用 {label}。 "
+  # Link to the Flywire sample page. The arrow means "opens in a new tab".
+  openPlayground: "在 Playground 中打开 ↗"
+  sendRequest: "发送 {method} 请求"
+  sending: "正在发送…"
+  requestFormat: "请求格式"
+  # Tab label. "curl" is a command-line tool. [do not translate]
+  curl: "curl"
+  nodeFetch: "Node fetch"
+  requestTitle: "发送至 Flywire 的请求"
+  fillFields: "请填写上方字段。"
+  requestFootnote: "本演示的服务器会将您的演示 API 密钥作为 X-Authentication-Key 一并发送。密钥不会在此处显示。"
+  # {when} is the booking’s creation date and time.
+  created: "创建于 {when}"
+  activity: "活动记录"
+  request: "请求"
+  requestBody: "请求正文"
+  response: "响应"
+  showData: "显示数据"
+  payment: "付款"
+  # {currency} is an ISO code.
+  amountLabel: "金额（{currency}）"
+  amountPositive: "请输入大于零的金额。"
+  amountMinimum: "金额不得低于 {amount}。"
+  whatForOffice: "用途（保存在后台）"
+  # Do not translate external_reference. It is a field name.
+  externalReference: "external_reference"
+  needReference: "请为此笔扣款添加 external_reference，例如预订编号。"
+  tokenFromReport: "来自会话的 tokenization_report。如有需要，可进行编辑。"
+  tokenMissing: "会话报告中没有银行卡令牌。请先刷新状态，或从 Flywire 门户粘贴令牌详情。"
+  # Do not translate these three field names.
+  paymentMethodToken: "payment_method_token"
+  mandateId: "mandate_id"
+  payorId: "payor_id"
+  resumeNote: "Flywire 响应后，Checkout 将使用新的 run_id 和 run_token 在此页面上打开。"
+  # {amount} is the current hold. Holds can be raised, never lowered.
+  extendMinimum: "最低 {amount}：预授权金额只能提高。"
+  currencyUnavailable: "币种不可用"
+  # {code} is USD. {name} is "US Dollar". {symbol} is " ($)" or empty.
+  currencyValue: "{code} · {name}{symbol}"
+  currencyUsd: "此收款方以 USD 结算，因此客房价格仍以美元显示。"
+  # {rate} is a number. {code} is the currency. {date} is " · 2026-10-06" or empty.
+  currencyRate: "1 USD = {rate} {code}{date}。客房价格和 Checkout 金额均采用此汇率。"
+  # {who} is the recipient name and id. {detail} is the rest of the sentence.
+  currencyLine: "{who}。{detail}"
+
+  # Preset reasons when charging a saved card. Staff pick one from a menu.
+  charges:
+    minibar: "客房小酒吧"
+    spa: "水疗护理"
+    lateCheckout: "延迟退房"
+    transfer: "机场接送"
+    dive: "潜水装备租赁"
+    noShow: "未入住费用"
+
+  # The five staff actions. "help" is the paragraph. "reason" / "fix" show when the action cannot run.
+  action:
+    refresh: "刷新状态"
+    refreshHelp: "从 Flywire 读取会话：会话、付款和令牌化报告。"
+    resume: "恢复会话"
+    resumeHelp: "为此会话获取新的运行凭据，然后使用这些凭据从住客中断之处重新打开 Checkout，例如用于发送付款链接。"
+    resumeOldReason: "此预订创建于支持恢复功能之前。"
+    resumeOldFix: "请创建新的预订。"
+    capture: "请款"
+    captureHelp: "收取全部或部分已冻结资金（例如在入住时）。未请款的金额将释放给住客。"
+    extend: "延长预授权"
+    extendHelp: "将预授权重置为自今日起 7 天，并可提高授权金额（只能提高）。"
+    charge: "从保存的银行卡扣款"
+    chargeHelp: "在住客不在场的情况下，从 Checkout 时保存的银行卡扣款，例如客房小酒吧消费或未入住费用。"
+    noSessionReason: "此预订使用的是匿名会话，因此服务器上没有可查询或恢复的会话。"
+    noSessionFix: "新预订请使用已认证会话（设置面板中的“会话”）。"
+    # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
+    notHoldReason: "Flywire 只能对预授权付款（冻结款项）进行请款或延期。此预订使用的是“{flow}”，{how}。"
+    chargedImmediately: "该流程会立即向住客扣款"
+    savedOnly: "该流程仅保存银行卡，不扣款也不冻结任何款项"
+    notHoldFix: "如需演示，请使用预授权流程创建预订：预订并预授权、预授权并保存银行卡、预授权（住客可选择保存银行卡）或预授权并留存银行卡。"
+    noPaymentReason: "此预订尚无付款 ID。"
+    noPaymentFixRefresh: "住客完成 Checkout 后，请点击“刷新状态”。"
+    noPaymentFixGuest: "住客尚未完成 Checkout。"
+    # {amount} is money. {when} is a date and time.
+    holdEndedReason: "{amount} 已于 {when} 请款，预授权随之结束：未请款的金额已释放给住客。"
+    holdEndedFixCard: "如需收取额外费用，请使用“从保存的银行卡扣款”：此预订已留存银行卡。"
+    holdEndedFixNew: "如需再次演示，请使用预授权流程创建新的预订。"
+    noCardReason: "此预订未保存银行卡。"
+    noCardFix: "请使用留存银行卡流程创建预订，例如“保存银行卡，稍后扣款”或“立即付款并保存银行卡”。"
+    fallbackFlow: "某个流程"
+
+  # History lines written after an action. {status} is a Flywire status code (do not translate the code).
+  history:
+    statusRefreshed: "状态已刷新"
+    statusRefreshedWith: "状态已刷新 · {status}"
+    statusFailed: "状态刷新失败"
+    resumed: "会话已恢复 · Checkout 已重新打开"
+    resumeFailed: "恢复失败"
+    # {amount} is money. {status} is " · received" or empty.
+    captured: "已请款 {amount}{status}"
+    holdRaised: "预授权已提高至 {amount}，并延长 7 天"
+    holdExtended: "预授权已延长 7 天"
+    # {amount} {what} {reference} are filled by the form. {status} is empty or " · " plus a Flywire status code.
+    charged: "已扣款 {amount} · {what} · {reference}{status}"
+    # When an action fails, the history line is rewritten. {what} is the text before the first " · ". {error} is the API message.
+    failedLine: "{what} 失败 · {error}"
+    failedSuffix: "失败"
+    checkoutAfterResume: "恢复后 Checkout 已完成"
+    checkoutAfterResumeStatus: "恢复后 Checkout 已完成 · {status}"
+    guestClosedAgain: "住客再次关闭了 Checkout"
+    checkoutTimedOut: "Checkout 已超时"
+    # {type} is an error code. Keep on_error.
+    onError: "on_error('{type}')"
+    couldNotStart: "Checkout 无法启动：{detail}"
+
+# -----------------------------------------------------------------------------
+# Card brands and payment methods, shown next to a payment result.
+# Brand names are trademarks. [do not translate] the brand names.
+# "Card" / "Direct debit" / "Bank transfer" / "Online payment" are generic and should be translated.
+# -----------------------------------------------------------------------------
+cards:
+  card: "银行卡"
+  directDebit: "直接借记"
+  bankTransfer: "银行转账"
+  online: "在线支付"
+  visa: "Visa"
+  mastercard: "Mastercard"
+  amex: "American Express"
+  discover: "Discover"
+  jcb: "JCB"
+  diners: "Diners Club"
+  unionpay: "UnionPay"
+  maestro: "Maestro"
+
+# -----------------------------------------------------------------------------
+# Errors thrown in the browser before checkout opens. Shown in a notice or the activity log.
+# -----------------------------------------------------------------------------
+sdk:
+  # Shown if the Flywire script never arrives. "connect.js" is a file name. [do not translate] the file name.
+  sdkMissing: "Flywire Checkout V2 SDK 未能加载。页面中是否已引入 connect.js？"
+  sessionCreateFailed: "会话创建失败"
+  sessionLookupFailed: "会话查询失败"
+  # {message} is one of the two lines above. {status} is an HTTP status number.
+  requestFailed: "{message}（{status}）"
+  # Recipient currency could not be read. Shown on the back office.
+  currencyUnreadable: "无法读取收款方币种。"
+  currencyUnreachable: "无法连接本演示服务器以读取收款方币种。"
+
+# -----------------------------------------------------------------------------
+# Sentences the demo server returns and the back office displays.
+# They are listed so translators can prepare them. The page language is saved
+# in this browser, but the server still sends the English text. Do not translate
+# URLs, header names, or field names inside these
+# sentences when they are written as code.
+# -----------------------------------------------------------------------------
+server:
+  # Returned with HTTP 401 when an action is attempted before an API key is saved.
+  # "/dashboard" is the back-office path. You may keep the path in parentheses.
+  missingCredentials: "请先在酒店后台（/dashboard）添加您的 Flywire 演示凭据。"
+  invalidSession: "会话 ID 无效。"
+  invalidPayment: "付款 ID 无效。"
+  amountMinor: "amount 必须是以最小货币单位（分）表示的正整数。"
+  chargeFields: "payment_method_token、mandate_id、payor_id、recipient_code 和 external_reference 为必填项。"
+  noApiKey: "尚未输入 API 密钥。"
+  # {detail} is Flywire’s own rejection text, already ending with a period.
+  keyRejected: "{detail} 此处仅接受 Flywire 演示密钥；生产环境密钥将被拒绝。"
+  keyRejectedFallback: "API 密钥被拒绝。"
+  keyAccepted: "演示 API 已接受此密钥。"
+  # {status} is an HTTP status number.
+  apiAnswered: "演示 API 返回 {status}。"
+  apiUnreachable: "无法连接 Flywire 演示 API。"
+  needClientId: "请先输入客户 ID，才能查询币种。"
+  needRecipient: "请先输入收款方代码，才能查询币种。"
+  currencyFailed: "无法读取收款方币种。"
+  flywireUnreachable: "无法连接 Flywire API"

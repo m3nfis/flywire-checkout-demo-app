@@ -1,0 +1,1288 @@
+# =============================================================================
+# The Caldera House — English source strings
+# Locale: vi
+#
+# This file is the source the translation team edits. The page reads it at
+# runtime (see public/i18n.js). Comments are for translators and are not shown.
+#
+# How to read a key
+# - The comment directly above a key says where it appears and any constraint.
+# - Nested keys become dotted names in the app, e.g. rooms.hero.title.
+#
+# Rules
+# - Keep every {placeholder} exactly, including the braces. The app fills them
+#   in. Example: "{amount} paid in full." — translate the words, leave {amount}.
+# - Keys that end in _one, _other, _two, _few, _many or _zero are plural forms.
+#   {count} is the number. English only needs _one (exactly 1) and _other
+#   (everything else). Add the other suffixes if your language needs them
+#   (Polish, Arabic, Russian, and others). If a form is missing, the app uses
+#   _other.
+# - [html] means the value contains tags such as <br>, <strong>, <em>, <a> or
+#   <code>. Translate the words. Leave tags, hrefs and class names unchanged.
+# - [do not translate] means the value is a proper noun, brand, code or
+#   endonym and must stay as written.
+# - Tone: sections under "guest" voice speak to the hotel guest (warm, luxury,
+#   second person). Sections marked "presenter" speak to the person running
+#   the demo or the hotel back office (plain instructions).
+# - Keep button and stepper labels short. Where length matters, the comment says so.
+# - Do not translate API field names, URLs, currency codes, portal codes, or
+#   the sample code in the integration preview. Those are not in this file.
+#
+# Not in this file
+# - Developer documentation under public/full-docs and public/minimal-docs.
+# - Code comments, console messages, and the generated checkout payload.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Shared words used on more than one screen
+# -----------------------------------------------------------------------------
+common:
+  # Booking total row. Short label, paired with a money amount.
+  total: "Tổng cộng"
+  # Date the guest arrives. Short label in a summary list.
+  checkIn: "Nhận phòng"
+  # Date the guest leaves. Short label in a summary list.
+  checkOut: "Trả phòng"
+  # How many people are staying. Short label in a summary list.
+  guests: "Số khách"
+  # The room that was booked. Short label.
+  suite: "Phòng"
+  # Closes a popover or drawer. Button.
+  done: "Xong"
+  # Restores the previous dates and guest counts. Text button in the date popover.
+  reset: "Đặt lại"
+  # Copies text to the clipboard. Small button. Restored after "Copied".
+  copy: "Sao chép"
+  # Shown for about a second after a copy succeeds. Same button as "Copy".
+  copied: "Đã sao chép"
+  # Shown for about a second when the browser blocks clipboard access.
+  copyFailed: "Không thể sao chép"
+  # Reveals a secret field (the API key). Small button. Opposite of "Hide".
+  show: "Hiện"
+  # Masks a secret field. Small button. Opposite of "Show".
+  hide: "Ẩn"
+  # Fallback when the guest has not given a name yet. Used in greetings.
+  guest: "Quý khách"
+  # Empty value in a definition list, e.g. a credential that has not been entered.
+  notSet: "Chưa thiết lập"
+  # Word before the last item of a list: "Client ID, recipient code and API key".
+  and: "và"
+  # Placeholder when a value is unknown. A single em dash. [do not translate]
+  dash: "—"
+
+# -----------------------------------------------------------------------------
+# Browser tab titles
+# -----------------------------------------------------------------------------
+meta:
+  # Browser tab title for the public booking site.
+  # "The Caldera House" is the hotel name. "Oia" and "Santorini" are place names.
+  # [do not translate] the hotel name and the place names. The em dash can stay.
+  bookingTitle: "The Caldera House — Oia, Santorini"
+  # Browser tab title for the hotel back office (staff page, not the guest page).
+  # [do not translate] "The Caldera House".
+  backOfficeTitle: "Trang quản trị — The Caldera House"
+
+# -----------------------------------------------------------------------------
+# Top bar of the booking site
+# -----------------------------------------------------------------------------
+nav:
+  # Logo text. Hotel name. [do not translate]
+  logo: "The Caldera House"
+  # Small location label next to the logo. Place names. [do not translate]
+  location: "Oia, Santorini"
+  # Tooltip and screen-reader name for the heartbeat icon. Opens a presenter drawer
+  # that lists what the payment checkout returned. Not part of the guest story.
+  checkoutActivity: "Hoạt động Checkout"
+  # Tooltip and screen-reader name for the grid icon. Opens the staff back office.
+  backOffice: "Trang quản trị khách sạn"
+  # Tooltip and screen-reader name for the gear icon. Opens presenter checkout settings.
+  # {flow} is the name of the selected payment flow, e.g. "Pay in full".
+  checkoutSettings: "Cài đặt Checkout"
+  checkoutSettingsWithFlow: "Cài đặt Checkout · {flow}"
+
+# -----------------------------------------------------------------------------
+# Three-step progress bar under the header. Keep each label short.
+# -----------------------------------------------------------------------------
+stepper:
+  # Step 1. Guest is choosing a room.
+  selectRoom: "Chọn phòng"
+  # Step 2. Guest is entering name, email and address.
+  guestDetails: "Thông tin khách"
+  # Step 3. Guest is about to pay.
+  payment: "Thanh toán"
+
+# -----------------------------------------------------------------------------
+# Page 1 — room selection. Guest voice.
+# -----------------------------------------------------------------------------
+rooms:
+  # Decorative photo behind the headline. Describe the picture, not the hotel brand.
+  heroAlt: "Những mái vòm xanh của Santorini nhìn ra biển Aegean"
+  # Small line above the headline. Hotel name and place. [do not translate]
+  eyebrow: "The Caldera House · Oia, Santorini"
+  # Main headline on the room list.
+  title: "Mời quý khách chọn phòng"
+  # Tooltip, screen-reader text, and the date popover name. Opens the date and guest picker.
+  changeDates: "Thay đổi ngày và số khách"
+  # Price suffix when the hotel bills in US dollars. Keep the leading slash.
+  perNight: "/đêm"
+  # Price suffix when the hotel bills in another currency.
+  # {currency} is an ISO code such as EUR or GBP. Do not translate the code.
+  perNightWithCurrency: "/đêm · {currency}"
+  # Button on every room card. Keep it short enough for a card footer.
+  selectSuite: "Chọn phòng này"
+
+  # Hero line under the headline, built in script.
+  # {range} is the dates, e.g. "June 12 – 15, 2026".
+  # {nights} and {guests} are already-translated phrases such as "3 Nights" and "2 Guests".
+  staySummary: "{range} · {nights} · {guests}"
+
+  cards:
+    royal-caldera:
+      # Marketing name of the featured suite. "Caldera" is the volcanic bay at Santorini;
+      # keep it. "Royal" and "Suite" may be translated.
+      name: "Suite Hoàng gia Caldera"
+      # Alt text for the suite photo. Same name guests see on the card.
+      alt: "Suite Hoàng gia Caldera"
+      # Ribbon on the photo. One word if possible.
+      badge: "Đề xuất"
+      # Facts line under the name. Middle dots separate three facts. "m²" is square metres.
+      specs: "120 m² · Hướng Caldera · Hồ bơi vô cực riêng"
+      # Size only, reused in the booking summary. Keep "m²".
+      size: "120 m²"
+      # View only, reused in the booking summary.
+      view: "Hướng Caldera"
+      # Paragraph on the card. Warm, descriptive.
+      description: "Viên ngọc quý của The Caldera House. Một không gian nghỉ dưỡng rộng lớn với cửa kính kịch trần đón trọn khung cảnh caldera, hồ bơi vô cực riêng và sân hiên được thiết kế để chiêm ngưỡng hoàng hôn nổi tiếng nhất thế giới."
+      # Short amenity chips. Keep each to one or two words.
+      tagPool: "Hồ bơi riêng"
+      tagButler: "Dịch vụ quản gia"
+      tagTerrace: "Sân hiên"
+      tagKitchen: "Bếp chuyên nghiệp"
+
+    sunset-villa:
+      # Marketing name. "Sunset" and "Honeymoon" may be translated. "Villa" may be translated.
+      name: "Biệt thự Trăng mật Hoàng hôn"
+      alt: "Biệt thự Trăng mật Hoàng hôn"
+      specs: "95 m² · Hướng hoàng hôn · Bồn tắm ngoài trời"
+      size: "95 m²"
+      view: "Hướng hoàng hôn"
+      description: "Một biệt thự biệt lập ẩn mình giữa sắc hoa giấy, với sân trong riêng, bồn tắm bằng đồng ngoài trời và tầm nhìn trọn vẹn ra hoàng hôn huyền thoại của Oia."
+      tagBath: "Bồn tắm ngoài trời"
+      tagCourtyard: "Sân trong"
+      tagSunset: "Hướng hoàng hôn"
+
+    captains-quarters:
+      # Marketing name. Nautical theme. The apostrophe is the hotel’s name for the room.
+      name: "Phòng Thuyền trưởng"
+      alt: "Phòng Thuyền trưởng"
+      specs: "65 m² · Hướng bến cảng · Hồ ngâm"
+      size: "65 m²"
+      view: "Hướng bến cảng"
+      description: "Lấy cảm hứng từ truyền thống hàng hải của Santorini, với trần vòm quét vôi trắng, đồ cổ được tuyển chọn kỹ lưỡng và sân trong riêng có hồ ngâm."
+      tagPlunge: "Hồ ngâm"
+      tagVaulted: "Trần vòm"
+      tagCourtyard: "Sân trong"
+
+    aegean-studio:
+      # Marketing name. "Aegean" is the sea; keep it. "Cliff" and "Studio" may be translated.
+      name: "Studio Vách đá Aegean"
+      alt: "Studio Vách đá Aegean"
+      specs: "45 m² · Hướng biển · Ban công riêng"
+      size: "45 m²"
+      view: "Hướng biển"
+      description: "Một chốn nghỉ dưỡng tinh tế tạc vào vách đá núi lửa, với ban công riêng lơ lửng trên biển Aegean. Những đường nét tối giản hòa quyện cùng đá tự nhiên trong căn studio do kiến trúc sư thiết kế."
+      tagSea: "Hướng biển"
+      tagBalcony: "Ban công"
+      tagShower: "Vòi sen mưa"
+
+# -----------------------------------------------------------------------------
+# Date and guest popover. Guest voice. Opened from "Change dates and guests".
+# -----------------------------------------------------------------------------
+stay:
+  # Plural of nights, lowercase, used inside sentences and the price breakdown.
+  # {count} is a number. See the plural rules at the top of this file.
+  night_one: "{count} đêm"
+  night_other: "{count} đêm"
+  # Same idea, title case, used in the hero summary ("3 Nights").
+  nightTitle_one: "{count} đêm"
+  nightTitle_other: "{count} đêm"
+  # Title case, hero summary ("2 Guests").
+  guestTitle_one: "{count} khách"
+  guestTitle_other: "{count} khách"
+  # Guest count in the summary panel ("2 Adults").
+  adult_one: "{count} người lớn"
+  adult_other: "{count} người lớn"
+  # Guest count when there are children. English "Child" / "Children" is irregular.
+  child_one: "{count} trẻ em"
+  child_other: "{count} trẻ em"
+  # Extra people beyond the two guests included in the rate. Lowercase, mid-sentence.
+  extraGuest_one: "{count} khách bổ sung"
+  extraGuest_other: "{count} khách bổ sung"
+  # Bookings count on the back office list.
+  booking_one: "{count} lượt đặt phòng trên trang đặt phòng"
+  booking_other: "{count} lượt đặt phòng trên trang đặt phòng"
+  # Nights column in the back office table.
+  nightShort_one: "{count} đêm"
+  nightShort_other: "{count} đêm"
+  # Relative time in the back office. {count} is minutes or hours.
+  minutesAgo_one: "{count} phút trước"
+  minutesAgo_other: "{count} phút trước"
+  hoursAgo_one: "{count} giờ trước"
+  hoursAgo_other: "{count} giờ trước"
+  # Less than a minute ago.
+  justNow: "vừa xong"
+
+  # Popover heading while the guest still needs to pick the departure date.
+  selectCheckout: "Chọn ngày trả phòng"
+  # Subtitle before a departure date is chosen.
+  # {checkIn} is a short date such as "Fri, Jun 12, 2026". {max} is a number (30).
+  checkoutHint: "Nhận phòng {checkIn} · tối đa {max} đêm"
+  # Screen-reader name for the previous-month arrow.
+  previousMonth: "Tháng trước"
+  # Screen-reader name for the next-month arrow.
+  nextMonth: "Tháng sau"
+  # Stepper label. Adults are ages 13+.
+  adults: "Người lớn"
+  # Hint under "Adults".
+  adultsHint: "Từ 13 tuổi trở lên"
+  # Stepper label.
+  children: "Trẻ em"
+  # Hint under "Children". An en dash between the ages.
+  childrenHint: "2–12 tuổi"
+  # Note under the steppers. {guests} is a number (2). {amount} is a money amount.
+  extraGuestFee: "Giá phòng đã bao gồm {guests} khách. Mỗi khách bổ sung có phụ phí {amount} mỗi đêm."
+  # Screen-reader name for the minus button. {who} is "adults" or "children", lowercase.
+  removeGuests: "Giảm số {who}"
+  # Screen-reader name for the plus button. {who} is "adults" or "children", lowercase.
+  addGuests: "Tăng số {who}"
+  # Lowercase plural used only inside the screen-reader phrases above.
+  adultsLower: "người lớn"
+  childrenLower: "trẻ em"
+
+  # Column headers of the month grid, Sunday through Saturday, in that order.
+  # The grid starts on Sunday. Do not reorder these seven keys.
+  # Keep them very short (about 2 letters in English).
+  weekdaySu: "CN"
+  weekdayMo: "T2"
+  weekdayTu: "T3"
+  weekdayWe: "T4"
+  weekdayTh: "T5"
+  weekdayFr: "T6"
+  weekdaySa: "T7"
+
+# -----------------------------------------------------------------------------
+# Page 2 — guest details form. Guest voice.
+# -----------------------------------------------------------------------------
+guest:
+  # Form heading.
+  title: "Thông tin khách"
+  # Line under the heading.
+  subtitle: "Vui lòng xác nhận thông tin đặt phòng của quý khách"
+  # Form labels. Each sits above an empty text field.
+  firstName: "Tên"
+  lastName: "Họ"
+  email: "Địa chỉ email"
+  phone: "Số điện thoại"
+  address: "Địa chỉ"
+  city: "Thành phố"
+  # Postal code. "ZIP" is the US term; "Postal" covers other countries. Keep both ideas.
+  zip: "Mã bưu chính"
+  country: "Quốc gia"
+  # First option in the country menu, shown before a country is chosen.
+  countryPlaceholder: "Chọn…"
+  # Returns to the room list. The arrow is part of the label; you may use your language’s back arrow.
+  backToRooms: "← Quay lại danh sách phòng"
+  # Submits the form and opens the payment step. Button.
+  continueToPayment: "Tiếp tục thanh toán"
+  # Heading of the side panel that repeats the chosen room.
+  yourSelection: "Lựa chọn của quý khách"
+
+  # Country menu. The stored value is the two-letter code; only the name is translated.
+  # Use the country’s usual name in your language.
+  countries:
+    ES: "Tây Ban Nha"
+    GR: "Hy Lạp"
+    IT: "Ý"
+    FR: "Pháp"
+    DE: "Đức"
+    GB: "Vương quốc Anh"
+    US: "Hoa Kỳ"
+    PT: "Bồ Đào Nha"
+    NL: "Hà Lan"
+    CH: "Thụy Sĩ"
+    AT: "Áo"
+    BE: "Bỉ"
+    SE: "Thụy Điển"
+    NO: "Na Uy"
+    DK: "Đan Mạch"
+    AU: "Úc"
+    CA: "Canada"
+    JP: "Nhật Bản"
+
+# -----------------------------------------------------------------------------
+# Page 3 — payment. Guest voice, plus a few presenter warnings.
+# -----------------------------------------------------------------------------
+booking:
+  # Large photo on the payment page.
+  heroAlt: "Khung cảnh caldera của Santorini lúc hoàng hôn"
+  # Three gallery captions under the payment-page photos.
+  gallerySuiteAlt: "Nội thất Suite Hoàng gia"
+  gallerySuite: "Suite Hoàng gia"
+  galleryPoolAlt: "Hồ bơi vô cực"
+  galleryPool: "Hồ bơi vô cực"
+  galleryDiningAlt: "Ẩm thực cao cấp"
+  galleryDining: "Ẩm thực riêng tư"
+  # Property story heading.
+  sanctuaryTitle: "Chốn bình yên trên biển cả"
+  # First paragraph of the property story. Place names stay.
+  sanctuaryBody1: "Tọa lạc trên những vách đá núi lửa của Oia, The Caldera House là nơi biển Aegean giao hòa cùng bầu trời. Mỗi phòng suite đều mở ra tầm nhìn khoáng đạt hướng về caldera, với nội thất đá chạm khắc thủ công, hồ ngâm riêng và sân hiên được thiết kế để ngắm hoàng hôn nổi tiếng nhất thế giới."
+  # Second paragraph.
+  sanctuaryBody2: "Từ những bữa tối dưới ánh nến do đầu bếp thường trú của chúng tôi chuẩn bị đến buổi tập yoga lúc bình minh trên đỉnh vách đá, mọi chi tiết đều được chăm chút để quý khách chỉ cần tận hưởng từng khoảnh khắc."
+  # Amenity list. Short phrases.
+  amenityPool: "Hồ bơi vô cực riêng"
+  amenityChef: "Đầu bếp phục vụ tại phòng"
+  amenityTerrace: "Sân hiên hướng Caldera"
+  amenitySpa: "Spa & chăm sóc sức khỏe"
+  amenitySailing: "Du thuyền ngắm hoàng hôn"
+  amenityAirport: "Dịch vụ hỗ trợ tại sân bay"
+  # Returns to the guest form. Arrow may be mirrored in RTL languages.
+  backToGuest: "← Quay lại thông tin khách"
+  # Side panel heading on the payment step.
+  yourStay: "Kỳ nghỉ của quý khách"
+  # Heading above the payment choice.
+  payment: "Thanh toán"
+  # Security reassurance under the pay button.
+  secured: "Mọi giao dịch đều được bảo mật và mã hóa."
+  # Line under that reassurance. {name} is the guest’s full name.
+  guestLine: "Khách: {name}"
+  # Tooltip on the pay button while Flywire demo credentials are missing.
+  # Presenter voice — the person clicking has to open the back office first.
+  credentialsFirst: "Vui lòng thêm thông tin xác thực demo Flywire trong trang quản trị khách sạn trước"
+  # Notice when checkout rejects the configuration. {detail} is a technical field list from Flywire.
+  # Presenter voice.
+  configRejected: "Checkout đã từ chối cấu hình này: {detail}"
+  # Notice when checkout fails to open. {detail} is the error text.
+  couldNotStart: "Không thể khởi động Checkout: {detail}"
+  # Shown in the activity log when a card is saved and no money is taken.
+  noAmount: "Không có số tiền (chỉ lưu thẻ)"
+  # Activity log value. Presenter voice. Checkout drawn on top of the page.
+  displayOverlay: "Lớp phủ toàn màn hình"
+  # Activity log value. Checkout placed inside the booking panel.
+  displayEmbedded: "Nhúng trong trang"
+
+  # Price breakdown lines. {nights} is "3 nights". {amount} is the nightly rate.
+  nightlyCalc: "{nights} × {amount}"
+  # {extras} is "1 extra guest" or "2 extra guests". {amount} is the fee. {nights} is "3 nights".
+  extraCalc: "{extras} × {amount} × {nights}"
+
+# -----------------------------------------------------------------------------
+# Guest-facing names for the payment flow the presenter picked.
+# These replace the "Payment" card title, description and the pay button.
+# {amount} is a money amount such as "$7,350" or "€6.800".
+# -----------------------------------------------------------------------------
+flows:
+  pay_full:
+    # Guest sees this as the payment option title.
+    guestTitle: "Thanh toán toàn bộ"
+    guestDesc: "Thanh toán một lần {amount}"
+    # Pay button. {amount} is included.
+    cta: "Thanh toán {amount}"
+    # Presenter sees this in the settings drawer, as the flow name.
+    title: "Thanh toán toàn bộ"
+    # Presenter. One sentence under the flow name.
+    pitch: "Giá trả trước, tour và trải nghiệm đặt vào phút chót."
+    # Link to a matching sample. Presenter.
+    playground: "Thanh toán với các trường thông dụng"
+
+  reserve_hold:
+    guestTitle: "Đặt chỗ & tạm giữ"
+    guestDesc: "Tạm giữ {amount} hôm nay, trừ tiền khi nhận phòng"
+    cta: "Đặt chỗ với khoản tạm giữ"
+    title: "Đặt chỗ & tạm giữ"
+    # "Pre-authorize" means a card hold, not a charge. "API" is the Flywire programming interface; you may keep "API".
+    pitch: "Ủy quyền trước khi đặt phòng, thu tiền khi nhận phòng. Khoản tạm giữ có thể được gia hạn hoặc tăng qua API."
+    playground: "Thanh toán với ủy quyền trước"
+
+  moto:
+    # MOTO means Mail Order / Telephone Order: staff take the card, the guest is not on the website.
+    # You may spell that out if the abbreviation is unknown, but keep it short (it is a menu title).
+    guestTitle: "Thanh toán qua bộ phận đặt phòng"
+    guestDesc: "Thanh toán {amount} với sự hỗ trợ của nhân viên"
+    cta: "Thu khoản thanh toán {amount}"
+    title: "Đặt phòng qua điện thoại & email (MOTO)"
+    pitch: "Nhân viên đặt phòng thu tiền cho khách đặt phòng qua điện thoại hoặc email."
+    playground: "Thanh toán MOTO"
+
+  save_card:
+    guestTitle: "Đảm bảo bằng thẻ"
+    guestDesc: "Thẻ của quý khách được dùng để đảm bảo đặt phòng. Hôm nay không có khoản phí nào được trừ."
+    cta: "Lưu thẻ & đặt chỗ"
+    title: "Lưu thẻ, trừ tiền sau"
+    pitch: "Đảm bảo bằng thẻ lưu trữ. Thu tiền đặt cọc, số dư hoặc phí vắng mặt sau bằng token."
+    playground: "Token hóa không kèm số tiền"
+
+  pay_save:
+    guestTitle: "Thanh toán & lưu thẻ"
+    guestDesc: "Thanh toán {amount} ngay; thẻ được lưu để chi trả các dịch vụ phát sinh"
+    cta: "Thanh toán {amount} & lưu thẻ"
+    title: "Thanh toán ngay & lưu thẻ"
+    pitch: "Thu tiền ngay và lưu thẻ cho các khoản phát sinh: thiết bị lặn, spa, tour tham quan, số dư."
+    playground: "Token hóa kèm số tiền"
+
+  hold_save:
+    guestTitle: "Tạm giữ & lưu thẻ"
+    guestDesc: "Tạm giữ {amount}; thẻ được lưu để thanh toán hóa đơn cuối cùng của quý khách"
+    cta: "Đặt chỗ với khoản tạm giữ"
+    title: "Tạm giữ & lưu thẻ"
+    pitch: "Ủy quyền trước cho kỳ lưu trú và lưu thẻ cho hóa đơn cuối cùng cùng các chi phí phát sinh."
+    playground: "Token hóa với ủy quyền trước"
+
+  optional:
+    guestTitle: "Thanh toán toàn bộ"
+    guestDesc: "Thanh toán một lần {amount}, quý khách có thể chọn lưu thẻ"
+    cta: "Thanh toán {amount}"
+    title: "Thanh toán, khách có thể lưu thẻ"
+    pitch: "Khách tự quyết định có lưu thẻ cho chuyến đi sau hay không. Rất phù hợp với khách quay lại."
+    playground: "Token hóa tùy chọn"
+
+  optional_hold:
+    guestTitle: "Đặt chỗ & tạm giữ"
+    guestDesc: "Tạm giữ {amount}, quý khách có thể chọn lưu thẻ"
+    cta: "Đặt chỗ với khoản tạm giữ"
+    title: "Tạm giữ, khách có thể lưu thẻ"
+    pitch: "Ủy quyền trước cho kỳ lưu trú; khách có thể chọn lưu thẻ."
+    playground: "Token hóa tùy chọn với ủy quyền trước"
+
+  implicit:
+    guestTitle: "Thanh toán toàn bộ"
+    guestDesc: "Thanh toán một lần {amount}; thẻ được lưu trong suốt kỳ lưu trú của quý khách"
+    cta: "Thanh toán {amount}"
+    title: "Thanh toán & lưu giữ thẻ"
+    pitch: "Thẻ được lưu tự động khi phương thức hỗ trợ. Lý tưởng cho các khoản thanh toán số dư và trả góp."
+    playground: "Token hóa ngầm định"
+
+  implicit_hold:
+    guestTitle: "Đặt chỗ & tạm giữ"
+    guestDesc: "Tạm giữ {amount}; thẻ được lưu trong suốt kỳ lưu trú của quý khách"
+    cta: "Đặt chỗ với khoản tạm giữ"
+    title: "Tạm giữ & lưu giữ thẻ"
+    pitch: "Ủy quyền trước cho kỳ lưu trú và tự động lưu thẻ cho các khoản thu sau."
+    playground: "Token hóa ngầm định với ủy quyền trước"
+
+  # Extra sentence under the payment option when part of the money goes to partners.
+  # {parts} is a list such as "sunset catamaran excursion ($350) and couples spa ritual ($250)".
+  splitNote: "Bao gồm {parts}, được thanh toán trực tiếp với các đối tác của chúng tôi."
+  # Joiner used inside {parts} before the last partner. Same role as common.and, kept here
+  # because it sits inside a guest sentence.
+  splitAnd: "và"
+  # Extra sentence when the hotel absorbs the card fee.
+  noSurcharge: "Không áp dụng phụ phí thẻ."
+
+  # Presenter. Group headings in the flow list.
+  groups:
+    payment: "Thanh toán"
+    tokenization: "Thẻ lưu trữ"
+    # Grey hint after the group name. Technical term for saving a card.
+    tokenizationHint: "Token hóa"
+    optional: "Khách chọn lưu thẻ"
+    optionalHint: "Token hóa tùy chọn"
+    implicit: "Thẻ được lưu tự động"
+    implicitHint: "Token hóa ngầm định"
+  # Presenter. Badge when a flow cannot be selected until an API key is saved.
+  needsApiKey: "Cần khóa API"
+  # Presenter. Appended to the technical summary when the flow does not charge now.
+  noAmountTech: "không có số tiền"
+
+  # Presenter. Extra sample links that appear when the matching setting is on.
+  playground:
+    authenticated: "Thanh toán với phiên đã xác thực"
+    embedded: "Thanh toán nhúng"
+    split: "Thanh toán chia tách"
+    waive: "Thanh toán miễn phụ phí"
+    offerRules: "Thanh toán với quy tắc tùy chọn thanh toán"
+    styles: "Thanh toán với kiểu tùy chỉnh"
+    timeout: "Thanh toán có thời gian chờ"
+    docs: "Hướng dẫn cấu hình Checkout V2"
+
+# -----------------------------------------------------------------------------
+# Confirmation page after a successful checkout. Guest voice.
+# -----------------------------------------------------------------------------
+success:
+  # Photo behind the confirmation.
+  backgroundAlt: "Hoàng hôn Santorini"
+  # Small line above the confirmation headline. Changes with the kind of payment.
+  eyebrowPaid: "Đặt phòng đã được xác nhận"
+  eyebrowHold: "Đặt phòng đã được giữ chỗ"
+  eyebrowCard: "Đặt phòng đã được đảm bảo"
+  # Headline. The <br> is a deliberate line break. [html]
+  title: "Kỳ nghỉ Santorini<br>đang chờ đón quý khách"
+  # {name} is the guest’s first and last name.
+  welcome: "Kính chào {name}"
+  # {amount} is the money amount.
+  notePaid: "Đã thanh toán toàn bộ {amount}."
+  noteHold: "Khoản tạm giữ {amount} đã được đặt trên thẻ của quý khách. Quý khách sẽ được trừ tiền khi nhận phòng."
+  noteCard: "Thẻ của quý khách đã được lưu an toàn. Hôm nay chưa có khoản phí nào được trừ."
+  noteMoto: "Bộ phận đặt phòng của chúng tôi đã thu {amount}."
+  # Appended after the note when the card was also stored. Leading space is intentional.
+  cardSaved: " Thẻ của quý khách đã được lưu để chi trả các dịch vụ phát sinh trong kỳ lưu trú."
+  cardSavedIfChosen: " Thẻ của quý khách đã được lưu nếu quý khách chọn giữ lại."
+  cardKeptWhereSupported: " Thẻ của quý khách được lưu trữ nếu phương thức thanh toán hỗ trợ."
+  # Heading above a short list of stay highlights.
+  awaits: "Những trải nghiệm đang chờ đón quý khách"
+  highlightPool: "Hồ bơi vô cực riêng nằm cao trên caldera"
+  highlightDinner: "Bữa tối ngắm hoàng hôn trên sân hiên, do đầu bếp của chúng tôi chuẩn bị"
+  highlightSailing: "Du ngoạn bằng thuyền catamaran riêng vào giờ vàng"
+  highlightSpa: "Liệu trình spa dành cho cặp đôi miễn phí"
+  # Presenter-only box under the confirmation. Not guest marketing.
+  returnedBy: "Do Flywire trả về · demo"
+  viewActivity: "Xem hoạt động Checkout →"
+  openDashboard: "Mở trong trang quản trị khách sạn →"
+  # Reloads the site so the presenter can run the booking again.
+  bookAnother: "Đặt một kỳ nghỉ khác"
+  # Labels in the presenter result list. The values next to them are ids and status codes.
+  resultBooking: "Đặt phòng"
+  resultFlow: "Quy trình"
+  resultSession: "Phiên"
+  resultSessionStatus: "Trạng thái phiên"
+  resultPaymentStatus: "Trạng thái thanh toán"
+  resultMethod: "Phương thức thanh toán"
+
+# -----------------------------------------------------------------------------
+# Failure page. Guest voice, slightly playful on the card decline.
+# -----------------------------------------------------------------------------
+error:
+  # Decline headline. Playful, not a formal banking error. Short.
+  declinedTitle: "Rất tiếc"
+  declinedSubtitle: "Thanh toán bị từ chối"
+  # [html] <br> is a line break.
+  declinedMessage: "Không thể xử lý khoản thanh toán của quý khách.<br>Vui lòng thử lại bằng một thẻ khác."
+  # Checkout timer ran out. The presenter enabled a countdown.
+  timeoutTitle: "Đã hết thời gian"
+  timeoutSubtitle: "Phiên thanh toán của quý khách đã hết hạn"
+  # [html]
+  timeoutMessage: "Chúng tôi đã giữ phòng cho quý khách lâu nhất có thể.<br>Vui lòng bắt đầu lại để hoàn tất đặt phòng."
+  # Returns the guest to the payment step.
+  tryAgain: "Thử lại"
+  viewActivity: "Xem hoạt động Checkout →"
+
+# -----------------------------------------------------------------------------
+# Warnings shown when Flywire demo credentials have not been entered.
+# Presenter voice. {missing} is a list such as "API key" or "Client ID and recipient code".
+# -----------------------------------------------------------------------------
+credentials:
+  # Field names used inside {missing}. "Client ID" and "API key" are product terms;
+  # translate them consistently everywhere in this file.
+  fields:
+    client_id: "ID khách hàng"
+    code: "mã bên nhận"
+    api_key: "khóa API"
+  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "ID khách hàng, mã bên nhận và khóa API"
+  # Payment step. Bold first line.
+  paymentTitle: "Checkout cần thông tin xác thực demo Flywire."
+  # [html] Payment step, the sentence after the title. Keep the <a> and its href.
+  paymentBody: "Vui lòng thêm {missing} trong <a href=\"/dashboard/#credentials\">trang quản trị khách sạn</a>, sau đó quay lại để thanh toán."
+  # Settings drawer and activity drawer. Bold first line.
+  drawerTitle: "Thêm thông tin xác thực demo Flywire để bắt đầu"
+  # Drawer paragraph. {missing} is the same list as above.
+  drawerBody: "Bản demo này không kèm thông tin xác thực. Vui lòng nhập {missing} trong trang quản trị khách sạn. Thông tin được lưu trong trình duyệt này và chỉ hoạt động với môi trường demo Flywire."
+  # Button in the drawer.
+  add: "Thêm thông tin xác thực"
+  # Back office banner. Bold first line, includes the period.
+  officeTitle: "Thêm thông tin xác thực demo Flywire để bắt đầu."
+  # Back office banner body. {missing} is the list. "Save & test connection" is the submit button; use the same translation as dashboard.saveAndTest.
+  officeBody: "Bản demo này không kèm thông tin xác thực. Vui lòng nhập {missing} của một tài khoản demo Flywire, sau đó nhấn Lưu và kiểm tra kết nối. Cho đến lúc đó, Checkout trên trang đặt phòng sẽ bị vô hiệu hóa."
+
+# -----------------------------------------------------------------------------
+# Checkout settings drawer (gear icon). Presenter voice throughout.
+# Technical tokens in <code> or in the "hint" strings are API names. Do not translate those tokens.
+# -----------------------------------------------------------------------------
+demo:
+  # Small label above the drawer title. Product name. [do not translate] "Flywire". "Checkout V2" is the product version.
+  overline: "Flywire Checkout V2"
+  title: "Cài đặt Checkout"
+  # Subtitle under the title.
+  subtitle: "Chọn nội dung hiển thị. Cài đặt sẽ áp dụng vào lần mở Checkout tiếp theo và được lưu trong trình duyệt này."
+  # Screen-reader name for the language icon in this header. The names in the menu (English, Español, …) are each language’s own name and are not in this file.
+  pageLanguage: "Ngôn ngữ trang"
+  # Screen-reader name for the X button.
+  close: "Đóng cài đặt Checkout"
+  # Numbered section titles. The number is drawn separately; translate only the word.
+  sectionFlow: "Quy trình"
+  sectionDisplay: "Hiển thị"
+  sectionPages: "Trang & trải nghiệm của khách"
+  sectionOptions: "Tùy chọn thanh toán"
+  sectionMethods: "Phương thức thanh toán & tiền tệ"
+  sectionBrand: "Thương hiệu & ngôn ngữ"
+  sectionSession: "Phiên"
+  sectionCredentials: "Thông tin xác thực demo Flywire"
+
+  # Display choices.
+  displayOverlay: "Lớp phủ toàn màn hình"
+  displayEmbedded: "Nhúng Checkout vào trang"
+  # [html] Keep <code>config.embed_to</code> unchanged.
+  displayHelp: "Chế độ nhúng gắn Checkout vào bảng đặt phòng bằng <code>config.embed_to</code>. Bảng này đã hiển thị khách sạn và tổng tiền, vì vậy hãy ẩn tiêu đề và số tiền của Checkout bên dưới khi nhúng."
+
+  # [html] The hint in the label is the API field. Do not translate show_payer_form.
+  payerFormLabel: "Trang thông tin người thanh toán <span class=\"fw-label-hint\">show_payer_form</span>"
+  # [html] Do not translate show_recipient_form.
+  recipientFormLabel: "Trang trường tùy chỉnh <span class=\"fw-label-hint\">show_recipient_form</span>"
+  # Three-way choice used for both pages above.
+  pageAuto: "Tự động"
+  pageAlways: "Luôn hiển thị"
+  pageHide: "Ẩn"
+  # Help under those choices. Changes with the selection.
+  pagesNoteAuto: "Chế độ Tự động bỏ qua một trang khi mọi thông tin trên đó đã được điền, như trường hợp thông tin khách được điền sẵn."
+  pagesNoteHidePayer: "Chỉ có thể ẩn trang người thanh toán khi Checkout đã có đủ mọi thông tin bắt buộc của người thanh toán. Biểu mẫu khách sẽ điền sẵn các thông tin này."
+  # [html] Do not translate disabled_fields.
+  readOnlyLabel: "Trường chỉ đọc của người thanh toán <span class=\"fw-label-hint\">disabled_fields</span>"
+  readOnlyNote: "Khách thấy các trường này nhưng không thể thay đổi, ví dụ: email đã dùng để đặt phòng."
+  readOnlyNoteHidden: "Khách chỉ thấy các trường này trên trang người thanh toán, trang mà chế độ Tự động bỏ qua khi thông tin đã được điền sẵn. Đặt trang người thanh toán thành Luôn hiển thị để trình diễn."
+  # Payer field chips. Short. These match the guest form, but they are presenter labels.
+  fieldFirstName: "Tên"
+  fieldLastName: "Họ"
+  fieldEmail: "Email"
+  fieldPhone: "Điện thoại"
+  fieldAddress: "Địa chỉ"
+  fieldCity: "Thành phố"
+  fieldZip: "Mã bưu chính"
+  fieldCountry: "Quốc gia"
+
+  # Toggle titles are the bold line. Hints in <span class="fw-label-hint"> are code. Descriptions are the second line.
+  # [html] on every *Label key. Do not translate the code inside the hint span.
+  hideCloseLabel: "<strong>Ẩn nút đóng</strong> <span class=\"fw-label-hint\">close_button: 'hidden'</span>"
+  hideCloseHelp: "Khách không thể đóng Checkout, nên phải hoàn tất hoặc chờ hết thời gian. Phù hợp nhất với chế độ nhúng."
+  hideHeaderLabel: "<strong>Ẩn tiêu đề Checkout</strong> <span class=\"fw-label-hint\">header: 'hidden'</span>"
+  hideHeaderHelp: "Trang đặt phòng đã hiển thị tên khách sạn. Checkout sẽ bỏ tiêu đề riêng, cả ở chế độ lớp phủ lẫn khi nhúng."
+  hideAmountLabel: "<strong>Ẩn số tiền</strong> <span class=\"fw-label-hint\">show_amount_info: false</span>"
+  hideAmountHelp: "Bảng đặt phòng đã hiển thị tổng tiền. Checkout bỏ qua phần tóm tắt số tiền. Mặc định hiển thị."
+  disableEmailsLabel: "<strong>Không gửi email cho người thanh toán</strong> <span class=\"fw-label-hint\">disable_payer_emails</span>"
+  disableEmailsHelp: "Flywire sẽ không gửi email trạng thái thanh toán, để khách sạn có thể gửi xác nhận mang thương hiệu riêng."
+
+  # [html]
+  splitLabel: "<strong>Chia tách với đối tác</strong> <span class=\"fw-label-hint\">transaction.details.split</span>"
+  splitHelp: "Chuyển một phần khoản thanh toán thẳng đến cổng của đối tác (tour tham quan, spa, tàu lặn). Phần còn lại thuộc về khách sạn."
+  waiveLabel: "<strong>Miễn phụ phí thẻ</strong>"
+  waiveHelp: "Khách sạn chịu phụ phí chỉ cho lượt đặt phòng này, không cần thay đổi cài đặt cổng."
+  # [html]
+  timeoutLabel: "<strong>Thời gian chờ Checkout</strong> <span class=\"fw-label-hint\">config.timeout</span>"
+  timeoutHelp: "Hiển thị đồng hồ đếm ngược và đóng Checkout khi hết hạn, ví dụ để giải phóng phòng đang giữ."
+  timeoutCountdown: "Đếm ngược"
+  timeoutWhole: "Toàn bộ Checkout"
+  timeoutEachAttempt: "Mỗi lần thử thanh toán"
+  timeoutDuration: "Thời lượng"
+  # {count} is 3, 5, 10 or 15. Keep short; it is a menu item.
+  minutes_one: "{count} phút"
+  minutes_other: "{count} phút"
+
+  # [html] Do not translate config.offer_rules.
+  methodsHelp: "Kiểm soát các tùy chọn thanh toán mà khách nhìn thấy và thứ tự hiển thị bằng <code>config.offer_rules</code>."
+  # Screen-reader name for the method chips.
+  methodsGroup: "Phương thức thanh toán hiển thị"
+  methodCards: "Thẻ"
+  methodDebit: "Ghi nợ trực tiếp"
+  methodOnline: "Phương thức trực tuyến nội địa"
+  methodTransfer: "Chuyển khoản ngân hàng"
+  hideAmex: "Ẩn American Express"
+  # [html] Do not translate filters.currency.
+  currenciesLabel: "Loại tiền được cung cấp <span class=\"fw-label-hint\">filters.currency</span>"
+  currencyAll: "Tất cả loại tiền hiện có"
+  currencyPayer: "Chỉ tiền tệ nước sở tại của khách"
+  currencyOtherThanPayer: "Khác với tiền tệ của khách"
+  currencyHotel: "Chỉ tiền tệ của khách sạn"
+  currencyOtherThanHotel: "Khác với tiền tệ của khách sạn"
+  currencyBoth: "Tiền tệ của khách và của khách sạn"
+  # [html] "sort · currency" is an API hint. Do not translate "sort" or "currency" inside the hint.
+  currencySortLabel: "Thứ tự tùy chọn theo tiền tệ <span class=\"fw-label-hint\">sort · currency</span>"
+  sortDefault: "Mặc định của Checkout"
+  sortPayerFirst: "Tiền tệ của khách trước"
+  sortHotelFirst: "Tiền tệ của khách sạn trước"
+  sortOtherFirst: "Tiền tệ khác trước"
+  # [html]
+  methodSortLabel: "Thứ tự tùy chọn theo phương thức <span class=\"fw-label-hint\">sort · method</span>"
+  sortCardsFirst: "Thẻ trước"
+  sortOnlineFirst: "Phương thức trực tuyến nội địa trước"
+  sortDebitFirst: "Ghi nợ trực tiếp trước"
+  sortTransferFirst: "Chuyển khoản ngân hàng trước"
+
+  # [html] Do not translate styles.
+  brandLabel: "<strong>Khớp với thương hiệu của khách hàng</strong>"
+  brandHelp: "Thiết lập màu sắc, phông chữ, cỡ chữ và khoảng cách của Checkout bằng <code>styles</code>."
+  brandColor: "Màu chính"
+  brandFont: "Phông chữ"
+  # Menu item that reveals a free-text font field. "Google Font" is a product name; you may keep it.
+  brandFontCustom: "Google Font tùy chỉnh"
+  # [html] Do not translate fonts.googleapis.com.
+  brandFontCustomLabel: "Google Font <span class=\"fw-label-hint\">fonts.googleapis.com</span>"
+  # Example text inside the empty font field.
+  brandFontPlaceholder: "Libre Baskerville, hoặc dán liên kết CSS"
+  # Shown when the font name is accepted. {family} is the font name the user typed.
+  brandFontOk: "Checkout tải “{family}” từ fonts.googleapis.com."
+  brandFontEmpty: "Nhập tên phông chữ, chẳng hạn Libre Baskerville, hoặc dán liên kết CSS từ fonts.googleapis.com."
+  brandFontBadUrl: "Liên kết này không phải là URL hợp lệ."
+  brandFontOrigin: "Checkout chỉ tải phông chữ từ https://fonts.googleapis.com."
+  brandFontFamily: "Liên kết cần có tên phông chữ gồm chữ cái, chữ số và dấu cách."
+  brandFontChars: "Chỉ dùng chữ cái, chữ số và dấu cách. Checkout từ chối các ký tự khác trong tên phông chữ."
+  # [html] Do not translate base_font_size. The sizes below keep the pixel value.
+  brandSizeLabel: "Cỡ chữ <span class=\"fw-label-hint\">base_font_size</span>"
+  brandSizeSmall: "Nhỏ · 14px"
+  brandSizeRegular: "Thường · 16px"
+  brandSizeLarge: "Lớn · 18px"
+  brandSizeXl: "Rất lớn · 20px"
+  # [html] Do not translate base_space. Keep the rem values.
+  brandSpaceLabel: "Khoảng cách <span class=\"fw-label-hint\">base_space</span>"
+  brandSpaceCompact: "Gọn · 0.75rem"
+  brandSpaceStandard: "Chuẩn · 1rem"
+  brandSpaceRoomy: "Rộng · 1.25rem"
+  checkoutLanguage: "Ngôn ngữ Checkout"
+
+  # Session choice. "Authenticated" means the hotel server creates the payment session.
+  sessionAuthenticated: "Đã xác thực"
+  sessionAnonymous: "Ẩn danh"
+  sessionAuthenticatedNote: "Khuyến nghị. Máy chủ tạo phiên và xác nhận kết quả."
+  sessionAnonymousNote: "Chỉ trên trình duyệt, dành cho thanh toán một lần. Không tra cứu trạng thái phía máy chủ."
+
+  # Help under the credential summary.
+  credentialsHelp: "Nhập một lần cho mỗi trình duyệt trong trang quản trị khách sạn và dùng cho mọi thao tác Checkout và thanh toán. Chỉ dành cho môi trường demo Flywire."
+  credentialsChange: "Thay đổi thông tin xác thực trong trang quản trị"
+  # Labels in the credential summary. Values are what the user typed.
+  clientName: "Tên khách hàng"
+  clientId: "ID khách hàng"
+  recipientCode: "Mã bên nhận"
+  apiKey: "Khóa API"
+
+  # Collapsed section that shows the code sent to checkout.
+  integrationCode: "Mã tích hợp"
+  # [html] Do not translate cpx_core.start().
+  integrationHelp: "Nội dung trang này gửi đến <code>cpx_core.start()</code>"
+  playgroundIntro: "Các mẫu playground tương ứng:"
+
+  reset: "Đặt lại"
+  done: "Xong"
+
+  # Why a control is disabled. Presenter voice.
+  unavailable:
+    needsAmount: "Cần có số tiền; không khả dụng khi chỉ lưu thẻ."
+    noForcePage: "Checkout không cho phép buộc hiển thị trang này khi chỉ lưu thẻ."
+    cardOnFileNeedsSession: "Quy trình thẻ lưu trữ luôn cần phiên đã xác thực."
+    needsApiKey: "Vui lòng thêm khóa API demo trong trang quản trị khách sạn trước."
+
+  # Partner split editor.
+  split:
+    # Column headers.
+    portalCode: "Mã cổng"
+    # {currency} is an ISO code such as USD.
+    amount: "Số tiền ({currency})"
+    description: "Mô tả"
+    # Placeholders inside the row. {n} is 1, 2, 3…
+    codePlaceholder: "Mã"
+    codeLabel: "Mã cổng của đối tác {n}"
+    # Placeholder when the currency has no cents.
+    amountPlaceholderWhole: "0"
+    amountPlaceholderCents: "0.00"
+    amountLabel: "Số tiền của đối tác {n} bằng {currency}"
+    whatFor: "Mục đích"
+    descriptionLabel: "Mô tả của đối tác {n}"
+    # Screen-reader name for the remove button. {n} is the row number.
+    remove: "Xóa đối tác {n}"
+    add: "+ Thêm đối tác"
+    useDefaults: "Dùng đối tác mặc định"
+    # {partners} and {hotel} and {total} are money amounts.
+    # The example note is added only before a room has been chosen.
+    summary: "Đối tác {partners} · khách sạn giữ {hotel} trên tổng {total}"
+    summaryExample: "Đối tác {partners} · khách sạn giữ {hotel} trên tổng {total} (tổng tiền ví dụ)"
+    # Validation. {row} is "Partner 1". {code} is a portal code such as ABC.
+    needCode: "{row}: vui lòng thêm mã cổng."
+    badCode: "{row}: mã cổng gồm 3 chữ cái (ABC) hoặc 5 ký tự bắt đầu bằng một chữ cái (ABC1D)."
+    ownPortal: "{row}: không được là cổng của chính khách sạn ({code})."
+    duplicate: "{row}: {code} bị liệt kê hai lần."
+    needAmount: "{row}: vui lòng nhập số tiền."
+    # {partners} and {total} are money amounts.
+    overTotal: "Đối tác nhận {partners}, vượt quá tổng tiền đặt phòng {total}."
+    rowLabel: "Đối tác {n}"
+
+  # Default descriptions for the two sample partners. Guest may see these in the payment note.
+  partners:
+    excursion: "Du ngoạn bằng thuyền catamaran ngắm hoàng hôn"
+    spa: "Liệu trình spa dành cho cặp đôi"
+
+  # Checkout language menu.
+  # Names match the checkout language list. Endonyms stay untranslated.
+  locales:
+    en: "English"
+    en-GB: "English (UK)"
+    es-ES: "Español"
+    es-419: "Español (Latin America)"
+    fr-FR: "Français"
+    fr-CA: "Français (CA)"
+    pt-PT: "Português"
+    pt-BR: "Português (BR)"
+    pl: "Polski"
+    it: "Italiano"
+    ko: "한국어"
+    zh: "中文"
+    ja: "日本語"
+    de: "Deutsch"
+    id: "Bahasa Indonesia"
+    vi: "Tiếng Việt"
+
+# -----------------------------------------------------------------------------
+# Checkout activity drawer (heartbeat icon). Presenter voice.
+# Status codes such as FULLY_PAID stay in English in the UI; only the explanations are here.
+# -----------------------------------------------------------------------------
+activity:
+  title: "Hoạt động Checkout"
+  subtitle: "Những gì Checkout trả về, theo thời gian thực: phiên, mọi callback và kết quả cuối cùng đọc từ máy chủ. Được lưu trong trình duyệt này cho đến khi bị xóa."
+  close: "Đóng hoạt động Checkout"
+  clear: "Xóa"
+  # Copies the whole log. Restored after "Copied".
+  copyLog: "Sao chép nhật ký"
+  done: "Xong"
+  emptyTitle: "Chưa có hoạt động Checkout nào"
+  emptyBody: "Mở Checkout từ bước thanh toán. Mọi dữ liệu trả về sẽ hiển thị tại đây theo thời gian thực."
+  earlierRuns: "Các lần chạy trước"
+  # {n} is the run number. {time} is a clock time.
+  runMeta: "Lần chạy #{n} · {time}"
+  # Collapsed row. {n} is the run number. {flow} is the flow name.
+  runSummary: "Lần chạy #{n} · {flow}"
+  # {status} is a translated status. {time} is a clock time.
+  runSummaryStatus: "{status} · {time}"
+  # {count} is how many events were recorded.
+  events_one: "{count} sự kiện"
+  events_other: "{count} sự kiện"
+  timeline: "Dòng thời gian"
+  outcome: "Kết quả"
+  # Fact labels in the latest-run summary. Values next to them come from the checkout that just ran.
+  flow: "Quy trình"
+  transaction: "Giao dịch"
+  amount: "Số tiền"
+  session: "Phiên"
+  display: "Hiển thị"
+  # While the server is still creating the session.
+  authenticatedCreating: "Đã xác thực (đang tạo…)"
+  anonymous: "Ẩn danh"
+  timeInCheckout: "Thời gian trong Checkout"
+  # "on_error" is the name of a callback. Do not translate on_error.
+  onErrorCalls: "Số lần gọi on_error"
+  # Do not translate on_end.
+  onEndReason: "Lý do on_end"
+  sessionStatus: "Trạng thái phiên"
+  paymentStatus: "Trạng thái thanh toán"
+  reportedAmount: "Số tiền được báo cáo"
+  report: "Báo cáo"
+  reportPending: "Chưa có."
+  # {amount} is the minor-unit number. {currency} is an ISO code. "subunits" means cents or the local equivalent.
+  subunits: "{amount} {currency} theo đơn vị nhỏ nhất"
+  paymentId: "ID thanh toán"
+  method: "Phương thức"
+  card: "Thẻ"
+  expires: "Hết hạn"
+  canceledHelp: "Người thanh toán đã đóng Checkout. Không có báo cáo cho các lần chạy đã hủy."
+  # Do not translate config.timeout.
+  timeoutHelp: "config.timeout đã hết hạn và Checkout tự đóng."
+  refresh: "Làm mới trạng thái"
+  # Shown on the refresh button while the request is in flight.
+  refreshing: "Đang làm mới…"
+  refreshHelp: "Đọc lại phiên từ máy chủ, ví dụ khi một khoản chuyển khoản ngân hàng đang chờ xử lý."
+  # Do not translate on_end.
+  anonymousReport: "Phiên ẩn danh: báo cáo này được gửi đến trình duyệt dưới dạng payload on_end."
+  showData: "Hiện dữ liệu"
+  # {elapsed} is a duration such as "1.2s" already formatted by the app.
+  elapsed: "+{elapsed}"
+
+  # Status pill on a run.
+  status:
+    # Shown for the moment between clicking pay and checkout actually opening.
+    starting: "Đang khởi động"
+    open: "Checkout đang mở"
+    completed: "Hoàn tất"
+    declined: "Bị từ chối"
+    canceled: "Người thanh toán đã hủy"
+    timeout: "Hết thời gian"
+    failed: "Khởi động thất bại"
+    interrupted: "Bị gián đoạn do tải lại trang"
+
+  # Plain-language meaning of Flywire session status codes. The code itself stays in English next to this sentence.
+  sessionStatusText:
+    ACTIVE: "Phiên đang mở; người thanh toán vẫn có thể thao tác."
+    PARTIALLY_COMPLETED: "Một số thao tác được yêu cầu đã hoàn tất."
+    COMPLETED: "Mọi yêu cầu trong phiên đã hoàn tất."
+    ARCHIVED: "Phiên đã đóng và chỉ có thể xem."
+
+  # Plain-language meaning of Flywire payment status codes.
+  paymentStatusText:
+    NO_PAYMENTS: "Không có khoản thanh toán nào (ví dụ: chỉ lưu thẻ)."
+    SOME_IN_PROGRESS: "Một khoản thanh toán vẫn đang được xử lý (ví dụ: chuyển khoản ngân hàng đang chờ)."
+    # Used instead of the generic line when the payment is a card hold waiting for the hotel to capture it.
+    SOME_IN_PROGRESS_HOLD: "Đã ủy quyền: số tiền đang được tạm giữ trên thẻ, chờ thu tiền (trang quản trị khách sạn)."
+    ALL_UNSUCCESSFUL: "Mọi lần thử thanh toán đều thất bại."
+    FULLY_PAID: "Đã thanh toán toàn bộ số tiền."
+    PARTIALLY_PAID: "Chỉ một phần số tiền đã được thanh toán."
+    OVERPAID: "Số tiền đã thanh toán vượt quá số tiền yêu cầu."
+
+  # Timeline event titles. Callback names (on_error, on_end, cpx_core.start) stay in English.
+  events:
+    requested: "Đã yêu cầu Checkout"
+    sessionCreated: "Máy chủ đã tạo phiên"
+    sessionCreatedText: "POST /commercial_payex/v2/session đã trả về thông tin xác thực được truyền vào initFields.session."
+    sessionResumed: "Máy chủ đã tiếp tục phiên"
+    sessionResumedText: "POST /commercial_payex/v2/session/{id} đã trả về thông tin xác thực lần chạy mới cho phiên hiện có."
+    # [do not translate] This is the function the page calls. Shown as a timeline title.
+    startTitle: "cpx_core.start(initFields)"
+    startText: "Checkout đã mở với payload này."
+    # {type} is an error code such as init_fields. The on_error('…') wrapper stays.
+    onErrorTitle: "on_error('{type}')"
+    onErrorRetry: "Checkout vẫn mở để người thanh toán thử lại."
+    # {reason} is completed, canceled or timeout.
+    onEndTitle: "on_end('{reason}')"
+    onEndPayload: "Payload được trả về trong trình duyệt (phiên ẩn danh)."
+    onEndNoPayload: "Phiên đã xác thực không có payload; hãy truy vấn kết quả từ máy chủ."
+    refreshed: "Đã làm mới trạng thái từ máy chủ"
+    outcomeFromServer: "Kết quả phiên từ máy chủ"
+    lookupFailed: "Tra cứu phiên thất bại"
+    launchFailed: "Không thể khởi động Checkout"
+
+# -----------------------------------------------------------------------------
+# Hotel back office (/dashboard). Presenter / staff voice.
+# -----------------------------------------------------------------------------
+dashboard:
+  # Header tag next to the hotel name.
+  backOffice: "Quản trị"
+  # [html] Keep <strong> around the words that should stay bold. "Flywire" is the company name.
+  demoTag: "Flywire <strong>chỉ dành cho môi trường demo</strong> · dữ liệu được lưu trong trình duyệt này"
+  backToBooking: "← Trang đặt phòng"
+  # Card heading. [html] "DEMO only" is a warning badge; keep the <span>.
+  connectionTitle: "Kết nối Flywire <span class=\"db-env-badge\">Chỉ DEMO</span>"
+  # [html] The <code> wraps the API host, which is filled in by the app. Do not translate the host.
+  connectionIntro: "Thông tin xác thực tài khoản <strong>demo</strong> Flywire, được trang đặt phòng và mọi thao tác trên trang này sử dụng. Yêu cầu luôn được gửi đến API demo của Flywire (<code>{host}</code>); thông tin xác thực của môi trường chính thức sẽ bị từ chối tại đó."
+  # Screen-reader name for the book icon. {count} is added when clients exist.
+  savedClients: "Khách hàng đã lưu"
+  savedClientsCount: "Khách hàng đã lưu, {count} mục"
+  connectionNotChecked: "Chưa kiểm tra"
+  # Form labels.
+  clientName: "Tên khách hàng"
+  clientNamePlaceholder: "ví dụ: Mykonos Hotel"
+  clientId: "ID khách hàng"
+  clientIdPlaceholder: "UUID từ tài khoản demo Flywire"
+  recipientCode: "Mã bên nhận"
+  recipientCodePlaceholder: "ví dụ: ABC"
+  savedCodesLabel: "Mã đã lưu cho ID khách hàng này"
+  savedCodes: "Mã đã lưu"
+  noSavedCodes: "Chưa có mã nào được lưu"
+  # Short label used when a pasted API key is cleaned. "API key" only; the header name stays in apiKeyLabel.
+  apiKey: "Khóa API"
+  # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
+  apiKeyLabel: "Khóa API <span class=\"db-hint\">X-Authentication-Key</span>"
+  apiKeyPlaceholder: "Dán khóa API demo"
+  # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
+  saveAndTest: "Lưu và kiểm tra kết nối"
+  clearCredentials: "Xóa thông tin xác thực"
+  recipientCurrency: "Tiền tệ của bên nhận"
+  # Fine print at the bottom of the credentials card.
+  credentialsFootnote: "Chỉ dành cho demo: thông tin xác thực được lưu trong trình duyệt này và khóa API được gửi đến máy chủ của bản demo này kèm mỗi yêu cầu, sau đó được chuyển tiếp đến API demo của Flywire. Trong tích hợp thực tế, khóa API luôn được giữ trên máy chủ của doanh nghiệp."
+  bookings: "Đặt phòng"
+  clearAll: "Xóa tất cả"
+  # Confirm dialog before deleting every booking in this browser.
+  confirmClearBookings: "Xóa tất cả lượt đặt phòng demo khỏi trình duyệt này?"
+  # Confirm dialog before forgetting the credentials currently in use.
+  confirmClearCredentials: "Ngừng sử dụng thông tin xác thực này? Các khách hàng đã lưu vẫn còn trong trình duyệt này và có thể được tải lại."
+  # {id} is the booking reference, such as a short id.
+  confirmDeleteBooking: "Xóa đặt phòng {id}?"
+
+  saved:
+    title: "Khách hàng đã lưu"
+    intro: "Mỗi ID khách hàng có một khóa API. Các mã bên nhận được lưu cùng khách hàng đó sẽ được liệt kê trên thẻ của khách hàng."
+    close: "Đóng danh sách khách hàng đã lưu"
+    empty: "Chưa có khách hàng nào được lưu. Hãy dùng Lưu và kiểm tra kết nối để lưu tại đây."
+    load: "Tải"
+    noneYet: "Chưa có"
+    unnamed: "Khách hàng chưa đặt tên"
+    inUse: "Đang dùng"
+    clientId: "ID khách hàng"
+    apiKey: "Khóa API"
+    recipientCodes: "Mã bên nhận"
+
+  # Connection status pill. Keep these short.
+  status:
+    notSet: "Chưa thiết lập"
+    checking: "Đang kiểm tra…"
+    keyRejected: "Khóa bị từ chối"
+    incomplete: "Chưa đầy đủ"
+    checkFields: "Đã kết nối · kiểm tra các trường"
+    connected: "Đã kết nối · API demo"
+    unreachable: "Không kết nối được máy chủ"
+  # {detail} is the reason from the server.
+  keyRejectedDetail: "{detail} Vui lòng kiểm tra xem có thiếu ký tự không, hoặc dán lại khóa."
+  # {missing} is the list of fields still empty.
+  keyWorksMissing: "Khóa API hoạt động trên API demo. Vẫn còn thiếu: {missing}."
+  # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
+  savedInBrowser: " Đã lưu {name}{id}{code} trong trình duyệt này."
+  demoKeyAccepted: "API demo đã chấp nhận khóa này."
+  # Format warnings, shown before the API is called.
+  clientIdFormat: "ID khách hàng có vẻ không phải là UUID (8-4-4-4-12 ký tự)."
+  recipientFormat: "Mã bên nhận gồm 3 chữ cái (ABC) hoặc 5 ký tự bắt đầu bằng một chữ cái (ABC1D)."
+  # {label} is Client ID, Recipient code or API key. {fixes} is a list of what was removed.
+  cleanedPaste: "Đã làm sạch nội dung được dán. {fixes}"
+  cleanedField: "{label}: đã xóa {fixes}."
+  # What paste-cleanup removed. Used inside {fixes}. Lowercase, mid-sentence.
+  fix:
+    invisible: "ký tự ẩn"
+    nbsp: "dấu cách không ngắt dòng"
+    quotes: "dấu ngoặc kép bao quanh"
+    fieldName: "tên trường ở phía trước"
+    bearer: "tiền tố \"Bearer\""
+    punctuation: "dấu câu ở cuối"
+    spacesInKey: "dấu xuống dòng hoặc dấu cách bên trong khóa"
+    spaces: "dấu cách"
+    lowercase: "chữ thường"
+
+  # Empty bookings table.
+  emptyTitle: "Chưa có lượt đặt phòng nào"
+  emptyBody: "Hãy đặt phòng trên trang đặt phòng. Mọi phiên Checkout được bắt đầu sẽ hiển thị tại đây."
+  emptyAction: "Đến trang đặt phòng"
+  # Table headers.
+  colBooking: "Đặt phòng"
+  colGuest: "Khách"
+  colStay: "Lưu trú"
+  colAmount: "Số tiền"
+  colStatus: "Trạng thái"
+  # Shown in the detail pane before a row is chosen.
+  selectBooking: "Chọn một lượt đặt phòng để xem các khoản thanh toán và thao tác."
+  deleteBooking: "Xóa đặt phòng"
+  # Fact labels in the detail pane.
+  factGuest: "Khách"
+  factStay: "Lưu trú"
+  factCheckout: "Checkout"
+  factTotal: "Tổng tiền đặt phòng"
+  factAuthorized: "Đã ủy quyền"
+  factCaptured: "Đã thu"
+  factCharged: "Đã trừ vào thẻ đã lưu"
+  factSession: "Phiên"
+  anonymousSession: "Ẩn danh (chỉ trên trình duyệt)"
+  factSessionStatus: "Trạng thái phiên"
+  factPaymentStatus: "Trạng thái thanh toán"
+  factTokenization: "Token hóa"
+  factLastChecked: "Kiểm tra lần cuối"
+  payments: "Thanh toán"
+  colPaymentId: "ID thanh toán"
+  colMethod: "Phương thức"
+  colCaptured: "Đã thu"
+  chargesTitle: "Các khoản trừ vào thẻ đã lưu"
+  colWhatFor: "Mục đích"
+  colFlywirePayment: "Thanh toán Flywire"
+  colResult: "Kết quả"
+  # “guest paid” is the label Flywire uses for the amount in the guest’s currency. You may keep the quotes.
+  chargesNote: "Số tiền là khoản khách sạn đã thu; “khách đã trả” là số tiền Flywire đã thu của khách bằng tiền tệ của khách (charge_info)."
+  # Secondary line under a charge amount. {amount} is money in the guest’s currency. Lowercase, mid-sentence.
+  guestPaid: "khách đã trả {amount}"
+  savedCard: "Thẻ đã lưu"
+  factCard: "Thẻ"
+  factMethod: "Phương thức"
+  # Card line. {brand} is Visa, Mastercard, etc. {last4} is four digits. {exp} is MM/YY.
+  cardLine: "{brand} •••• {last4}"
+  cardExpiry: "· hết hạn {exp}"
+
+  # Booking status pills. Short.
+  bookingStatus:
+    failed: "Khởi động thất bại"
+    abandoned: "Đã bỏ dở"
+    timedOut: "Hết thời gian"
+    inCheckout: "Đang Checkout"
+    declined: "Bị từ chối"
+    captured: "Đã thu"
+    partlyCaptured: "Đã thu một phần"
+    authorized: "Đã ủy quyền"
+    processing: "Đang xử lý"
+    paid: "Đã thanh toán"
+    cardSaved: "Đã lưu thẻ"
+    completed: "Checkout hoàn tất"
+
+  # Hold explanation under the status, when money is authorized but not captured yet.
+  holdPending: "Đã ủy quyền: số tiền đang được tạm giữ trên thẻ, chờ thu."
+  holdCaptureSent: "Đã gửi yêu cầu thu tiền; Flywire xử lý không đồng bộ. Làm mới trạng thái để xem kết quả."
+
+  # Same payment-status explanations as the activity drawer, shorter, for the back office.
+  paymentStatusText:
+    NO_PAYMENTS: "Không có khoản thanh toán nào."
+    SOME_IN_PROGRESS: "Một khoản thanh toán vẫn đang được xử lý."
+    ALL_UNSUCCESSFUL: "Mọi lần thử thanh toán đều thất bại."
+    FULLY_PAID: "Toàn bộ số tiền đã được thanh toán hoặc ủy quyền."
+    PARTIALLY_PAID: "Chỉ một phần số tiền đã được thanh toán."
+    OVERPAID: "Số tiền đã thanh toán vượt quá số tiền yêu cầu."
+
+  actionsTitle: "Thao tác"
+  actionsSubtitle: "Các lệnh gọi API Flywire, thực hiện qua máy chủ của bản demo này"
+  # Shown on an action button while its request is in flight.
+  working: "Đang xử lý…"
+  # {label} is the action name, e.g. "Capture payment".
+  unavailableTitle: "{label} không khả dụng cho đặt phòng này. "
+  # Link to the Flywire sample page. The arrow means "opens in a new tab".
+  openPlayground: "Mở trong playground ↗"
+  sendRequest: "Gửi yêu cầu {method}"
+  sending: "Đang gửi…"
+  requestFormat: "Định dạng yêu cầu"
+  # Tab label. "curl" is a command-line tool. [do not translate]
+  curl: "curl"
+  nodeFetch: "Node fetch"
+  requestTitle: "Yêu cầu gửi đến Flywire"
+  fillFields: "Vui lòng điền các trường ở trên."
+  requestFootnote: "Máy chủ của bản demo này gửi yêu cầu kèm khóa API demo dưới dạng X-Authentication-Key. Khóa không bao giờ được hiển thị tại đây."
+  # {when} is the booking’s creation date and time.
+  created: "Tạo lúc {when}"
+  activity: "Hoạt động"
+  request: "Yêu cầu"
+  requestBody: "Nội dung yêu cầu"
+  response: "Phản hồi"
+  showData: "Hiện dữ liệu"
+  payment: "Thanh toán"
+  # {currency} is an ISO code.
+  amountLabel: "Số tiền ({currency})"
+  amountPositive: "Vui lòng nhập số tiền lớn hơn 0."
+  amountMinimum: "Số tiền phải tối thiểu là {amount}."
+  whatForOffice: "Mục đích (lưu trong trang quản trị)"
+  # Do not translate external_reference. It is a field name.
+  externalReference: "external_reference"
+  needReference: "Vui lòng thêm external_reference cho khoản thu này, ví dụ: số đặt phòng."
+  tokenFromReport: "Lấy từ tokenization_report của phiên. Chỉnh sửa nếu cần."
+  tokenMissing: "Không tìm thấy token thẻ trong báo cáo phiên. Vui lòng làm mới trạng thái trước, hoặc dán thông tin token từ cổng Flywire."
+  # Do not translate these three field names.
+  paymentMethodToken: "payment_method_token"
+  mandateId: "mandate_id"
+  payorId: "payor_id"
+  resumeNote: "Sau khi Flywire phản hồi, Checkout sẽ mở trên trang này với run_id và run_token mới."
+  # {amount} is the current hold. Holds can be raised, never lowered.
+  extendMinimum: "Tối thiểu {amount}: khoản tạm giữ chỉ có thể tăng."
+  currencyUnavailable: "Không có thông tin tiền tệ"
+  # {code} is USD. {name} is "US Dollar". {symbol} is " ($)" or empty.
+  currencyValue: "{code} · {name}{symbol}"
+  currencyUsd: "Bên nhận này thanh toán bằng USD, vì vậy giá phòng vẫn tính bằng đô la."
+  # {rate} is a number. {code} is the currency. {date} is " · 2026-10-06" or empty.
+  currencyRate: "1 USD = {rate} {code}{date}. Giá phòng và số tiền Checkout sử dụng tỷ giá này."
+  # {who} is the recipient name and id. {detail} is the rest of the sentence.
+  currencyLine: "{who}. {detail}"
+
+  # Preset reasons when charging a saved card. Staff pick one from a menu.
+  charges:
+    minibar: "Minibar"
+    spa: "Liệu trình spa"
+    lateCheckout: "Trả phòng muộn"
+    transfer: "Đưa đón sân bay"
+    dive: "Thuê thiết bị lặn"
+    noShow: "Phí không đến nhận phòng"
+
+  # The five staff actions. "help" is the paragraph. "reason" / "fix" show when the action cannot run.
+  action:
+    refresh: "Làm mới trạng thái"
+    refreshHelp: "Đọc phiên từ Flywire: báo cáo phiên, thanh toán và token hóa."
+    resume: "Tiếp tục phiên"
+    resumeHelp: "Lấy thông tin xác thực lần chạy mới cho phiên này, sau đó mở lại Checkout tại điểm khách đã dừng, ví dụ để gửi liên kết thanh toán."
+    resumeOldReason: "Đặt phòng này được tạo trước khi có tính năng tiếp tục phiên."
+    resumeOldFix: "Hãy tạo một đặt phòng mới."
+    capture: "Thu tiền"
+    captureHelp: "Thu toàn bộ hoặc một phần số tiền đang tạm giữ (ví dụ: khi nhận phòng). Số tiền chưa thu sẽ được giải phóng cho khách."
+    extend: "Gia hạn tạm giữ"
+    extendHelp: "Đặt lại thời hạn tạm giữ thành 7 ngày kể từ hôm nay và có thể tăng số tiền ủy quyền (chỉ tăng)."
+    charge: "Trừ tiền vào thẻ đã lưu"
+    chargeHelp: "Trừ tiền vào thẻ đã lưu khi Checkout mà không cần khách có mặt, ví dụ: minibar hoặc phí không đến nhận phòng."
+    noSessionReason: "Đặt phòng này dùng phiên ẩn danh, nên không có phiên nào trên máy chủ để tra cứu hoặc tiếp tục."
+    noSessionFix: "Hãy dùng phiên đã xác thực (bảng cài đặt, mục Phiên) cho các đặt phòng mới."
+    # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
+    notHoldReason: "Flywire chỉ có thể thu tiền hoặc gia hạn một khoản thanh toán đã được ủy quyền trước (khoản tạm giữ). Đặt phòng này dùng “{flow}”, {how}."
+    chargedImmediately: "quy trình này trừ tiền khách ngay lập tức"
+    savedOnly: "quy trình này chỉ lưu thẻ mà không trừ tiền hay tạm giữ bất kỳ khoản nào"
+    notHoldFix: "Để trình diễn, hãy đặt phòng với một quy trình tạm giữ: Đặt chỗ & tạm giữ, Tạm giữ & lưu thẻ, Tạm giữ (khách có thể lưu thẻ) hoặc Tạm giữ & lưu giữ thẻ."
+    noPaymentReason: "Đặt phòng này chưa có ID thanh toán."
+    noPaymentFixRefresh: "Nhấn Làm mới trạng thái sau khi khách hoàn tất Checkout."
+    noPaymentFixGuest: "Khách chưa hoàn tất Checkout."
+    # {amount} is money. {when} is a date and time.
+    holdEndedReason: "{amount} đã được thu vào {when}, việc này kết thúc khoản tạm giữ: mọi số tiền chưa thu đã được giải phóng cho khách."
+    holdEndedFixCard: "Đối với các khoản phát sinh, hãy dùng Trừ tiền vào thẻ đã lưu: đặt phòng này có thẻ được lưu trữ."
+    holdEndedFixNew: "Để trình diễn lại, hãy tạo đặt phòng mới với một quy trình tạm giữ."
+    noCardReason: "Không có thẻ nào được lưu cho đặt phòng này."
+    noCardFix: "Hãy đặt phòng với một quy trình thẻ lưu trữ, ví dụ: Lưu thẻ, trừ tiền sau hoặc Thanh toán ngay & lưu thẻ."
+    fallbackFlow: "một quy trình"
+
+  # History lines written after an action. {status} is a Flywire status code (do not translate the code).
+  history:
+    statusRefreshed: "Đã làm mới trạng thái"
+    statusRefreshedWith: "Đã làm mới trạng thái · {status}"
+    statusFailed: "Làm mới trạng thái thất bại"
+    resumed: "Đã tiếp tục phiên · đã mở lại Checkout"
+    resumeFailed: "Tiếp tục phiên thất bại"
+    # {amount} is money. {status} is " · received" or empty.
+    captured: "Đã thu {amount}{status}"
+    holdRaised: "Đã tăng khoản tạm giữ lên {amount} và gia hạn 7 ngày"
+    holdExtended: "Đã gia hạn tạm giữ 7 ngày"
+    # {amount} {what} {reference} are filled by the form. {status} is empty or " · " plus a Flywire status code.
+    charged: "Đã trừ {amount} · {what} · {reference}{status}"
+    # When an action fails, the history line is rewritten. {what} is the text before the first " · ". {error} is the API message.
+    failedLine: "{what} thất bại · {error}"
+    failedSuffix: "thất bại"
+    checkoutAfterResume: "Checkout hoàn tất sau khi tiếp tục phiên"
+    checkoutAfterResumeStatus: "Checkout hoàn tất sau khi tiếp tục phiên · {status}"
+    guestClosedAgain: "Khách lại đóng Checkout"
+    checkoutTimedOut: "Checkout hết thời gian"
+    # {type} is an error code. Keep on_error.
+    onError: "on_error('{type}')"
+    couldNotStart: "Không thể khởi động Checkout: {detail}"
+
+# -----------------------------------------------------------------------------
+# Card brands and payment methods, shown next to a payment result.
+# Brand names are trademarks. [do not translate] the brand names.
+# "Card" / "Direct debit" / "Bank transfer" / "Online payment" are generic and should be translated.
+# -----------------------------------------------------------------------------
+cards:
+  card: "Thẻ"
+  directDebit: "Ghi nợ trực tiếp"
+  bankTransfer: "Chuyển khoản ngân hàng"
+  online: "Thanh toán trực tuyến"
+  visa: "Visa"
+  mastercard: "Mastercard"
+  amex: "American Express"
+  discover: "Discover"
+  jcb: "JCB"
+  diners: "Diners Club"
+  unionpay: "UnionPay"
+  maestro: "Maestro"
+
+# -----------------------------------------------------------------------------
+# Errors thrown in the browser before checkout opens. Shown in a notice or the activity log.
+# -----------------------------------------------------------------------------
+sdk:
+  # Shown if the Flywire script never arrives. "connect.js" is a file name. [do not translate] the file name.
+  sdkMissing: "Không tải được SDK Flywire Checkout V2. Trang đã nhúng connect.js chưa?"
+  sessionCreateFailed: "Tạo phiên thất bại"
+  sessionLookupFailed: "Tra cứu phiên thất bại"
+  # {message} is one of the two lines above. {status} is an HTTP status number.
+  requestFailed: "{message} ({status})"
+  # Recipient currency could not be read. Shown on the back office.
+  currencyUnreadable: "Không thể đọc tiền tệ của bên nhận."
+  currencyUnreachable: "Không thể kết nối đến máy chủ demo này để đọc tiền tệ của bên nhận."
+
+# -----------------------------------------------------------------------------
+# Sentences the demo server returns and the back office displays.
+# They are listed so translators can prepare them. The page language is saved
+# in this browser, but the server still sends the English text. Do not translate
+# URLs, header names, or field names inside these
+# sentences when they are written as code.
+# -----------------------------------------------------------------------------
+server:
+  # Returned with HTTP 401 when an action is attempted before an API key is saved.
+  # "/dashboard" is the back-office path. You may keep the path in parentheses.
+  missingCredentials: "Vui lòng thêm thông tin xác thực demo Flywire trong trang quản trị khách sạn (/dashboard) trước."
+  invalidSession: "ID phiên không hợp lệ."
+  invalidPayment: "ID thanh toán không hợp lệ."
+  amountMinor: "amount phải là số nguyên dương theo đơn vị tiền tệ nhỏ nhất (xu)."
+  chargeFields: "payment_method_token, mandate_id, payor_id, recipient_code và external_reference là bắt buộc."
+  noApiKey: "Chưa nhập khóa API."
+  # {detail} is Flywire’s own rejection text, already ending with a period.
+  keyRejected: "{detail} Chỉ khóa demo Flywire hoạt động tại đây; khóa của môi trường chính thức sẽ bị từ chối."
+  keyRejectedFallback: "Khóa API đã bị từ chối."
+  keyAccepted: "API demo đã chấp nhận khóa này."
+  # {status} is an HTTP status number.
+  apiAnswered: "API demo đã phản hồi {status}."
+  apiUnreachable: "Không thể kết nối đến API demo của Flywire."
+  needClientId: "Vui lòng nhập ID khách hàng trước khi tra cứu tiền tệ."
+  needRecipient: "Vui lòng nhập mã bên nhận trước khi tra cứu tiền tệ."
+  currencyFailed: "Không thể đọc tiền tệ của bên nhận."
+  flywireUnreachable: "Không thể kết nối đến API Flywire"

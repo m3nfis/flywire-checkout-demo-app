@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Back office &mdash; The Caldera House</title>
+    <title data-i18n="meta.backOfficeTitle">Back office &mdash; The Caldera House</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Inter:wght@400;500;600&family=Roboto+Mono&display=swap" rel="stylesheet">
@@ -16,12 +16,12 @@
     <header class="db-header">
         <div class="db-header-inner">
             <div class="db-brand">
-                <a href="/" class="db-logo">The Caldera House</a>
-                <span class="db-brand-tag">Back office</span>
+                <a href="/" class="db-logo" data-i18n="nav.logo">The Caldera House</a>
+                <span class="db-brand-tag" data-i18n="dashboard.backOffice">Back office</span>
             </div>
             <div class="db-header-meta">
-                <span class="db-demo-tag">Flywire <strong>demo environment only</strong> &middot; data saved in this browser</span>
-                <a href="/" class="db-link">&larr; Booking site</a>
+                <span class="db-demo-tag" data-i18n-html="dashboard.demoTag">Flywire <strong>demo environment only</strong> &middot; data saved in this browser</span>
+                <a href="/" class="db-link" data-i18n="dashboard.backToBooking">&larr; Booking site</a>
             </div>
         </div>
     </header>
@@ -30,51 +30,74 @@
         <section class="db-card" id="credentials" aria-labelledby="db-credentials-title">
             <div class="db-card-head">
                 <div>
-                    <h2 id="db-credentials-title">Flywire connection <span class="db-env-badge">DEMO only</span></h2>
-                    <p class="db-muted">Your Flywire <strong>demo</strong> account credentials, used by the booking site and by every action on this page. Requests always go to the Flywire demo API (<code id="db-api-base">api-platform.demo.flywire.com</code>); production credentials are rejected there.</p>
+                    <h2 id="db-credentials-title" data-i18n-html="dashboard.connectionTitle">Flywire connection <span class="db-env-badge">DEMO only</span></h2>
+                    <p class="db-muted" id="db-connection-intro">Your Flywire <strong>demo</strong> account credentials, used by the booking site and by every action on this page. Requests always go to the Flywire demo API (<code id="db-api-base">api-platform.demo.flywire.com</code>); production credentials are rejected there.</p>
                 </div>
-                <span id="db-connection-status" class="db-pill db-pill-neutral">Not checked</span>
+                <div class="db-card-tools">
+                    <button type="button" id="db-saved-open" class="db-icon-btn" aria-haspopup="dialog" aria-controls="db-saved-drawer" aria-expanded="false" data-i18n-attr="aria-label:dashboard.savedClients" aria-label="Saved clients">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        <span id="db-saved-count" class="db-icon-count" hidden></span>
+                    </button>
+                    <span id="db-connection-status" class="db-pill db-pill-neutral" data-i18n="dashboard.connectionNotChecked">Not checked</span>
+                </div>
             </div>
 
             <div id="db-credentials-intro" class="db-notice db-notice-warn db-intro" data-credentials-banner hidden>
-                <strong>Add your Flywire demo credentials to start.</strong>
-                This demo ships without credentials. Enter the <span data-credentials-missing></span> of a Flywire demo account, then press <em>Save &amp; test connection</em>. Until then, checkout on the booking site stays disabled.
+                <strong data-i18n="credentials.officeTitle">Add your Flywire demo credentials to start.</strong>
+                <span data-credentials-body="credentials.officeBody"></span>
             </div>
 
             <form id="db-credentials-form" class="db-credentials" autocomplete="off" novalidate>
-                <label class="db-field">
-                    <span>Client ID</span>
+                <label class="db-field db-field-text db-span-2">
+                    <span data-i18n="dashboard.clientName">Client name</span>
+                    <input type="text" id="db-client-name" spellcheck="false" data-i18n-attr="placeholder:dashboard.clientNamePlaceholder" placeholder="e.g. Mykonos Hotel">
+                </label>
+                <label class="db-field db-span-2">
+                    <span data-i18n="dashboard.clientId">Client ID</span>
                     <input type="text" id="db-client-id" spellcheck="false">
                 </label>
-                <label class="db-field db-field-narrow">
-                    <span>Recipient code</span>
+                <label class="db-field">
+                    <span data-i18n="dashboard.recipientCode">Recipient code</span>
                     <input type="text" id="db-code" spellcheck="false">
                 </label>
-                <label class="db-field db-field-wide">
-                    <span>API key <span class="db-hint">X-Authentication-Key</span></span>
+                <label class="db-field db-field-text">
+                    <span data-i18n="dashboard.savedCodesLabel">Saved codes for this Client ID</span>
+                    <select id="db-code-saved" data-i18n-attr="aria-label:dashboard.savedCodesLabel" aria-label="Saved recipient codes for this Client ID">
+                        <option value="" data-i18n="dashboard.noSavedCodes">No saved codes</option>
+                    </select>
+                </label>
+                <label class="db-field db-span-2">
+                    <span data-i18n-html="dashboard.apiKeyLabel">API key <span class="db-hint">X-Authentication-Key</span></span>
                     <span class="db-secret">
                         <input type="password" id="db-api-key" spellcheck="false" autocomplete="new-password">
-                        <button type="button" id="db-api-key-toggle" class="db-btn db-btn-ghost db-btn-sm" aria-pressed="false">Show</button>
+                        <button type="button" id="db-api-key-toggle" class="db-btn db-btn-ghost db-btn-sm" aria-pressed="false" data-i18n="common.show">Show</button>
                     </span>
                 </label>
                 <div class="db-credentials-actions">
-                    <button type="submit" class="db-btn db-btn-primary">Save &amp; test connection</button>
-                    <button type="button" id="db-credentials-reset" class="db-btn db-btn-secondary">Clear credentials</button>
+                    <button type="submit" class="db-btn db-btn-primary" data-i18n="dashboard.saveAndTest">Save &amp; test connection</button>
+                    <button type="button" id="db-credentials-reset" class="db-btn db-btn-secondary" data-i18n="dashboard.clearCredentials">Clear credentials</button>
                 </div>
             </form>
+            <div id="db-recipient-currency" class="db-currency" hidden>
+                <div class="db-currency-main">
+                    <span class="db-currency-label" data-i18n="dashboard.recipientCurrency">Recipient currency</span>
+                    <strong id="db-recipient-currency-value"></strong>
+                </div>
+                <p id="db-recipient-fx" class="db-muted db-small"></p>
+            </div>
             <p id="db-credentials-fixes" class="db-notice db-notice-info" role="status" hidden></p>
             <p id="db-credentials-result" class="db-notice" role="status" hidden></p>
-            <p class="db-muted db-small">Demo only: credentials are stored in this browser and the API key is sent to this demo's server with each request, which forwards it to the Flywire demo API. In a real integration your API key stays on your server.</p>
+            <p class="db-muted db-small" data-i18n="dashboard.credentialsFootnote">Demo only: credentials are stored in this browser and the API key is sent to this demo's server with each request, which forwards it to the Flywire demo API. In a real integration your API key stays on your server.</p>
         </section>
 
         <div class="db-layout">
             <section class="db-card db-bookings" aria-labelledby="db-bookings-title">
                 <div class="db-card-head">
                     <div>
-                        <h2 id="db-bookings-title">Bookings</h2>
+                        <h2 id="db-bookings-title" data-i18n="dashboard.bookings">Bookings</h2>
                         <p class="db-muted" id="db-bookings-count"></p>
                     </div>
-                    <button type="button" id="db-clear-bookings" class="db-btn db-btn-secondary db-btn-sm">Clear all</button>
+                    <button type="button" id="db-clear-bookings" class="db-btn db-btn-secondary db-btn-sm" data-i18n="dashboard.clearAll">Clear all</button>
                 </div>
                 <div id="db-bookings-list"></div>
             </section>
@@ -83,7 +106,25 @@
         </div>
     </main>
 
+    <div id="db-saved-drawer" class="db-drawer" hidden>
+        <div class="db-drawer-backdrop" data-saved-close></div>
+        <aside class="db-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="db-saved-title">
+            <header class="db-drawer-header">
+                <div>
+                    <h2 id="db-saved-title" tabindex="-1" data-i18n="dashboard.saved.title">Saved clients</h2>
+                    <p class="db-muted" data-i18n="dashboard.saved.intro">One API key per Client ID. Recipient codes saved with that client are listed on its card.</p>
+                </div>
+                <button type="button" class="db-icon-btn" data-saved-close data-i18n-attr="aria-label:dashboard.saved.close" aria-label="Close saved clients">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
+            </header>
+            <div id="db-saved-list" class="db-drawer-body"></div>
+        </aside>
+    </div>
+
+    <script src="/i18n.js"></script>
     <script src="/demo-credentials.js"></script>
+    <script src="/money.js"></script>
     <script src="/bookings-store.js"></script>
     <script src="/flywire-checkout.js"></script>
     <script src="/card-brands.js"></script>
