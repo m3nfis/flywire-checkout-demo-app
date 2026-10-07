@@ -48,29 +48,29 @@
             </div>
 
             <form id="db-credentials-form" class="db-credentials" autocomplete="off" novalidate>
-                <label class="db-field db-field-text db-span-2">
+                <label class="db-field db-field-text db-field-name">
                     <span data-i18n="dashboard.clientName">Client name</span>
                     <input type="text" id="db-client-name" spellcheck="false" data-i18n-attr="placeholder:dashboard.clientNamePlaceholder" placeholder="e.g. Mykonos Hotel">
                 </label>
-                <label class="db-field db-span-2">
+                <label class="db-field db-field-paste db-field-id">
                     <span data-i18n="dashboard.clientId">Client ID</span>
-                    <input type="text" id="db-client-id" spellcheck="false">
+                    <input type="text" id="db-client-id" spellcheck="false" size="36">
                 </label>
-                <label class="db-field">
-                    <span data-i18n="dashboard.recipientCode">Recipient code</span>
-                    <input type="text" id="db-code" spellcheck="false">
-                </label>
-                <label class="db-field db-field-text">
-                    <span data-i18n="dashboard.savedCodesLabel">Saved codes for this Client ID</span>
-                    <select id="db-code-saved" data-i18n-attr="aria-label:dashboard.savedCodesLabel" aria-label="Saved recipient codes for this Client ID">
-                        <option value="" data-i18n="dashboard.noSavedCodes">No saved codes</option>
-                    </select>
-                </label>
-                <label class="db-field db-span-2">
+                <div class="db-field db-field-code">
+                    <label for="db-code" data-i18n="dashboard.recipientCode">Recipient code</label>
+                    <div class="db-codebox">
+                        <input type="text" id="db-code" spellcheck="false" autocomplete="off" data-i18n-attr="placeholder:dashboard.recipientCodePlaceholder" placeholder="e.g. ABC" aria-controls="db-code-menu" aria-autocomplete="list">
+                        <button type="button" id="db-code-toggle" class="db-codebox-btn" hidden aria-haspopup="listbox" aria-expanded="false" aria-controls="db-code-menu" data-i18n-attr="aria-label:dashboard.savedCodes" aria-label="Saved codes">
+                            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <ul id="db-code-menu" class="db-codebox-menu" role="listbox" hidden></ul>
+                    </div>
+                </div>
+                <label class="db-field db-field-paste db-field-apikey">
                     <span data-i18n-html="dashboard.apiKeyLabel">API key <span class="db-hint">X-Authentication-Key</span></span>
                     <span class="db-secret">
                         <input type="password" id="db-api-key" spellcheck="false" autocomplete="new-password">
-                        <button type="button" id="db-api-key-toggle" class="db-btn db-btn-ghost db-btn-sm" aria-pressed="false" data-i18n="common.show">Show</button>
+                        <button type="button" id="db-api-key-toggle" class="db-secret-toggle" aria-pressed="false" data-i18n="common.show">Show</button>
                     </span>
                 </label>
                 <div class="db-credentials-actions">
@@ -78,6 +78,22 @@
                     <button type="button" id="db-credentials-reset" class="db-btn db-btn-secondary" data-i18n="dashboard.clearCredentials">Clear credentials</button>
                 </div>
             </form>
+            <details id="db-recipient-fields" class="db-fields">
+                <summary>
+                    <svg class="db-fields-chevron" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span data-i18n="dashboard.recipientFields">Recipient fields</span>
+                    <span id="db-recipient-fields-count" class="db-fields-count" hidden></span>
+                </summary>
+                <div class="db-fields-body">
+                    <p class="db-muted db-small" data-i18n-html="dashboard.recipientFieldsHelp">Included in <code>recipient.fields</code> when checkout starts. Saved for this Client ID and recipient code.</p>
+                    <div class="db-fields-head">
+                        <span data-i18n="dashboard.fieldKey">Key</span>
+                        <span data-i18n="dashboard.fieldValue">Value</span>
+                    </div>
+                    <div id="db-recipient-fields-rows"></div>
+                    <button type="button" id="db-recipient-fields-add" class="db-fields-add" data-i18n="dashboard.addField">Add field</button>
+                </div>
+            </details>
             <div id="db-recipient-currency" class="db-currency" hidden>
                 <div class="db-currency-main">
                     <span class="db-currency-label" data-i18n="dashboard.recipientCurrency">Recipient currency</span>

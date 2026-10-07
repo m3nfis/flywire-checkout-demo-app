@@ -18,7 +18,7 @@
  * `initFields` shape (all keys are snake_case):
  *
  *     {
- *       recipient:   { client_id, code },                  // required — who receives the payment
+ *       recipient:   { client_id, code, fields? },         // required — who receives the payment
  *       transaction: { type, details? },                   // required — see below
  *       payer?:      { fields: { first_name, ... } },      // optional — prefill payer info
  *       session?:    { id, run_id, run_token },            // authenticated session (recommended; required for tokenization)
@@ -53,7 +53,7 @@
      * Launch Flywire Checkout V2.
      *
      * @param {Object} opts
-     * @param {{client_id: string, code: string}} opts.recipient
+     * @param {{client_id: string, code: string, fields?: Object}} opts.recipient
      * @param {{type: string, details?: Object}} opts.transaction
      * @param {Object} [opts.payer]    Prefill: `{ first_name, last_name, email, phone, address, city, zip, country }`.
      * @param {Object} [opts.config]   `initFields.config` (locale, embed_to, offer_rules, timeout, header, show_amount_info, close_button).

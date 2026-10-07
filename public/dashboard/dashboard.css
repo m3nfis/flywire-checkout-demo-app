@@ -257,8 +257,8 @@ code {
 
 .db-credentials {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 0.75rem 1rem;
+    grid-template-columns: minmax(8rem, 0.85fr) auto 8.25rem minmax(14rem, 1.7fr);
+    gap: 0.5rem 0.75rem;
     align-items: end;
 }
 
@@ -270,6 +270,125 @@ code {
     grid-column: 1 / -1;
     display: flex;
     gap: 0.5rem;
+    margin-top: 0.15rem;
+}
+
+.db-fields {
+    margin-top: 0.85rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--border);
+}
+
+.db-fields summary {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    width: fit-content;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+}
+
+.db-fields summary::-webkit-details-marker {
+    display: none;
+}
+
+.db-fields-chevron {
+    color: var(--text-secondary);
+    transition: transform 0.15s ease;
+}
+
+.db-fields[open] .db-fields-chevron {
+    transform: rotate(90deg);
+}
+
+.db-fields-count {
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--bg-muted);
+    color: var(--text-secondary);
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+}
+
+.db-fields-body {
+    max-width: 640px;
+    margin-top: 0.55rem;
+}
+
+.db-fields-body .db-small {
+    margin-top: 0;
+}
+
+.db-fields-head,
+.db-field-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) 32px;
+    gap: 0.45rem;
+    align-items: center;
+}
+
+.db-fields-head {
+    margin-top: 0.55rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.db-field-row {
+    margin-top: 0.35rem;
+}
+
+.db-field-row input {
+    height: 32px;
+    width: 100%;
+    padding: 0 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--text);
+}
+
+.db-field-row input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(18, 116, 196, 0.15);
+}
+
+.db-field-remove {
+    width: 32px;
+    height: 32px;
+    color: var(--text-secondary);
+}
+
+.db-field-remove:hover {
+    color: var(--error);
+    background: var(--error-bg);
+}
+
+.db-fields-add {
+    margin-top: 0.55rem;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.db-fields-add:hover {
+    text-decoration: underline;
 }
 
 .db-field-text input,
@@ -293,7 +412,7 @@ code {
 
 .db-field input,
 .db-field select {
-    height: 36px;
+    height: 34px;
     width: 100%;
     padding: 0 0.65rem;
     border: 1px solid var(--border);
@@ -303,6 +422,26 @@ code {
     font-size: 0.8125rem;
     color: var(--text);
     box-shadow: var(--shadow-xs);
+}
+
+.db-field-paste input {
+    height: 32px;
+    background: var(--bg);
+    font-size: 0.72rem;
+    letter-spacing: -0.01em;
+}
+
+.db-field-id input {
+    width: 40ch;
+}
+
+.db-secret input {
+    padding-right: 3.4rem;
+}
+
+.db-field-name input {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
 }
 
 .db-field select {
@@ -317,12 +456,92 @@ code {
 }
 
 .db-secret {
-    display: flex;
-    gap: 0.4rem;
+    position: relative;
+    display: block;
 }
 
 .db-secret input {
-    flex: 1;
+    width: 100%;
+}
+
+.db-secret-toggle {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    height: 30px;
+    padding: 0 0.55rem;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.db-secret-toggle:hover {
+    background: var(--bg-blue);
+}
+
+.db-codebox {
+    position: relative;
+}
+
+.db-codebox input {
+    padding-right: 1.7rem;
+}
+
+.db-codebox-btn {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 32px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.db-codebox-btn:hover,
+.db-codebox-btn[aria-expanded="true"] {
+    color: var(--primary);
+    background: var(--bg-blue);
+}
+
+.db-codebox-menu {
+    position: absolute;
+    z-index: 8;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.db-codebox-menu li {
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.db-codebox-menu li:hover,
+.db-codebox-menu li:focus {
+    background: var(--bg-blue);
+    color: var(--primary-hover);
+    outline: none;
 }
 
 .db-drawer {
@@ -1065,6 +1284,12 @@ body.db-drawer-locked {
     .db-detail {
         position: static;
         max-height: none;
+    }
+}
+
+@media (max-width: 980px) {
+    .db-credentials {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
 }
 

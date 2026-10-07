@@ -255,7 +255,8 @@
     /** Recipient sent to checkout: the demo credentials entered in the back office. */
     function recipient() {
         const { client_id, code } = global.DemoCredentials.get();
-        return { client_id, code };
+        const fields = global.DemoCredentials.fieldMap();
+        return fields ? { client_id, code, fields } : { client_id, code };
     }
 
     function hasApiKey() {
@@ -944,9 +945,14 @@
             amountMinor: bookingChargeMinor || undefined,
             embedTo: '#payment-embed-target',
         });
+        const savedRecipient = recipient();
         const initFields = global.FlywireCheckout.buildInitFields({
             ...options,
-            recipient: { client_id: recipient().client_id || 'CLIENT_ID', code: recipient().code || 'RECIPIENT_CODE' },
+            recipient: {
+                client_id: savedRecipient.client_id || 'CLIENT_ID',
+                code: savedRecipient.code || 'RECIPIENT_CODE',
+                ...(savedRecipient.fields ? { fields: savedRecipient.fields } : {}),
+            },
             payer: { first_name: '…', last_name: '…', email: '…' },
             session: options.authenticated
                 ? { id: code('session.id'), run_id: code('session.run_id'), run_token: code('session.run_token') }

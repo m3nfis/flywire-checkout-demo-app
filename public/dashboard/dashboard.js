@@ -60,7 +60,7 @@
         Bookings.onChange(render);
         DemoCredentials.onChange(() => {
             renderSavedClients();
-            if (!document.activeElement?.closest('#db-credentials-form')) fillCredentials();
+            if (!document.activeElement?.closest('#credentials')) fillCredentials();
         });
         render();
         DemoCredentials.renderBanners();
@@ -86,34 +86,44 @@
 
         fields.forEach(([id, , kind]) => {
             const input = $(id);
-            input.addEventListener('paste', () => setTimeout(() => cleanInput(input, kind), 0));
-            input.addEventListener('blur', () => cleanInput(input, kind));
+            const commitIfIdentity = () => {
+                cleanInput(input, kind);
+                if (kind === 'id' || kind === 'code') commitRecipientIdentity();
+            };
+            input.addEventListener('paste', () => setTimeout(commitIfIdentity, 0));
+            input.addEventListener('blur', commitIfIdentity);
         });
 
         $('db-credentials-form').addEventListener('submit', (e) => {
             e.preventDefault();
             fields.forEach(([id, , kind]) => cleanInput($(id), kind));
-            DemoCredentials.set({
-                client_id: $('db-client-id').value,
-                client_name: $('db-client-name').value.trim(),
-                code: $('db-code').value,
-                api_key: $('db-api-key').value,
-            });
+            commitRecipientIdentity({ includeConnection: true });
             testConnection({ persist: true });
         });
 
-        $('db-client-id').addEventListener('input', renderCodeOptions);
+        $('db-client-id').addEventListener('input', () => {
+            renderCodeOptions();
+            commitRecipientIdentity();
+        });
+        $('db-code').addEventListener('input', () => commitRecipientIdentity());
+        $('db-code-toggle').addEventListener('click', () => {
+            const menu = $('db-code-menu');
+            if (!menu || $('db-code-toggle').hidden) return;
+            const open = menu.hidden;
+            menu.hidden = !open;
+            $('db-code-toggle').setAttribute('aria-expanded', String(open));
+            if (open) menu.querySelector('[role="option"]')?.focus();
+        });
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.db-codebox')) closeCodeMenu();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeCodeMenu();
+        });
 
         $('db-saved-open').addEventListener('click', openSavedDrawer);
         document.querySelectorAll('[data-saved-close]').forEach((el) => el.addEventListener('click', closeSavedDrawer));
         $('db-saved-drawer').addEventListener('keydown', onSavedDrawerKeydown);
-
-        $('db-code-saved').addEventListener('change', () => {
-            const code = $('db-code-saved').value;
-            if (!code) return;
-            $('db-code').value = code;
-            $('db-code-saved').value = '';
-        });
 
         $('db-credentials-reset').addEventListener('click', () => {
             if (!confirm(t('dashboard.confirmClearCredentials'))) return;
@@ -132,6 +142,11 @@
             e.currentTarget.textContent = show ? t('common.hide') : t('common.show');
             e.currentTarget.setAttribute('aria-pressed', String(show));
         });
+
+        $('db-recipient-fields-add').addEventListener('click', () => {
+            $('db-recipient-fields-rows').append(recipientFieldRow({ key: '', value: '' }));
+            $('db-recipient-fields-rows').lastElementChild?.querySelector('input')?.focus();
+        });
     }
 
     function fillCredentials() {
@@ -143,7 +158,105 @@
         $('db-code').placeholder = t('dashboard.recipientCodePlaceholder');
         $('db-api-key').value = saved.api_key;
         $('db-api-key').placeholder = t('dashboard.apiKeyPlaceholder');
+        renderRecipientFields();
         renderSavedClients();
+    }
+
+    let loadedIdentity = { client_id: '', code: '' };
+
+    function identityKey(clientId, code) {
+        return `${String(clientId || '').trim().toLowerCase()}|${String(code || '').trim().toUpperCase()}`;
+    }
+
+    function recipientFieldRows() {
+        return [...document.querySelectorAll('#db-recipient-fields-rows .db-field-row')].map((row) => ({
+            key: row.querySelector('.db-field-key').value,
+            value: row.querySelector('.db-field-value').value,
+        }));
+    }
+
+    function persistRecipientFields() {
+        DemoCredentials.saveFields(loadedIdentity.client_id, loadedIdentity.code, recipientFieldRows());
+        updateRecipientFieldsCount();
+    }
+
+    /**
+     * Point the active connection at the Client ID and recipient code in the form,
+     * then show the field set stored for that pair. Rows already on screen stay
+     * with the pair they were loaded for.
+     */
+    function commitRecipientIdentity({ includeConnection = false } = {}) {
+        const clientId = $('db-client-id').value.trim();
+        const code = $('db-code').value.trim();
+        const same = identityKey(clientId, code) === identityKey(loadedIdentity.client_id, loadedIdentity.code);
+        if (same && !includeConnection) return;
+        // A half-typed code stays on screen. Don't retarget the field set until the pair is real.
+        if (!includeConnection && (!UUID.test(clientId) || !PORTAL_CODE.test(code))) return;
+        const rows = recipientFieldRows();
+        const hasRows = rows.some((row) => row.key.trim());
+        const previousHadTuple = Boolean(String(loadedIdentity.client_id).trim() && String(loadedIdentity.code).trim());
+        const payload = { client_id: clientId, code };
+        if (includeConnection) {
+            payload.client_name = $('db-client-name').value.trim();
+            payload.api_key = $('db-api-key').value;
+        }
+        if (!same && !previousHadTuple && hasRows) payload.fields = rows;
+        DemoCredentials.set(payload);
+        if (!same) renderRecipientFields();
+    }
+
+    function updateRecipientFieldsCount() {
+        const count = $('db-recipient-fields-count');
+        if (!count) return;
+        const filled = Object.keys(DemoCredentials.fieldMap() || {}).length;
+        count.hidden = filled === 0;
+        count.textContent = String(filled);
+    }
+
+    function renderRecipientFields() {
+        const rows = $('db-recipient-fields-rows');
+        if (!rows) return;
+        const saved = DemoCredentials.get();
+        loadedIdentity = { client_id: saved.client_id, code: saved.code };
+        const items = saved.fields.length ? saved.fields : [{ key: '', value: '' }];
+        rows.replaceChildren(...items.map((item) => recipientFieldRow(item)));
+        updateRecipientFieldsCount();
+    }
+
+    function recipientFieldRow(item) {
+        const key = h('input', {
+            type: 'text',
+            class: 'db-field-key',
+            value: item.key || '',
+            spellcheck: 'false',
+            autocomplete: 'off',
+            placeholder: t('dashboard.fieldKeyPlaceholder'),
+            'aria-label': t('dashboard.fieldKey'),
+        });
+        const value = h('input', {
+            type: 'text',
+            class: 'db-field-value',
+            value: item.value || '',
+            spellcheck: 'false',
+            autocomplete: 'off',
+            placeholder: t('dashboard.fieldValuePlaceholder'),
+            'aria-label': t('dashboard.fieldValue'),
+        });
+        key.addEventListener('input', persistRecipientFields);
+        value.addEventListener('input', persistRecipientFields);
+        const remove = h('button', {
+            type: 'button',
+            class: 'db-icon-btn db-field-remove',
+            'aria-label': t('dashboard.removeField'),
+        });
+        remove.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M9 7V5h6v2M8 7l1 12h6l1-12"/></svg>';
+        remove.addEventListener('click', () => {
+            const list = $('db-recipient-fields-rows');
+            remove.closest('.db-field-row').remove();
+            if (!list.children.length) list.append(recipientFieldRow({ key: '', value: '' }));
+            persistRecipientFields();
+        });
+        return h('div', { class: 'db-field-row' }, key, value, remove);
     }
 
     let savedDrawerFocus = null;
@@ -236,15 +349,40 @@
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
 
+    function closeCodeMenu() {
+        const menu = $('db-code-menu');
+        const toggle = $('db-code-toggle');
+        if (!menu) return;
+        menu.hidden = true;
+        toggle?.setAttribute('aria-expanded', 'false');
+    }
+
     function renderCodeOptions() {
-        const select = $('db-code-saved');
-        if (!select) return;
+        const menu = $('db-code-menu');
+        const toggle = $('db-code-toggle');
+        if (!menu || !toggle) return;
+        const current = ($('db-code').value || '').trim().toUpperCase();
         const codes = DemoCredentials.codesFor($('db-client-id').value);
-        select.replaceChildren(
-            h('option', { value: '' }, codes.length ? t('dashboard.savedCodes') : t('dashboard.noSavedCodes')),
-            ...codes.map((code) => h('option', { value: code }, code)),
-        );
-        select.disabled = codes.length === 0;
+        menu.replaceChildren(...codes.map((code) => {
+            const item = h('li', {
+                role: 'option',
+                tabindex: '0',
+                'aria-selected': String(code === current),
+            }, code);
+            const choose = () => {
+                $('db-code').value = code;
+                closeCodeMenu();
+                commitRecipientIdentity();
+                $('db-code').focus();
+            };
+            item.addEventListener('mousedown', (e) => { e.preventDefault(); choose(); });
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); }
+            });
+            return item;
+        }));
+        toggle.hidden = codes.length === 0;
+        if (!codes.length) closeCodeMenu();
     }
 
     function loadClient(clientId, code) {
@@ -262,6 +400,7 @@
             code,
             api_key: item.api_key,
         });
+        renderRecipientFields();
         renderSavedClients();
         testConnection({ persist: true });
     }

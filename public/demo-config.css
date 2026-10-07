@@ -182,7 +182,7 @@ body.fw-drawer-locked {
     right: 0;
     z-index: 3;
     min-width: 16rem;
-    max-height: min(70vh, 22rem);
+    max-height: min(80vh, 40rem);
     overflow-y: auto;
     margin: 0;
     padding: 0.25rem;

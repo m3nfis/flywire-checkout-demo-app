@@ -966,6 +966,18 @@ dashboard:
   clientIdPlaceholder: "UUID from your Flywire demo account"
   recipientCode: "Recipient code"
   recipientCodePlaceholder: "e.g. ABC"
+  # Collapsed section under the connection form. Values are sent as recipient.fields.
+  # "recipient.fields" is the init payload path. Do not translate it.
+  recipientFields: "Recipient fields"
+  # [html] Do not translate recipient.fields. Client ID and recipient code name the saved pair.
+  recipientFieldsHelp: "Included in <code>recipient.fields</code> when checkout starts. Saved for this Client ID and recipient code."
+  fieldKey: "Key"
+  fieldValue: "Value"
+  # Example field id from a hotel recipient. [do not translate]
+  fieldKeyPlaceholder: "booking_reference"
+  fieldValuePlaceholder: "e.g. TOIS"
+  addField: "Add field"
+  removeField: "Remove field"
   savedCodesLabel: "Saved codes for this Client ID"
   savedCodes: "Saved codes"
   noSavedCodes: "No saved codes"
