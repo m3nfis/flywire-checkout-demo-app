@@ -576,8 +576,8 @@ credentials:
     client_id: "Client ID"
     code: "código de destinatário"
     api_key: "chave de API"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "Client ID, código de destinatário e chave de API"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "Client ID e código de destinatário"
   # Payment step. Bold first line.
   paymentTitle: "O checkout necessita de credenciais de demonstração da Flywire."
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -765,6 +765,7 @@ demo:
     needsAmount: "Requer um montante; indisponível quando apenas se guarda um cartão."
     noForcePage: "O checkout não permite forçar esta página quando apenas se guarda um cartão."
     cardOnFileNeedsSession: "Os fluxos com cartão guardado exigem sempre uma sessão autenticada."
+    holdNeedsSession: "As retenções (pré-autorização) exigem sempre uma sessão autenticada."
     needsApiKey: "Adicione primeiro a sua chave de API de demonstração no back office do hotel."
 
   # Partner split editor.
@@ -981,7 +982,7 @@ dashboard:
   apiKey: "Chave de API"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "Chave de API <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "Cole a sua chave de API de demonstração"
+  apiKeyPlaceholder: "Opcional · cole a sua chave de API de demonstração"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "Guardar e testar ligação"
   clearCredentials: "Limpar credenciais"
@@ -1009,6 +1010,7 @@ dashboard:
     clientId: "Client ID"
     apiKey: "Chave de API"
     recipientCodes: "Códigos de destinatário"
+    noApiKey: "Nenhuma (anónima)"
 
   # Connection status pill. Keep these short.
   status:
@@ -1018,6 +1020,7 @@ dashboard:
     incomplete: "Incompleto"
     checkFields: "Ligado · verificar campos"
     connected: "Ligado · API de demonstração"
+    sessionless: "Anónima · sem chave de API"
     unreachable: "Servidor inacessível"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} Verifique se falta algum caráter ou cole novamente a chave."
@@ -1026,6 +1029,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: " Guardado neste navegador: {name}{id}{code}."
   demoKeyAccepted: "A API de demonstração aceitou esta chave."
+  sessionlessDetail: "Sem chave de API, o Checkout inicia uma sessão anónima com este Client ID e este código de destinatário. Apenas pagamentos únicos: as retenções, os fluxos com cartão guardado e as ações desta página exigem uma chave de API."
   # Format warnings, shown before the API is called.
   clientIdFormat: "O Client ID não parece um UUID (8-4-4-4-12 carateres)."
   recipientFormat: "Os códigos de destinatário têm 3 letras (ABC) ou 5 carateres que começam por uma letra (ABC1D)."
@@ -1194,6 +1198,8 @@ dashboard:
     chargeHelp: "Cobra o cartão guardado no checkout sem a presença do hóspede, por exemplo minibar ou taxa por não comparência."
     noSessionReason: "Esta reserva usou uma sessão anónima, pelo que não há sessão para consultar ou retomar no servidor."
     noSessionFix: "Utilize uma sessão autenticada (painel de definições, Sessão) nas novas reservas."
+    noKeyReason: "Estas ações chamam a Flywire através do servidor desta demonstração, que precisa da sua chave de API."
+    noKeyFix: "Adicione a sua chave de API de demonstração no formulário de ligação acima."
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "A Flywire só pode capturar ou prolongar um pagamento pré-autorizado (uma retenção). Esta reserva usou “{flow}”, {how}."
     chargedImmediately: "que cobrou o hóspede de imediato"

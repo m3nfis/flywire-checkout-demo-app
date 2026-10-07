@@ -576,8 +576,8 @@ credentials:
     client_id: "ID khách hàng"
     code: "mã bên nhận"
     api_key: "khóa API"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "ID khách hàng, mã bên nhận và khóa API"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "ID khách hàng và mã bên nhận"
   # Payment step. Bold first line.
   paymentTitle: "Checkout cần thông tin xác thực demo Flywire."
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -765,6 +765,7 @@ demo:
     needsAmount: "Cần có số tiền; không khả dụng khi chỉ lưu thẻ."
     noForcePage: "Checkout không cho phép buộc hiển thị trang này khi chỉ lưu thẻ."
     cardOnFileNeedsSession: "Quy trình thẻ lưu trữ luôn cần phiên đã xác thực."
+    holdNeedsSession: "Tạm giữ (ủy quyền trước) luôn cần phiên đã xác thực."
     needsApiKey: "Vui lòng thêm khóa API demo trong trang quản trị khách sạn trước."
 
   # Partner split editor.
@@ -981,7 +982,7 @@ dashboard:
   apiKey: "Khóa API"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "Khóa API <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "Dán khóa API demo"
+  apiKeyPlaceholder: "Không bắt buộc · dán khóa API demo"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "Lưu và kiểm tra kết nối"
   clearCredentials: "Xóa thông tin xác thực"
@@ -1009,6 +1010,7 @@ dashboard:
     clientId: "ID khách hàng"
     apiKey: "Khóa API"
     recipientCodes: "Mã bên nhận"
+    noApiKey: "Không có (ẩn danh)"
 
   # Connection status pill. Keep these short.
   status:
@@ -1018,6 +1020,7 @@ dashboard:
     incomplete: "Chưa đầy đủ"
     checkFields: "Đã kết nối · kiểm tra các trường"
     connected: "Đã kết nối · API demo"
+    sessionless: "Ẩn danh · không có khóa API"
     unreachable: "Không kết nối được máy chủ"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} Vui lòng kiểm tra xem có thiếu ký tự không, hoặc dán lại khóa."
@@ -1026,6 +1029,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: " Đã lưu {name}{id}{code} trong trình duyệt này."
   demoKeyAccepted: "API demo đã chấp nhận khóa này."
+  sessionlessDetail: "Khi không có khóa API, Checkout khởi chạy dưới dạng phiên ẩn danh với ID khách hàng và mã bên nhận này. Chỉ hỗ trợ thanh toán một lần; tạm giữ, quy trình thẻ lưu trữ và các thao tác trên trang này cần khóa API."
   # Format warnings, shown before the API is called.
   clientIdFormat: "ID khách hàng có vẻ không phải là UUID (8-4-4-4-12 ký tự)."
   recipientFormat: "Mã bên nhận gồm 3 chữ cái (ABC) hoặc 5 ký tự bắt đầu bằng một chữ cái (ABC1D)."
@@ -1194,6 +1198,8 @@ dashboard:
     chargeHelp: "Trừ tiền vào thẻ đã lưu khi Checkout mà không cần khách có mặt, ví dụ: minibar hoặc phí không đến nhận phòng."
     noSessionReason: "Đặt phòng này dùng phiên ẩn danh, nên không có phiên nào trên máy chủ để tra cứu hoặc tiếp tục."
     noSessionFix: "Hãy dùng phiên đã xác thực (bảng cài đặt, mục Phiên) cho các đặt phòng mới."
+    noKeyReason: "Các thao tác này gọi Flywire qua máy chủ của bản demo, nên cần khóa API của bạn."
+    noKeyFix: "Vui lòng thêm khóa API demo trong biểu mẫu kết nối ở trên."
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "Flywire chỉ có thể thu tiền hoặc gia hạn một khoản thanh toán đã được ủy quyền trước (khoản tạm giữ). Đặt phòng này dùng “{flow}”, {how}."
     chargedImmediately: "quy trình này trừ tiền khách ngay lập tức"

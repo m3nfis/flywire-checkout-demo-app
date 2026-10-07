@@ -10,6 +10,8 @@
  * DEMO ONLY. This server holds no credentials: every user enters their own
  * Flywire demo credentials in the back office (/dashboard), they live in the
  * browser, and the API key arrives with each request in `X-Demo-Api-Key`.
+ * The key is optional: without it checkout runs sessionless (anonymous), and
+ * only the session and payments proxies below are unavailable.
  * All calls go to the Flywire DEMO API; there is no setting to point it at
  * production, so production keys are simply rejected (401).
  * In a real integration the API key lives only in your server's environment.
@@ -29,6 +31,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const { randomUUID } = require('crypto');
 
 const app = express();
 app.use(express.json());
@@ -306,6 +309,8 @@ app.get('/api/credentials/check', async (req, res) => {
  * GET /api/recipient?client_id=&code=
  *
  * Reads the recipient's billing currency from a demo checkout session run.
+ * With an API key the run is authenticated; without one it is anonymous
+ * (sessionless), the same way checkout itself starts without a key.
  * The USD conversion rate is not fetched here; the browser keeps each
  * currency pair in localStorage for 3 days and calls GET /api/fx only when
  * that pair is missing or older than that.
@@ -313,7 +318,6 @@ app.get('/api/credentials/check', async (req, res) => {
  */
 app.get('/api/recipient', async (req, res) => {
     const key = demoApiKey(req);
-    if (!key) return res.status(401).json({ ok: false, detail: 'No API key entered yet.' });
 
     const clientId = String(req.query.client_id || '').trim();
     const code = String(req.query.code || '').trim().toUpperCase();
@@ -339,7 +343,11 @@ app.get('/api/recipient', async (req, res) => {
     }
 });
 
-async function lookupRecipient(key, clientId, code) {
+/** Session headers for the lookup run: a real session with a key, random ids for an anonymous one. */
+async function lookupSession(key) {
+    if (!key) {
+        return { type: 'anonymous', id: randomUUID(), run_id: randomUUID(), run_token: randomUUID() };
+    }
     const sessionRes = await fetch(`${FLYWIRE_DEMO_API}${SESSION_PATH}`, {
         method: 'POST',
         headers: { 'X-Authentication-Key': key, 'Content-Type': 'application/json' },
@@ -350,6 +358,11 @@ async function lookupRecipient(key, clientId, code) {
         err.status = sessionRes.status || 502;
         throw err;
     }
+    return { type: 'authenticated', id: session.id, run_id: session.run_id, run_token: session.run_token };
+}
+
+async function lookupRecipient(key, clientId, code) {
+    const session = await lookupSession(key);
 
     const initFields = {
         recipient: { client_id: clientId, code },
@@ -367,14 +380,16 @@ async function lookupRecipient(key, clientId, code) {
             },
         },
         config: { locale: 'en', env: 'demo' },
-        session: { id: session.id, run_id: session.run_id, run_token: session.run_token },
     };
+    if (session.type === 'authenticated') {
+        initFields.session = { id: session.id, run_id: session.run_id, run_token: session.run_token };
+    }
 
     const startRes = await fetch(`${CHECKOUT_DEMO}/backend_demo/rest/v2/session_run/start`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Session-Type': 'authenticated',
+            'X-Session-Type': session.type,
             'X-Session-Id': session.id,
             'X-Session-Run-Id': session.run_id,
             'X-Session-Run-Token': session.run_token,

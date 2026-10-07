@@ -576,8 +576,8 @@ credentials:
     client_id: "클라이언트 ID"
     code: "수취인 코드"
     api_key: "API 키"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "클라이언트 ID, 수취인 코드 및 API 키"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "클라이언트 ID 및 수취인 코드"
   # Payment step. Bold first line.
   paymentTitle: "Checkout을 사용하려면 Flywire 데모 인증 정보가 필요합니다."
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -765,6 +765,7 @@ demo:
     needsAmount: "금액이 필요합니다. 카드만 저장하는 경우에는 사용할 수 없습니다."
     noForcePage: "카드만 저장하는 경우 Checkout에서 이 페이지를 강제로 표시할 수 없습니다."
     cardOnFileNeedsSession: "카드 정보 보관 플로우에는 항상 인증 세션이 필요합니다."
+    holdNeedsSession: "가승인에는 항상 인증 세션이 필요합니다."
     needsApiKey: "먼저 호텔 백오피스에서 데모 API 키를 추가하십시오."
 
   # Partner split editor.
@@ -981,7 +982,7 @@ dashboard:
   apiKey: "API 키"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "API 키 <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "데모 API 키를 붙여넣으십시오"
+  apiKeyPlaceholder: "선택 사항 · 데모 API 키를 붙여넣으십시오"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "저장 및 연결 테스트"
   clearCredentials: "인증 정보 지우기"
@@ -1009,6 +1010,7 @@ dashboard:
     clientId: "클라이언트 ID"
     apiKey: "API 키"
     recipientCodes: "수취인 코드"
+    noApiKey: "없음(익명)"
 
   # Connection status pill. Keep these short.
   status:
@@ -1018,6 +1020,7 @@ dashboard:
     incomplete: "정보 부족"
     checkFields: "연결됨 · 필드 확인"
     connected: "연결됨 · 데모 API"
+    sessionless: "익명 · API 키 없음"
     unreachable: "서버 연결 불가"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} 누락된 문자가 없는지 확인하거나 키를 다시 붙여넣으십시오."
@@ -1026,6 +1029,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: " {name}{id}{code} 정보를 이 브라우저에 저장했습니다."
   demoKeyAccepted: "데모 API가 이 키를 승인했습니다."
+  sessionlessDetail: "API 키가 없으면 Checkout이 이 클라이언트 ID와 수취인 코드로 익명 세션을 시작합니다. 일회성 결제만 가능합니다. 가승인, 카드 정보 보관 플로우와 이 페이지의 작업에는 API 키가 필요합니다."
   # Format warnings, shown before the API is called.
   clientIdFormat: "클라이언트 ID가 UUID 형식(8-4-4-4-12자)이 아닌 것 같습니다."
   recipientFormat: "수취인 코드는 영문자 3자(ABC) 또는 영문자로 시작하는 5자(ABC1D)입니다."
@@ -1194,6 +1198,8 @@ dashboard:
     chargeHelp: "Checkout에서 저장한 카드로 고객 없이 청구합니다(예: 미니바, 노쇼 요금)."
     noSessionReason: "이 예약은 익명 세션을 사용했으므로 서버에서 조회하거나 재개할 세션이 없습니다."
     noSessionFix: "새 예약에는 인증 세션(설정 창의 '세션')을 사용하십시오."
+    noKeyReason: "이 작업은 이 데모의 서버를 통해 Flywire를 호출하므로 API 키가 필요합니다."
+    noKeyFix: "위의 연결 양식에서 데모 API 키를 추가하십시오."
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "Flywire는 가승인된 결제(보류)만 매입하거나 연장할 수 있습니다. 이 예약의 플로우는 '{flow}'이며, {how}."
     chargedImmediately: "고객에게 즉시 청구하는 방식입니다"

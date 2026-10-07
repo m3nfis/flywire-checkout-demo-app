@@ -58,9 +58,15 @@
             else select(hashBooking());
         });
         Bookings.onChange(render);
-        DemoCredentials.onChange(() => {
+        let hadApiKey = Boolean(DemoCredentials.get().api_key);
+        DemoCredentials.onChange((saved) => {
             renderSavedClients();
             if (!document.activeElement?.closest('#credentials')) fillCredentials();
+            // Booking actions depend on the key; redraw them when it is added or removed.
+            if (Boolean(saved.api_key) !== hadApiKey) {
+                hadApiKey = Boolean(saved.api_key);
+                render();
+            }
         });
         render();
         DemoCredentials.renderBanners();
@@ -305,7 +311,7 @@
                 h('dt', {}, t('dashboard.saved.clientId')),
                 h('dd', {}, item.client_id),
                 h('dt', {}, t('dashboard.saved.apiKey')),
-                h('dd', {}, DemoCredentials.mask(item.api_key)),
+                h('dd', {}, item.api_key ? DemoCredentials.mask(item.api_key) : t('dashboard.saved.noApiKey')),
                 h('dt', {}, t('dashboard.saved.recipientCodes')),
                 h('dd', {}, codes),
             ),
@@ -435,6 +441,19 @@
         notice.hidden = false;
     }
 
+    /** Save the connection in use to the saved clients. Returns the "Saved … in this browser." note. */
+    function rememberConnection() {
+        const saved = DemoCredentials.get();
+        if (!saved.client_id) return '';
+        DemoCredentials.remember(saved);
+        renderSavedClients();
+        return t('dashboard.savedInBrowser', {
+            name: saved.client_name ? `${saved.client_name} · ` : '',
+            id: saved.client_id,
+            code: saved.code ? ` / ${saved.code}` : '',
+        });
+    }
+
     async function testConnection({ persist = false } = {}) {
         const pill = $('db-connection-status');
         const result = $('db-credentials-result');
@@ -442,10 +461,20 @@
         const warnings = formatWarnings();
 
         if (!DemoCredentials.get().api_key) {
-            setPill(pill, 'warn', t('dashboard.status.notSet'));
             renderRecipientCurrency();
-            if (warnings.length) showNotice(result, 'error', warnings.join(' '));
-            else result.hidden = true;
+            if (missing.length) {
+                setPill(pill, 'warn', t('dashboard.status.notSet'));
+                if (warnings.length) showNotice(result, 'error', warnings.join(' '));
+                else result.hidden = true;
+                return;
+            }
+            if (warnings.length) {
+                setPill(pill, 'warn', t('dashboard.status.checkFields'));
+                showNotice(result, 'error', warnings.join(' '));
+                return;
+            }
+            setPill(pill, 'success', t('dashboard.status.sessionless'));
+            showNotice(result, 'info', `${t('dashboard.sessionlessDetail')}${persist ? rememberConnection() : ''}`);
             return;
         }
 
@@ -465,19 +494,7 @@
                 showNotice(result, 'error', warnings.join(' '));
             } else {
                 setPill(pill, 'success', t('dashboard.status.connected'));
-                const saved = DemoCredentials.get();
-                if (persist && saved.client_id && saved.api_key) {
-                    DemoCredentials.remember(saved);
-                    renderSavedClients();
-                }
-                const named = saved.client_name ? `${saved.client_name} · ` : '';
-                const stored = persist
-                    ? t('dashboard.savedInBrowser', {
-                        name: named,
-                        id: saved.client_id,
-                        code: saved.code ? ` / ${saved.code}` : '',
-                    })
-                    : '';
+                const stored = persist ? rememberConnection() : '';
                 showNotice(result, 'info', `${check.detail || t('dashboard.demoKeyAccepted')}${stored}`);
             }
         } catch {
@@ -705,6 +722,11 @@
 
     function actionsFor(b) {
         const hasPayment = b.payments?.length > 0;
+        // Every action goes through this server's proxy, which signs it with the API key.
+        const noKey = DemoCredentials.get().api_key ? null : {
+            reason: t('dashboard.action.noKeyReason'),
+            fix: t('dashboard.action.noKeyFix'),
+        };
         const noSession = b.sessionId ? null : {
             reason: t('dashboard.action.noSessionReason'),
             fix: t('dashboard.action.noSessionFix'),
@@ -737,31 +759,31 @@
             {
                 id: 'refresh', label: t('dashboard.action.refresh'), method: 'GET', endpoint: '/commercial_payex/v2/session/{session_id}', playground: 'get_session',
                 help: t('dashboard.action.refreshHelp'),
-                disabled: noSession, spec: refreshSpec,
+                disabled: noKey || noSession, spec: refreshSpec,
             },
             {
                 id: 'resume', label: t('dashboard.action.resume'), method: 'POST', endpoint: '/commercial_payex/v2/session/{session_id}', playground: 'resume_session',
                 help: t('dashboard.action.resumeHelp'),
-                disabled: noSession || (b.checkout ? null : { reason: t('dashboard.action.resumeOldReason'), fix: t('dashboard.action.resumeOldFix') }),
+                disabled: noKey || noSession || (b.checkout ? null : { reason: t('dashboard.action.resumeOldReason'), fix: t('dashboard.action.resumeOldFix') }),
                 spec: resumeSpec,
             },
             {
                 id: 'capture', label: t('dashboard.action.capture'), method: 'POST', endpoint: '/payments/v1/payments/{payment_id}/captures', playground: 'capture_payment',
                 help: t('dashboard.action.captureHelp'),
-                disabled: notPreauth || noPayment || holdEnded, spec: captureSpec,
+                disabled: noKey || notPreauth || noPayment || holdEnded, spec: captureSpec,
             },
             {
                 id: 'extend', label: t('dashboard.action.extend'), method: 'POST', endpoint: '/payments/v1/payments/{payment_id}/authorization_adjustments', playground: 'extend_preauth',
                 help: t('dashboard.action.extendHelp'),
-                disabled: notPreauth || noPayment || holdEnded, spec: extendSpec,
+                disabled: noKey || notPreauth || noPayment || holdEnded, spec: extendSpec,
             },
             {
                 id: 'charge', label: t('dashboard.action.charge'), method: 'POST', endpoint: '/payments/v1/payments/charge', playground: 'charge_token',
                 help: t('dashboard.action.chargeHelp'),
-                disabled: savesCard ? null : {
+                disabled: noKey || (savesCard ? null : {
                     reason: t('dashboard.action.noCardReason'),
                     fix: t('dashboard.action.noCardFix'),
-                },
+                }),
                 spec: chargeSpec,
             },
         ];

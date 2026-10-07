@@ -576,8 +576,8 @@ credentials:
     client_id: "クライアントID"
     code: "受取人コード"
     api_key: "APIキー"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "クライアントID、受取人コード、APIキー"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "クライアントIDと受取人コード"
   # Payment step. Bold first line.
   paymentTitle: "Checkout には Flywire デモ認証情報が必要です。"
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -765,6 +765,7 @@ demo:
     needsAmount: "金額が必要です。カードの保存のみの場合は利用できません。"
     noForcePage: "カードの保存のみの場合、Checkout ではこのページを強制表示できません。"
     cardOnFileNeedsSession: "カード情報を保管するフローには、常に認証済みセッションが必要です。"
+    holdNeedsSession: "与信確保には、常に認証済みセッションが必要です。"
     needsApiKey: "先にホテルのバックオフィスでデモ用APIキーを追加してください。"
 
   # Partner split editor.
@@ -981,7 +982,7 @@ dashboard:
   apiKey: "APIキー"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "APIキー <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "デモ用APIキーを貼り付けてください"
+  apiKeyPlaceholder: "任意 · デモ用APIキーを貼り付けてください"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "保存して接続をテスト"
   clearCredentials: "認証情報を消去"
@@ -1009,6 +1010,7 @@ dashboard:
     clientId: "クライアントID"
     apiKey: "APIキー"
     recipientCodes: "受取人コード"
+    noApiKey: "なし（匿名）"
 
   # Connection status pill. Keep these short.
   status:
@@ -1018,6 +1020,7 @@ dashboard:
     incomplete: "入力不足"
     checkFields: "接続済み · 項目を確認"
     connected: "接続済み · デモ API"
+    sessionless: "匿名 · APIキーなし"
     unreachable: "サーバーに接続不可"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} 文字の欠落がないか確認するか、キーを再度貼り付けてください。"
@@ -1026,6 +1029,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: "{name}{id}{code} をこのブラウザに保存しました。"
   demoKeyAccepted: "デモ API がこのキーを承認しました。"
+  sessionlessDetail: "APIキーがない場合、Checkout はこのクライアントIDと受取人コードを使った匿名セッションとして開始されます。単発のお支払いのみ対応しています。与信確保、カード情報を保管するフロー、このページの操作にはAPIキーが必要です。"
   # Format warnings, shown before the API is called.
   clientIdFormat: "クライアントIDが UUID の形式（8-4-4-4-12 文字）になっていません。"
   recipientFormat: "受取人コードは英字3文字（ABC）、または英字で始まる5文字（ABC1D）です。"
@@ -1194,6 +1198,8 @@ dashboard:
     chargeHelp: "Checkout で保存したカードに、お客様の立ち会いなしで請求します（例：ミニバーやノーショー料金）。"
     noSessionReason: "この予約は匿名セッションを使用したため、サーバー上で照会または再開できるセッションがありません。"
     noSessionFix: "新しい予約では、認証済みセッション（設定ドロワーの「セッション」）を使用してください。"
+    noKeyReason: "これらの操作は、このデモのサーバー経由で Flywire を呼び出すため、APIキーが必要です。"
+    noKeyFix: "上の接続フォームでデモ用APIキーを追加してください。"
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "Flywire が売上確定または延長できるのは、与信確保された支払い（ホールド）のみです。この予約は「{flow}」を使用しており、{how}。"
     chargedImmediately: "お客様に即時請求するフローです"

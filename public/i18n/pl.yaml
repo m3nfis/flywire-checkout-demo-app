@@ -596,8 +596,8 @@ credentials:
     client_id: "ID klienta"
     code: "kod odbiorcy"
     api_key: "klucz API"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "ID klienta, kod odbiorcy i klucz API"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "ID klienta i kod odbiorcy"
   # Payment step. Bold first line.
   paymentTitle: "Checkout wymaga danych dostępowych demo Flywire."
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -787,6 +787,7 @@ demo:
     needsAmount: "Wymaga kwoty; niedostępne przy samym zapisie karty."
     noForcePage: "Checkout nie pozwala wymusić tej strony przy samym zapisie karty."
     cardOnFileNeedsSession: "Scenariusze z zapisaną kartą zawsze wymagają uwierzytelnionej sesji."
+    holdNeedsSession: "Blokady (preautoryzacja) zawsze wymagają uwierzytelnionej sesji."
     needsApiKey: "Najpierw proszę dodać klucz API demo w panelu administracyjnym hotelu."
 
   # Partner split editor.
@@ -1005,7 +1006,7 @@ dashboard:
   apiKey: "Klucz API"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "Klucz API <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "Proszę wkleić klucz API demo"
+  apiKeyPlaceholder: "Opcjonalnie · proszę wkleić klucz API demo"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "Zapisz i przetestuj połączenie"
   clearCredentials: "Wyczyść dane dostępowe"
@@ -1033,6 +1034,7 @@ dashboard:
     clientId: "ID klienta"
     apiKey: "Klucz API"
     recipientCodes: "Kody odbiorcy"
+    noApiKey: "Brak (sesja anonimowa)"
 
   # Connection status pill. Keep these short.
   status:
@@ -1042,6 +1044,7 @@ dashboard:
     incomplete: "Niekompletne"
     checkFields: "Połączono · sprawdź pola"
     connected: "Połączono · API demo"
+    sessionless: "Anonimowa · bez klucza API"
     unreachable: "Serwer niedostępny"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} Proszę sprawdzić, czy nie brakuje znaku, lub wkleić klucz ponownie."
@@ -1050,6 +1053,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: " Zapisano {name}{id}{code} w tej przeglądarce."
   demoKeyAccepted: "API demo zaakceptowało ten klucz."
+  sessionlessDetail: "Bez klucza API Checkout uruchamia się jako sesja anonimowa z tym ID klienta i kodem odbiorcy. Tylko płatności jednorazowe: blokady, scenariusze z zapisaną kartą i działania na tej stronie wymagają klucza API."
   # Format warnings, shown before the API is called.
   clientIdFormat: "ID klienta nie wygląda na UUID (8-4-4-4-12 znaków)."
   recipientFormat: "Kod odbiorcy to 3 litery (ABC) lub 5 znaków zaczynających się od litery (ABC1D)."
@@ -1218,6 +1222,8 @@ dashboard:
     chargeHelp: "Obciąża kartę zapisaną podczas Checkout bez obecności gościa, np. za minibar lub opłatę za niestawienie się."
     noSessionReason: "Ta rezerwacja korzystała z sesji anonimowej, więc na serwerze nie ma sesji do odczytania ani wznowienia."
     noSessionFix: "Dla nowych rezerwacji proszę używać sesji uwierzytelnionej (panel ustawień, Sesja)."
+    noKeyReason: "Te działania wywołują Flywire przez serwer tego demo, który wymaga klucza API."
+    noKeyFix: "Proszę dodać klucz API demo w formularzu połączenia powyżej."
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "Flywire może pobrać lub przedłużyć tylko płatność preautoryzowaną (blokadę). Ta rezerwacja korzystała ze scenariusza „{flow}”, {how}."
     chargedImmediately: "który od razu obciążył gościa"

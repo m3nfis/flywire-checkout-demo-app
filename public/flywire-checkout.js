@@ -59,8 +59,8 @@
      * @param {Object} [opts.config]   `initFields.config` (locale, embed_to, offer_rules, timeout, header, show_amount_info, close_button).
      * @param {Object} [opts.styles]   `initFields.styles`.
      * @param {boolean} [opts.authenticated=true]
-     *        Create a server-side session first. Required for every tokenization type;
-     *        anonymous sessions only support one-off payments.
+     *        Create a server-side session first. Required for every tokenization type
+     *        and for preauth holds; anonymous sessions only support one-off payments.
      * @param {{id: string, run_id: string, run_token: string}} [opts.session]
      *        Existing session credentials, e.g. from resuming a session on your server.
      * @param {Function} [opts.onComplete]  `({ report, sessionId })` — report is `{ session_report, payment_report }`.
@@ -75,6 +75,9 @@
         const authenticated = opts.authenticated !== false;
         if (!authenticated && opts.transaction.type !== 'payment') {
             throw new Error(`FlywireCheckout: '${opts.transaction.type}' requires an authenticated session.`);
+        }
+        if (!authenticated && opts.transaction.details?.authorization === 'preauth') {
+            throw new Error("FlywireCheckout: authorization 'preauth' requires an authenticated session.");
         }
 
         await waitForSDK();

@@ -205,7 +205,7 @@
 
     async function refresh() {
         const creds = global.DemoCredentials?.get() || {};
-        if (!creds.api_key || !creds.client_id || !creds.code) {
+        if (!creds.client_id || !creds.code) {
             applyUsd();
             return profile;
         }

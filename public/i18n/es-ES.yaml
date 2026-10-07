@@ -576,8 +576,8 @@ credentials:
     client_id: "ID de cliente"
     code: "código de destinatario"
     api_key: "clave de API"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "ID de cliente, código de destinatario y clave de API"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "ID de cliente y código de destinatario"
   # Payment step. Bold first line.
   paymentTitle: "Checkout necesita las credenciales de demostración de Flywire."
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -765,6 +765,7 @@ demo:
     needsAmount: "Requiere un importe; no está disponible si solo se registra la tarjeta."
     noForcePage: "Checkout no permite forzar esta página cuando solo se registra la tarjeta."
     cardOnFileNeedsSession: "Los flujos con tarjeta registrada siempre requieren una sesión autenticada."
+    holdNeedsSession: "Las retenciones (preautorización) siempre requieren una sesión autenticada."
     needsApiKey: "Añada primero su clave de API de demostración en el back office del hotel."
 
   # Partner split editor.
@@ -981,7 +982,7 @@ dashboard:
   apiKey: "Clave de API"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "Clave de API <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "Pegue su clave de API de demostración"
+  apiKeyPlaceholder: "Opcional · pegue su clave de API de demostración"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "Guardar y probar conexión"
   clearCredentials: "Borrar credenciales"
@@ -1009,6 +1010,7 @@ dashboard:
     clientId: "ID de cliente"
     apiKey: "Clave de API"
     recipientCodes: "Códigos de destinatario"
+    noApiKey: "Ninguna (anónima)"
 
   # Connection status pill. Keep these short.
   status:
@@ -1018,6 +1020,7 @@ dashboard:
     incomplete: "Incompleto"
     checkFields: "Conectado · revise los campos"
     connected: "Conectado · API de demostración"
+    sessionless: "Anónima · sin clave de API"
     unreachable: "Servidor inaccesible"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} Compruebe si falta algún carácter o vuelva a pegar la clave."
@@ -1026,6 +1029,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: " Se guardó {name}{id}{code} en este navegador."
   demoKeyAccepted: "La API de demostración aceptó esta clave."
+  sessionlessDetail: "Sin clave de API, Checkout se inicia como una sesión anónima con este ID de cliente y este código de destinatario. Solo pagos únicos: las retenciones, los flujos con tarjeta registrada y las acciones de esta página requieren una clave de API."
   # Format warnings, shown before the API is called.
   clientIdFormat: "El ID de cliente no parece un UUID (8-4-4-4-12 caracteres)."
   recipientFormat: "Los códigos de destinatario tienen 3 letras (ABC) o 5 caracteres que empiezan por una letra (ABC1D)."
@@ -1194,6 +1198,8 @@ dashboard:
     chargeHelp: "Cobra la tarjeta registrada en Checkout sin que el huésped esté presente; por ejemplo, minibar o cobro por no presentación."
     noSessionReason: "Esta reserva usó una sesión anónima, por lo que no hay sesión que consultar ni reanudar en el servidor."
     noSessionFix: "Use una sesión autenticada (panel de configuración, Sesión) para las reservas nuevas."
+    noKeyReason: "Estas acciones llaman a Flywire a través del servidor de esta demostración, que necesita su clave de API."
+    noKeyFix: "Añada su clave de API de demostración en el formulario de conexión de arriba."
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "Flywire solo puede capturar o prolongar un pago preautorizado (una retención). Esta reserva usó «{flow}», {how}."
     chargedImmediately: "que cobró al huésped de inmediato"

@@ -19,10 +19,11 @@
     const FIELD_SETS_KEY = 'flywire.checkoutDemo.recipientFields';
     const CLIENT_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     const PORTAL_CODE = /^(?:[A-Z]{3}|[A-Z][A-Z0-9]{4})$/;
+    // Checkout can start with these alone, as an anonymous (sessionless) session.
+    // The API key is optional: it adds authenticated sessions, card-on-file flows and back-office actions.
     const FIELDS = [
         ['client_id', 'credentials.fields.client_id'],
         ['code', 'credentials.fields.code'],
-        ['api_key', 'credentials.fields.api_key'],
     ];
     const listeners = new Set();
 
@@ -128,7 +129,11 @@
     function readClients() {
         try {
             const parsed = JSON.parse(localStorage.getItem(CLIENTS_KEY));
-            return Array.isArray(parsed) ? parsed.filter((item) => item && item.client_id && item.api_key) : [];
+            return Array.isArray(parsed)
+                ? parsed
+                    .filter((item) => item && item.client_id)
+                    .map((item) => ({ ...item, api_key: String(item.api_key || ''), codes: Array.isArray(item.codes) ? item.codes : [] }))
+                : [];
         } catch {
             return [];
         }
@@ -146,7 +151,7 @@
         const clients = readClients();
         if (clients.length || localStorage.getItem(CLIENTS_KEY) != null) return clients;
         const current = get();
-        if (!current.client_id || !current.api_key) return [];
+        if (!current.client_id) return [];
         const seeded = [entryFrom(current)];
         writeClients(seeded);
         return seeded;
@@ -157,7 +162,7 @@
         return {
             client_id: String(creds.client_id).trim(),
             client_name: String(creds.client_name || '').trim(),
-            api_key: creds.api_key,
+            api_key: String(creds.api_key || ''),
             codes: code ? [code] : [],
         };
     }
@@ -173,13 +178,14 @@
     }
 
     /**
-     * Remember a connection that the demo API accepted.
+     * Remember a connection that the demo API accepted, or a sessionless one (no API key).
      * Client ID is the index: one API key per Client ID, recipient codes accumulate.
+     * Saving without a key keeps a key already stored for that Client ID.
      */
     function remember(creds) {
         const clientId = String(creds.client_id || '').trim();
         const apiKey = String(creds.api_key || '');
-        if (!clientId || !apiKey) return list();
+        if (!clientId) return list();
 
         const clients = list();
         const code = String(creds.code || '').trim().toUpperCase();
@@ -190,7 +196,7 @@
             clients.push(item);
         } else {
             item.client_id = clientId;
-            item.api_key = apiKey;
+            if (apiKey) item.api_key = apiKey;
             if (name) item.client_name = name;
             delete item.fields;
         }
@@ -221,7 +227,7 @@
         return Object.keys(out).length ? out : undefined;
     }
 
-    /** Translated labels of the credentials still missing, e.g. ['API key']. */
+    /** Translated labels of the required credentials still missing, e.g. ['recipient code']. */
     function missing() {
         const saved = get();
         return FIELDS.filter(([key]) => !saved[key]).map(([, label]) => global.I18n.t(label));

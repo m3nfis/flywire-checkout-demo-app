@@ -267,9 +267,13 @@
         return FLOWS.find((f) => f.id === state.flow);
     }
 
+    /** Anonymous sessions only accept one-off payments: no card-on-file and no preauth hold. */
+    function needsSession(flow) {
+        return flow.type !== 'payment' || Boolean(flow.preauth);
+    }
+
     function isFlowAvailable(flow) {
-        if (flow.type !== 'payment' && !hasApiKey()) return false;
-        return true;
+        return hasApiKey() || !needsSession(flow);
     }
 
     /** Why an option can't be used with the selected flow, or null when it can. */
@@ -283,6 +287,7 @@
                 return flow.noAmount ? t('demo.unavailable.needsAmount') : null;
             case 'anonymous':
                 if (flow.type !== 'payment') return t('demo.unavailable.cardOnFileNeedsSession');
+                if (flow.preauth) return t('demo.unavailable.holdNeedsSession');
                 return null;
             case 'authenticated':
                 return hasApiKey() ? null : t('demo.unavailable.needsApiKey');
@@ -625,7 +630,7 @@
 
                 const body = el('span', 'fw-flow-option-body');
                 const titleRow = el('span', 'fw-flow-option-title', t(`flows.${flow.id}.title`));
-                if (flow.type !== 'payment' && !hasApiKey()) titleRow.append(el('span', 'fw-badge fw-badge-warn', t('flows.needsApiKey')));
+                if (!available) titleRow.append(el('span', 'fw-badge fw-badge-warn', t('flows.needsApiKey')));
                 body.append(titleRow, el('span', 'fw-flow-option-pitch', t(`flows.${flow.id}.pitch`)), el('code', 'fw-flow-option-tech', techSummary(flow)));
 
                 label.append(input, body);

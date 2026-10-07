@@ -576,8 +576,8 @@ credentials:
     client_id: "Client-ID"
     code: "Empfängercode"
     api_key: "API-Schlüssel"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "Client-ID, Empfängercode und API-Schlüssel"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "Client-ID und Empfängercode"
   # Payment step. Bold first line.
   paymentTitle: "Der Checkout benötigt Flywire-Demo-Zugangsdaten."
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -765,6 +765,7 @@ demo:
     needsAmount: "Benötigt einen Betrag; nicht verfügbar, wenn nur eine Karte gespeichert wird."
     noForcePage: "Der Checkout erlaubt es nicht, diese Seite zu erzwingen, wenn nur eine Karte gespeichert wird."
     cardOnFileNeedsSession: "Flows mit hinterlegter Karte benötigen immer eine authentifizierte Sitzung."
+    holdNeedsSession: "Vorautorisierungen benötigen immer eine authentifizierte Sitzung."
     needsApiKey: "Hinterlegen Sie zuerst Ihren Demo-API-Schlüssel im Hotel-Backoffice."
 
   # Partner split editor.
@@ -981,7 +982,7 @@ dashboard:
   apiKey: "API-Schlüssel"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "API-Schlüssel <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "Fügen Sie Ihren Demo-API-Schlüssel ein"
+  apiKeyPlaceholder: "Optional · fügen Sie Ihren Demo-API-Schlüssel ein"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "Speichern & Verbindung testen"
   clearCredentials: "Zugangsdaten löschen"
@@ -1009,6 +1010,7 @@ dashboard:
     clientId: "Client-ID"
     apiKey: "API-Schlüssel"
     recipientCodes: "Empfängercodes"
+    noApiKey: "Keiner (anonym)"
 
   # Connection status pill. Keep these short.
   status:
@@ -1018,6 +1020,7 @@ dashboard:
     incomplete: "Unvollständig"
     checkFields: "Verbunden · Felder prüfen"
     connected: "Verbunden · Demo-API"
+    sessionless: "Anonym · kein API-Schlüssel"
     unreachable: "Server nicht erreichbar"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} Prüfen Sie, ob ein Zeichen fehlt, oder fügen Sie den Schlüssel erneut ein."
@@ -1026,6 +1029,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: " {name}{id}{code} in diesem Browser gespeichert."
   demoKeyAccepted: "Die Demo-API hat diesen Schlüssel akzeptiert."
+  sessionlessDetail: "Ohne API-Schlüssel startet Checkout als anonyme Sitzung mit dieser Client-ID und diesem Empfängercode. Nur Einmalzahlungen: Vorautorisierungen, Flows mit hinterlegter Karte und die Aktionen auf dieser Seite benötigen einen API-Schlüssel."
   # Format warnings, shown before the API is called.
   clientIdFormat: "Die Client-ID sieht nicht wie eine UUID aus (8-4-4-4-12 Zeichen)."
   recipientFormat: "Empfängercodes bestehen aus 3 Buchstaben (ABC) oder 5 Zeichen, beginnend mit einem Buchstaben (ABC1D)."
@@ -1194,6 +1198,8 @@ dashboard:
     chargeHelp: "Belastet die beim Checkout gespeicherte Karte ohne Anwesenheit des Gastes, z. B. Minibar oder eine No-Show-Gebühr."
     noSessionReason: "Diese Buchung verwendete eine anonyme Sitzung, daher gibt es auf dem Server keine Sitzung zum Abfragen oder Fortsetzen."
     noSessionFix: "Verwenden Sie für neue Buchungen eine authentifizierte Sitzung (Einstellungen, Sitzung)."
+    noKeyReason: "Diese Aktionen rufen Flywire über den Server dieser Demo auf, und dafür ist Ihr API-Schlüssel erforderlich."
+    noKeyFix: "Hinterlegen Sie Ihren Demo-API-Schlüssel oben im Verbindungsformular."
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "Flywire kann nur eine vorautorisierte Zahlung einziehen oder verlängern. Diese Buchung verwendete „{flow}“, {how}."
     chargedImmediately: "was den Gast sofort belastet hat"

@@ -576,8 +576,8 @@ credentials:
     client_id: "ID Klien"
     code: "kode penerima"
     api_key: "kunci API"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "ID Klien, kode penerima, dan kunci API"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "ID Klien dan kode penerima"
   # Payment step. Bold first line.
   paymentTitle: "Checkout memerlukan kredensial demo Flywire."
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -765,6 +765,7 @@ demo:
     needsAmount: "Memerlukan jumlah; tidak tersedia jika hanya menyimpan kartu."
     noForcePage: "Checkout tidak mengizinkan halaman ini ditampilkan paksa jika hanya menyimpan kartu."
     cardOnFileNeedsSession: "Alur kartu tersimpan selalu memerlukan sesi terautentikasi."
+    holdNeedsSession: "Penahanan dana (praotorisasi) selalu memerlukan sesi terautentikasi."
     needsApiKey: "Tambahkan kunci API demo Anda di back office hotel terlebih dahulu."
 
   # Partner split editor.
@@ -981,7 +982,7 @@ dashboard:
   apiKey: "Kunci API"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "Kunci API <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "Tempel kunci API demo Anda"
+  apiKeyPlaceholder: "Opsional · tempel kunci API demo Anda"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "Simpan & uji koneksi"
   clearCredentials: "Hapus kredensial"
@@ -1009,6 +1010,7 @@ dashboard:
     clientId: "ID Klien"
     apiKey: "Kunci API"
     recipientCodes: "Kode penerima"
+    noApiKey: "Tidak ada (anonim)"
 
   # Connection status pill. Keep these short.
   status:
@@ -1018,6 +1020,7 @@ dashboard:
     incomplete: "Belum lengkap"
     checkFields: "Terhubung · periksa kolom"
     connected: "Terhubung · API demo"
+    sessionless: "Anonim · tanpa kunci API"
     unreachable: "Server tidak dapat dijangkau"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} Periksa apakah ada karakter yang hilang, atau tempel kembali kuncinya."
@@ -1026,6 +1029,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: " {name}{id}{code} telah disimpan di browser ini."
   demoKeyAccepted: "API demo menerima kunci ini."
+  sessionlessDetail: "Tanpa kunci API, Checkout dimulai sebagai sesi anonim dengan ID Klien dan kode penerima ini. Hanya untuk pembayaran satu kali; penahanan dana, alur kartu tersimpan, dan tindakan di halaman ini memerlukan kunci API."
   # Format warnings, shown before the API is called.
   clientIdFormat: "ID Klien tampaknya bukan UUID (8-4-4-4-12 karakter)."
   recipientFormat: "Kode penerima terdiri dari 3 huruf (ABC) atau 5 karakter yang diawali huruf (ABC1D)."
@@ -1194,6 +1198,8 @@ dashboard:
     chargeHelp: "Menagih kartu yang disimpan saat Checkout tanpa kehadiran tamu, misalnya minibar atau biaya no-show."
     noSessionReason: "Pemesanan ini menggunakan sesi anonim, sehingga tidak ada sesi yang dapat dicari atau dilanjutkan di server."
     noSessionFix: "Gunakan sesi terautentikasi (panel pengaturan, Sesi) untuk pemesanan baru."
+    noKeyReason: "Tindakan ini memanggil Flywire melalui server demo ini, yang memerlukan kunci API Anda."
+    noKeyFix: "Tambahkan kunci API demo Anda di formulir koneksi di atas."
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "Flywire hanya dapat menarik atau memperpanjang pembayaran yang telah dipra-otorisasi (penahanan dana). Pemesanan ini menggunakan “{flow}”, {how}."
     chargedImmediately: "yang langsung menagih tamu"

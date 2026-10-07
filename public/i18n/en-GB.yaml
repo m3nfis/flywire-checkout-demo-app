@@ -576,8 +576,8 @@ credentials:
     client_id: "Client ID"
     code: "recipient code"
     api_key: "API key"
-  # Used instead of a raw list when all three fields are empty. Sentence fragment, not a full sentence.
-  allMissing: "Client ID, recipient code and API key"
+  # Used instead of a raw list when both required fields are empty. Sentence fragment, not a full sentence.
+  allMissing: "Client ID and recipient code"
   # Payment step. Bold first line.
   paymentTitle: "Checkout needs Flywire demo credentials."
   # [html] Payment step, the sentence after the title. Keep the <a> and its href.
@@ -765,6 +765,7 @@ demo:
     needsAmount: "Needs an amount; not available when only saving a card."
     noForcePage: "Checkout doesn’t allow forcing this page when only saving a card."
     cardOnFileNeedsSession: "Card-on-file flows always need an authenticated session."
+    holdNeedsSession: "Holds (preauth) always need an authenticated session."
     needsApiKey: "Add your demo API key in the hotel back office first."
 
   # Partner split editor.
@@ -981,7 +982,7 @@ dashboard:
   apiKey: "API key"
   # [html] Do not translate X-Authentication-Key. It is the HTTP header name.
   apiKeyLabel: "API key <span class=\"db-hint\">X-Authentication-Key</span>"
-  apiKeyPlaceholder: "Paste your demo API key"
+  apiKeyPlaceholder: "Optional · paste your demo API key"
   # Submit button. Also referred to from credentials.officeBody — keep the two translations aligned.
   saveAndTest: "Save & test connection"
   clearCredentials: "Clear credentials"
@@ -1009,6 +1010,7 @@ dashboard:
     clientId: "Client ID"
     apiKey: "API key"
     recipientCodes: "Recipient codes"
+    noApiKey: "None (sessionless)"
 
   # Connection status pill. Keep these short.
   status:
@@ -1018,6 +1020,7 @@ dashboard:
     incomplete: "Incomplete"
     checkFields: "Connected · check fields"
     connected: "Connected · demo API"
+    sessionless: "Sessionless · no API key"
     unreachable: "Server unreachable"
   # {detail} is the reason from the server.
   keyRejectedDetail: "{detail} Check for a missing character, or paste the key again."
@@ -1026,6 +1029,7 @@ dashboard:
   # {name} is the optional client name plus a separator, or empty. {id} is the Client ID. {code} is " / ABC" or empty.
   savedInBrowser: " Saved {name}{id}{code} in this browser."
   demoKeyAccepted: "Demo API accepted this key."
+  sessionlessDetail: "No API key: checkout starts as an anonymous session with this Client ID and recipient code. One-off payments only: holds, card-on-file flows and the actions on this page need an API key."
   # Format warnings, shown before the API is called.
   clientIdFormat: "The Client ID doesn’t look like a UUID (8-4-4-4-12 characters)."
   recipientFormat: "Recipient codes are 3 letters (ABC) or 5 characters starting with a letter (ABC1D)."
@@ -1194,6 +1198,8 @@ dashboard:
     chargeHelp: "Charges the card saved at checkout without the guest present, e.g. minibar or a no-show fee."
     noSessionReason: "This booking used an anonymous session, so there is no session to look up or resume on the server."
     noSessionFix: "Use an authenticated session (settings drawer, Session) for new bookings."
+    noKeyReason: "These actions call Flywire through this demo’s server, which needs your API key."
+    noKeyFix: "Add your demo API key in the connection form above."
     # {flow} is the flow name. {how} is either action.chargedImmediately or action.savedOnly.
     notHoldReason: "Flywire can only capture or extend a pre-authorised payment (a hold). This booking used “{flow}”, {how}."
     chargedImmediately: "which charged the guest straight away"
